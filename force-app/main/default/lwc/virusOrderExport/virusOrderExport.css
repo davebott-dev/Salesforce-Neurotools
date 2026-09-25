@@ -1,0 +1,375 @@
+/* ==========================================
+   PAGE
+   ========================================== */
+
+.page-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1.5rem;
+}
+
+
+/* ==========================================
+   SUCCESS HEADER
+   ========================================== */
+
+.success-section {
+    text-align: center;
+    padding: 1.5rem 1rem 2rem;
+}
+
+.success-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 64px;
+    height: 64px;
+
+    margin: 0 auto 1rem;
+
+    border-radius: 50%;
+
+    background: #e3fcef;
+}
+
+.success-title {
+    margin: 0;
+
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.success-message {
+    margin-top: 0.5rem;
+
+    font-size: 1rem;
+
+    color: #706e6b;
+}
+
+
+/* ==========================================
+   GENERAL CARD
+   ========================================== */
+
+.card {
+    margin-bottom: 1rem;
+
+    padding: 1.5rem;
+
+    background: #ffffff;
+
+    border: 1px solid #dddbda;
+
+    border-radius: 0.5rem;
+
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.card-header {
+    margin-bottom: 1rem;
+}
+
+.card-title {
+    margin: 0;
+
+    font-size: 1.15rem;
+
+    font-weight: 700;
+}
+
+.card-subtitle {
+    margin-top: 0.3rem;
+
+    color: #706e6b;
+}
+
+
+/* ==========================================
+   ORDER NUMBERS
+   ========================================== */
+
+.order-number-list {
+    display: flex;
+    flex-direction: column;
+
+    gap: 0.5rem;
+}
+
+.order-number {
+    padding: 0.85rem 1rem;
+
+    background: #f8f9fb;
+
+    border: 1px solid #dddbda;
+
+    border-radius: 0.25rem;
+
+    font-size: 1rem;
+
+    font-weight: 600;
+
+    letter-spacing: 0.02em;
+}
+
+
+/* ==========================================
+   DNA CARD
+   ========================================== */
+
+.dna-card {
+    background: #f8f9fb;
+}
+
+.dna-header {
+    display: flex;
+
+    align-items: center;
+
+    gap: 1rem;
+}
+
+.dna-icon {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+}
+
+.dna-button-container {
+    margin-top: 1.25rem;
+}
+
+
+/* ==========================================
+   INSTRUCTIONS
+   ========================================== */
+
+.instructions {
+    margin-top: 1rem;
+}
+
+.instruction {
+    display: flex;
+
+    gap: 0.9rem;
+
+    padding: 1rem 0;
+
+    border-bottom: 1px solid #eeeeee;
+}
+
+.instruction:last-child {
+    border-bottom: none;
+}
+
+.instruction-icon {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    width: 30px;
+    height: 30px;
+
+    border-radius: 50%;
+
+    background: #eef1f6;
+
+    font-weight: 700;
+}
+
+.instruction p {
+    margin-top: 0.3rem;
+
+    color: #706e6b;
+
+    line-height: 1.5;
+}
+
+.guide-link {
+    margin-top: 1rem;
+
+    padding-top: 1rem;
+
+    border-top: 1px solid #dddbda;
+
+    color: #706e6b;
+}
+
+
+/* ==========================================
+   SHIPPING
+   ========================================== */
+
+.shipping-address {
+    margin-top: 1rem;
+
+    padding: 1rem;
+
+    line-height: 1.6;
+
+    background: #f8f9fb;
+
+    border-left: 4px solid #0176d3;
+
+    border-radius: 0.25rem;
+}
+
+
+/* ==========================================
+   NEXT STEPS
+   ========================================== */
+
+.next-steps {
+    margin-top: 1.5rem;
+
+    padding: 1.5rem;
+
+    text-align: center;
+
+    border-top: 1px solid #dddbda;
+}
+
+.next-steps-title {
+    margin: 0;
+
+    font-size: 1.2rem;
+
+    font-weight: 700;
+}
+
+.next-steps-message {
+    margin-top: 0.4rem;
+
+    color: #706e6b;
+}
+
+.button-row {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 0.75rem;
+
+    margin-top: 1.25rem;
+}
+
+
+/* ==========================================
+   LOADING
+   ========================================== */
+
+.loading-container {
+    min-height: 300px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+}
+
+.loading-text {
+    margin-top: 2.5rem;
+
+    color: #706e6b;
+}
+
+
+/* ==========================================
+   ERROR
+   ========================================== */
+
+.error-card {
+    display: flex;
+
+    gap: 1rem;
+
+    margin: 1.5rem auto;
+
+    max-width: 800px;
+
+    padding: 1.5rem;
+
+    background: #ffffff;
+
+    border: 1px solid #ea001e;
+
+    border-radius: 0.5rem;
+}
+
+.error-title {
+    margin: 0;
+
+    font-size: 1.15rem;
+
+    font-weight: 700;
+}
+
+.error-message {
+    margin-top: 0.5rem;
+}
+
+.error-help {
+    margin-top: 0.75rem;
+
+    color: #706e6b;
+}
+
+
+/* ==========================================
+   NO ORDERS
+   ========================================== */
+
+.no-orders {
+    text-align: center;
+}
+
+.no-orders h2 {
+    margin-top: 1rem;
+
+    font-size: 1.2rem;
+
+    font-weight: 700;
+}
+
+.no-orders p {
+    margin-top: 0.4rem;
+
+    color: #706e6b;
+}
+
+
+/* ==========================================
+   MOBILE
+   ========================================== */
+
+@media (max-width: 600px) {
+
+    .page-container {
+        padding: 0.75rem;
+    }
+
+    .success-section {
+        padding-top: 1rem;
+    }
+
+    .success-title {
+        font-size: 1.35rem;
+    }
+
+    .dna-header {
+        align-items: flex-start;
+    }
+
+    .button-row {
+        flex-direction: column;
+    }
+
+}

@@ -1,0 +1,371 @@
+/* =========================
+   PAGE WRAPPER
+========================= */
+.detail-container {
+    padding: 16px;
+    background: #f6f8fb;
+    min-height: 100vh;
+}
+
+/* =========================
+   HEADER
+========================= */
+.project-header {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    margin-bottom: 20px;
+}
+
+.title {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.meta {
+    display: flex;
+    gap: 16px;
+    font-size: 13px;
+    color: #666;
+}
+
+.financial {
+    font-weight: 600;
+    color: #1d4ed8;
+}
+
+.card {
+    background: white;
+    border-radius: 10px;
+    padding: 12px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+.label {
+    font-size: 11px;
+    color: #888;
+    margin-bottom: 4px;
+}
+
+.value {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* =========================
+   SECTIONS
+========================= */
+.section {
+    background: white;
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eef2f7;
+}
+
+.section-header h2 {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0;
+}
+
+/* =========================
+   BLUE ACTION BUTTON
+========================= */
+.section-btn {
+    background: #1d4ed8;
+    color: white;
+    border: none;
+    padding: 7px 12px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.15s ease;
+}
+
+.section-btn:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+}
+
+/* =========================
+   TABLE ROWS
+========================= */
+.list-item {
+    display: grid;
+    grid-template-columns: 2fr 1fr 2fr;
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    font-size: 13px;
+    align-items: center;
+}
+
+.header-row {
+    font-weight: 600;
+    background: #f9fafb;
+    color: #444;
+}
+
+.list-item:last-child {
+    border-bottom: none;
+}
+
+.name {
+    font-weight: 600;
+}
+
+.status {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: #666;
+}
+
+.amount {
+    text-align: right;
+    font-weight: 600;
+}
+
+/* =========================
+   CLICKABLE ROWS
+========================= */
+.clickable {
+    cursor: pointer;
+}
+
+.clickable:hover {
+    background: #eef6ff;
+}
+
+.clickable:active {
+    background: #dbeafe;
+}
+
+/* =========================
+   EMPTY STATE
+========================= */
+.empty-state {
+    padding: 40px;
+    text-align: center;
+    color: #777;
+}
+
+/* =========================
+   MODAL OVERLAY (FIXED)
+========================= */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    background: rgba(0,0,0,0.55);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 9999;
+}
+
+/* =========================
+   MODAL BOX
+========================= */
+.modal-container {
+    background: white;
+    width: 480px;
+    border-radius: 12px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+}
+
+/* HEADER */
+.modal-header {
+    padding: 16px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* BODY */
+.modal-body {
+    padding: 16px;
+}
+
+/* FOOTER */
+.modal-footer {
+    padding: 14px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    border-top: 1px solid #eee;
+}
+
+/* BUTTONS */
+.btn.primary {
+    background: #1d4ed8;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+}
+
+.btn.secondary {
+    background: #e5e7eb;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+}
+
+.dev-banner {
+    margin-top: 6px;
+    font-size: 12px;
+    color: #2f5f8f;
+    background: #eef6ff;
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid #cfe3ff;
+}
+
+/* =========================
+   LARGE MODAL VARIANT
+========================= */
+.large-modal {
+    width: 720px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* allow scrolling inside modal body */
+.large-modal .modal-body {
+    padding: 16px;
+}
+.xlarge-modal {
+    width: 95%;
+    max-width: 1400px;
+}
+
+/* =========================
+   ORDER TABLE (IMPROVED UX)
+========================= */
+
+.order-table {
+    width: 100%;
+    border: 1px solid #d8dde6;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* SCROLLABLE BODY WRAPPER */
+.order-table-scroll {
+    max-height: 55vh;
+    overflow-y: auto;
+}
+
+/* ROW LAYOUT */
+.order-row {
+    display: grid;
+    grid-template-columns:
+        60px
+        minmax(160px, 2fr)
+        minmax(120px, 1fr)
+        minmax(120px, 1fr)
+        minmax(220px, 2fr)
+        minmax(100px, 1fr)
+        minmax(120px, 1fr);
+
+    gap: 16px;
+    align-items: center;
+
+    padding: 12px 14px;
+    border-bottom: 1px solid #eef1f6;
+    font-size: 13px;
+
+    min-width: 900px; /* prevents squishing */
+}
+
+/* HEADER ROW */
+.order-row.header {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+
+    background: #f7f9fc;
+    font-weight: 700;
+    color: #1b1f23;
+
+    border-bottom: 1px solid #d8dde6;
+}
+
+/* SCROLL CONTAINER FIX */
+.order-table-scroll .order-row.header {
+    top: 0;
+}
+
+/* BODY ROW HOVER */
+.order-row:not(.header):hover {
+    background: #fafcff;
+}
+
+/* CELL SAFETY */
+.order-row > div {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* CHECKBOX CENTERING */
+.checkbox-col {
+    display: flex;
+    justify-content: center;
+}
+
+/* TEXT STYLES */
+.order-name {
+    font-weight: 600;
+    color: #16325c;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.construct-cell {
+    overflow-wrap: anywhere;
+    white-space: normal;
+}
+
+.amount-cell {
+    font-weight: 700;
+    color: #2e7d32;
+}
+
+/* SEARCH BAR */
+.search-box {
+    margin-bottom: 12px;
+}
+
+/* EMPTY STATE */
+.empty-inline {
+    padding: 20px;
+    color: #666;
+    text-align: center;
+}

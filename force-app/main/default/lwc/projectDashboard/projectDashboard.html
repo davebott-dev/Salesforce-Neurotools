@@ -1,0 +1,231 @@
+<template>
+
+    <div class="dashboard-container">
+
+        <!-- HEADER -->
+        <div class="header">
+
+            <div>
+                <h1>Project Dashboard</h1>
+                <p class="subtitle">Manage collaboration requests and projects</p>
+            </div>
+
+            <button class="create-btn" onclick={handleCreateProject}>
+                + New Project
+            </button>
+
+        </div>
+
+        <!-- TABS -->
+        <div class="tabs">
+
+            <button class={allTabClass} onclick={showAll}>
+                All Projects ({allCount})
+            </button>
+
+            <button class={pendingTabClass} onclick={showPending}>
+                Pending Invitations ({pendingCount})
+            </button>
+
+        </div>
+
+        <!-- GRID -->
+        <template if:true={hasProjects}>
+
+            <div class="card-grid">
+
+                <template for:each={filteredProjects} for:item="project">
+
+                    <div
+                        key={project.projectId}
+                        class="project-card"
+                        data-id={project.projectId}
+                        onclick={handleCardClick}>
+
+                        <!-- HEADER -->
+                        <div class="card-header">
+
+                            <div>
+                                <div class="project-title">
+                                    {project.projectName}
+                                </div>
+
+                                <div class="project-number">
+                                    {project.projectNumber}
+                                </div>
+                            </div>
+
+                            <div class={project.statusClass}>
+                                {project.status}
+                            </div>
+
+                        </div>
+
+                        <!-- BODY -->
+                        <div class="card-body">
+
+                            <div class="field">
+                                <span class="label">Model</span>
+                                <span class="value">{project.model}</span>
+                            </div>
+
+                            <div class="field">
+                                <span class="label">Injection Site</span>
+                                <span class="value">{project.injectionSite}</span>
+                            </div>
+
+                            <div class="field">
+                                <span class="label">Volume</span>
+                                <span class="value">{project.volume}</span>
+                            </div>
+
+                            <div class="field">
+                                <span class="label">Endotoxin</span>
+                                <span class="value">{project.endotoxin}</span>
+                            </div>
+
+                            <div class="field">
+                                <span class="label">Performance</span>
+                                <span class="value">{project.performance}</span>
+                            </div>
+
+                        </div>
+
+                        <!-- FOOTER -->
+                        <div class="card-footer">
+
+                            <div>
+                                Submitted: {project.submittedDate}
+                            </div>
+
+                            <!-- APPROVE / DENY BUTTONS -->
+                            <template if:true={project.showActions}>
+
+                                <div class="card-actions">
+
+                                    <button
+                                        class="approve-btn"
+                                        data-id={project.projectId}
+                                        onclick={handleApprove}>
+
+                                        Approve
+
+                                    </button>
+
+                                    <button
+                                        class="deny-btn"
+                                        data-id={project.projectId}
+                                        onclick={handleDeny}>
+
+                                        Deny
+
+                                    </button>
+
+                                </div>
+
+                            </template>
+
+                        </div>
+
+                    </div>
+
+                </template>
+
+            </div>
+
+        </template>
+
+        <!-- EMPTY STATE -->
+        <template if:false={hasProjects}>
+            <div class="empty-state">
+                No projects found in this view.
+            </div>
+        </template>
+
+        <!-- CREATE PROJECT MODAL -->
+        <template if:true={showProjectModal}>
+
+            <section class="modal-overlay">
+
+                <div class="modal-container">
+
+                    <!-- HEADER -->
+                    <div class="modal-header">
+
+                        <h2>New Project</h2>
+
+                        <button
+                            class="close-btn"
+                            onclick={closeProjectModal}>
+
+                            ✕
+
+                        </button>
+
+                    </div>
+
+                    <!-- BODY -->
+                    <div class="modal-body">
+
+                        <lightning-input
+                            label="Project Name"
+                            value={projectName}
+                            onchange={handleProjectName}>
+                        </lightning-input>
+
+                        <lightning-input
+                            type="number"
+                            label="Budget"
+                            value={budget}
+                            onchange={handleBudget}>
+                        </lightning-input>
+
+                        <lightning-dual-listbox
+                            name="labs"
+                            label="Select Collaborating Labs"
+                            source-label="Available Labs"
+                            selected-label="Selected Labs"
+                            options={labOptions}
+                            value={selectedLabs}
+                            onchange={handleLabChange}>
+                        </lightning-dual-listbox>
+
+                    </div>
+
+                    <!-- FOOTER -->
+                    <div class="modal-footer">
+
+                        <button
+                            class="btn secondary"
+                            onclick={closeProjectModal}>
+
+                            Cancel
+
+                        </button>
+
+                        <button
+                            class="btn primary"
+                            onclick={handleCreateProjectSubmit}
+                            disabled={isLoading}>
+
+                            <template if:true={isLoading}>
+                                Creating...
+                            </template>
+
+                            <template if:false={isLoading}>
+                                Create Project
+                            </template>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </template>
+
+    </div>
+
+</template>

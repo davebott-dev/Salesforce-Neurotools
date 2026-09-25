@@ -1,0 +1,15 @@
+.type-filter {
+    margin: 1rem 0;
+    max-width: 300px;
+}
+
+/* Center the no records message */
+.no-records {
+  margin-top: 2rem;
+  font-style: italic;
+  color: #666;
+  text-align: center;
+}
+.slds-notify_alert {
+    border-radius: 0.25rem;
+}

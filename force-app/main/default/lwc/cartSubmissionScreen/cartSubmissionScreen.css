@@ -1,0 +1,679 @@
+:host {
+    display: block;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.submission-header {
+    padding: 1.5rem;
+
+    border-bottom: 1px solid #dddbda;
+
+    background: white;
+}
+
+
+.submission-title {
+    margin: 0;
+
+    font-size: 1.5rem;
+
+    font-weight: 600;
+}
+
+
+.submission-subtitle {
+    margin-top: 0.35rem;
+
+    margin-bottom: 0;
+
+    color: #706e6b;
+
+    font-size: 0.95rem;
+}
+
+
+/* =========================================================
+   SECTION
+   ========================================================= */
+
+.section {
+    padding: 1.5rem;
+}
+
+
+.section-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-start;
+
+    margin-bottom: 1rem;
+}
+
+
+.section-header h2 {
+    margin: 0;
+
+    font-size: 1.15rem;
+
+    font-weight: 600;
+}
+
+
+.section-header p {
+    margin-top: 0.25rem;
+
+    margin-bottom: 0;
+
+    color: #706e6b;
+}
+
+
+.order-count {
+    font-weight: 600;
+
+    color: #3e3e3c;
+}
+
+
+/* =========================================================
+   ORDER CARD
+   ========================================================= */
+
+.order-card {
+    background: white;
+
+    border: 1px solid #dddbda;
+
+    border-radius: 0.35rem;
+
+    margin-bottom: 1rem;
+
+    overflow: hidden;
+}
+
+
+.order-card-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-start;
+
+    gap: 1rem;
+
+    padding: 1rem 1.25rem;
+
+    background: #f8f8f8;
+
+    border-bottom: 1px solid #dddbda;
+}
+
+
+.order-number {
+    font-weight: 600;
+
+    font-size: 1rem;
+
+    color: #0176d3;
+}
+
+
+.order-description {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 0.15rem;
+
+    margin-top: 0.3rem;
+
+    color: #706e6b;
+
+    font-size: 0.85rem;
+}
+
+
+.order-description span {
+    margin-right: 0.15rem;
+}
+
+
+.order-price {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-end;
+
+    white-space: nowrap;
+
+    font-weight: 600;
+
+    font-size: 1.05rem;
+}
+
+
+.price-label {
+    margin-bottom: 0.15rem;
+
+    color: #706e6b;
+
+    font-size: 0.75rem;
+
+    font-weight: 400;
+}
+
+
+/* =========================================================
+   ORDER DETAILS
+   ========================================================= */
+
+.order-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 1rem;
+
+    padding: 1rem 1.25rem;
+
+    border-bottom: 1px solid #dddbda;
+}
+
+
+.detail-item {
+    display: flex;
+
+    flex-direction: column;
+
+    min-width: 0;
+}
+
+
+.field-label {
+    margin-bottom: 0.2rem;
+
+    color: #706e6b;
+
+    font-size: 0.75rem;
+
+    font-weight: 600;
+}
+
+
+.field-value {
+    color: #181818;
+
+    word-break: break-word;
+}
+
+
+/* =========================================================
+   BILLING
+   ========================================================= */
+
+.billing-summary {
+    padding: 1rem 1.25rem;
+}
+
+
+.billing-heading {
+    margin-bottom: 0.75rem;
+
+    font-size: 0.9rem;
+
+    font-weight: 600;
+}
+
+
+.billing-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 1rem;
+}
+
+
+/* =========================================================
+   MESSAGES
+   ========================================================= */
+
+.info-message,
+.error-message,
+.warning-message,
+.success-message {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 0.5rem;
+
+    margin-top: 1rem;
+
+    padding: 0.75rem;
+
+    border-radius: 0.25rem;
+}
+
+
+.info-message {
+    background: #f3f3f3;
+
+    color: #3e3e3c;
+}
+
+
+.error-message {
+    background: #fcebea;
+
+    color: #ba0517;
+
+    border: 1px solid #ea001e;
+}
+
+
+.warning-message {
+    background: #fef4e8;
+
+    color: #3e3e3c;
+
+    border: 1px solid #dd7a01;
+}
+
+
+.success-message {
+    background: #eef7ee;
+
+    color: #2e844a;
+
+    border: 1px solid #2e844a;
+}
+
+
+.warning-content {
+    flex: 1;
+}
+
+
+.warning-content strong {
+    display: block;
+
+    margin-bottom: 0.25rem;
+}
+
+
+.warning-content p {
+    margin-top: 0;
+
+    margin-bottom: 0.75rem;
+
+    color: #3e3e3c;
+}
+
+
+/* =========================================================
+   TOTALS
+   ========================================================= */
+
+.totals-section {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-end;
+
+    gap: 0.5rem;
+
+    padding: 1rem 1.5rem 1.25rem;
+
+    border-top: 1px solid #dddbda;
+
+    background: #fafaf9;
+}
+
+
+.total-line {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    width: 320px;
+
+    gap: 2rem;
+
+    font-size: 1rem;
+}
+
+
+.grand-total {
+    margin-top: 0.25rem;
+
+    padding-top: 0.75rem;
+
+    border-top: 1px solid #dddbda;
+
+    font-size: 1.15rem;
+}
+
+
+/* =========================================================
+   VALIDATION SUMMARY
+   ========================================================= */
+
+.validation-summary {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 0.75rem;
+
+    margin: 0 1.5rem 1rem;
+
+    padding: 1rem;
+
+    border-radius: 0.25rem;
+}
+
+
+.validation-summary strong {
+    display: block;
+
+    margin-bottom: 0.25rem;
+}
+
+
+.validation-summary p {
+    margin: 0;
+
+    color: #3e3e3c;
+}
+
+
+.error-summary {
+    background: #fcebea;
+
+    border: 1px solid #ea001e;
+
+    color: #ba0517;
+}
+
+
+.success-summary {
+    background: #eef7ee;
+
+    border: 1px solid #2e844a;
+
+    color: #2e844a;
+}
+
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.actions {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 1rem 1.5rem;
+
+    border-top: 1px solid #dddbda;
+
+    background: white;
+}
+
+
+/* =========================================================
+   LOADING
+   ========================================================= */
+
+.loading-container {
+    position: relative;
+
+    min-height: 8rem;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.empty-state {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 0.75rem;
+
+    margin: 1.5rem;
+
+    padding: 1.5rem;
+
+    background: #f3f3f3;
+
+    border: 1px solid #dddbda;
+
+    border-radius: 0.25rem;
+}
+
+
+.empty-state strong {
+    display: block;
+
+    margin-bottom: 0.25rem;
+}
+
+
+.empty-state p {
+    margin: 0;
+
+    color: #706e6b;
+}
+
+
+/* =========================================================
+   HIDDEN SUBMIT FLOW
+   ========================================================= */
+
+.hidden-flow {
+    position: absolute;
+
+    width: 1px;
+
+    height: 1px;
+
+    overflow: hidden;
+
+    opacity: 0;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media only screen and (max-width: 900px) {
+
+    .order-card-header {
+        flex-direction: column;
+    }
+
+
+    .order-price {
+        align-items: flex-start;
+    }
+
+
+    .order-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+
+    .billing-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .total-line {
+        width: 100%;
+    }
+
+}
+
+
+@media only screen and (max-width: 600px) {
+
+    .section {
+        padding: 1rem;
+    }
+
+
+    .order-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .totals-section {
+        padding-left: 1rem;
+
+        padding-right: 1rem;
+    }
+
+
+    .validation-summary {
+        margin-left: 1rem;
+
+        margin-right: 1rem;
+    }
+
+
+    .actions {
+        padding-left: 1rem;
+
+        padding-right: 1rem;
+    }
+
+}
+/* =========================================================
+   SHIPPING PREFERENCE
+   ========================================================= */
+
+.shipping-section {
+    margin: 0 1.5rem 1.5rem;
+
+    background: white;
+
+    border: 1px solid #dddbda;
+
+    border-radius: 0.35rem;
+
+    overflow: hidden;
+}
+
+
+.shipping-header {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 0.75rem;
+
+    padding: 1rem 1.25rem;
+
+    background: #f8f8f8;
+
+    border-bottom: 1px solid #dddbda;
+}
+
+
+.shipping-icon-container {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 2rem;
+
+    height: 2rem;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background: #eaf5fe;
+}
+
+
+.shipping-header-content {
+    flex: 1;
+}
+
+
+.shipping-header-content h2 {
+    margin: 0;
+
+    font-size: 1rem;
+
+    font-weight: 600;
+
+    color: #181818;
+}
+
+
+.shipping-header-content p {
+    margin: 0.25rem 0 0;
+
+    color: #706e6b;
+
+    font-size: 0.85rem;
+
+    line-height: 1.4;
+}
+
+
+.shipping-option-container {
+    padding: 1.25rem;
+}
+
+
+.shipping-help-message {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 0.5rem;
+
+    margin-top: 0.75rem;
+
+    padding: 0.75rem;
+
+    background: #f3f8fc;
+
+    border: 1px solid #d8eaf7;
+
+    border-radius: 0.25rem;
+
+    color: #3e3e3c;
+
+    font-size: 0.85rem;
+
+    line-height: 1.4;
+}

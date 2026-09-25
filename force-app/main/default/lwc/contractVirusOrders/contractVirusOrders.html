@@ -1,0 +1,27 @@
+<template>
+    <lightning-card title="Virus Orders">
+        <div class="slds-p-horizontal_medium slds-p-vertical_small">
+            <lightning-button label="Refresh" onclick={handleRefresh} icon-name="utility:refresh"></lightning-button>
+        </div>
+
+        <template if:true={hasData}>
+            <lightning-datatable
+                key-field="Id"
+                data={pagedOrders}
+                columns={columns}
+                hide-checkbox-column
+                class="slds-p-horizontal_medium">
+            </lightning-datatable>
+
+            <div class="slds-p-around_medium slds-text-align_center">
+                <lightning-button label="Previous" onclick={handlePrev} disabled={isFirstPage}></lightning-button>
+                <span class="slds-p-horizontal_small">Page {page} of {totalPages}</span>
+                <lightning-button label="Next" onclick={handleNext} disabled={isLastPage}></lightning-button>
+            </div>
+        </template>
+
+        <template if:false={hasData}>
+            <p class="slds-p-around_medium">No virus orders found.</p>
+        </template>
+    </lightning-card>
+</template>

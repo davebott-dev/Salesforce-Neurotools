@@ -1,0 +1,111 @@
+<template>
+
+    <!-- TRUE MODAL -->
+    <template if:true={showModal}>
+
+        <section role="dialog"
+                 tabindex="-1"
+                 class="slds-modal slds-fade-in-open">
+
+            <div class="slds-modal__container">
+
+                <!-- HEADER -->
+                <header class="slds-modal__header">
+                    <h2 class="slds-text-heading_medium">
+                        Review & Submit
+                    </h2>
+                </header>
+
+                <!-- BODY -->
+<!-- BODY -->
+<div class="slds-modal__content slds-p-around_medium">
+
+    <div class="slds-box slds-scrollable_y"
+         style="max-height: 260px; line-height: 1.5;">
+
+        <p><strong>Shipping:</strong></p>
+        <p>
+            Orders are shipped via FedEx. Once the package is handed off to the carrier,
+            NeuroTools is not responsible for any loss, theft, damage, or delays.
+        </p>
+        <br/>
+        <p>
+            Shipping insurance must be requested and paid for at the time of order;
+            without it, NeuroTools is not obligated to replace, remake, or refund shipments affected during transit.
+        </p>
+        <br/>
+        <p>
+            If you choose a carrier other than FedEx, all responsibility transfers to that carrier upon shipment.
+        </p>
+
+        <br/>
+
+        <p><strong>Order Changes & Cancellations:</strong></p>
+        <p>
+            Orders may be modified or canceled only before reaching the “Inventory Check” stage.
+            After this point, orders cannot be changed or canceled without additional charges due to materials and work already committed.
+        </p>
+
+        <br/>
+
+        <p><strong>Quality Standards:</strong></p>
+
+        <p>
+            All orders will meet a quality control standard with a minimum baseline titer applicable
+            to the given virus type (or a higher requested/paid standard). If this is not met,
+            NeuroTools will repeat the order at no additional cost.
+        </p>
+        <br/>
+        <p>
+            If an order fails due to client-provided materials (e.g., low-quality DNA or toxic inserts),
+            repeat work will incur additional charges.
+        </p>
+        <br/>
+        <p>
+            If an order does not meet standards after two attempts, it may be canceled at no charge.
+        </p>
+        <br/>
+        <p>
+            Customers should notify NeuroTools promptly of any quality issues associated with an order.
+            After 90 days from the order ship date, NeuroTools will not accept or investigate any claims
+            of product quality issues including but not limited to end volume, titer, or product performance.
+        </p>
+
+    </div>
+
+    <!-- AGREEMENT -->
+    <lightning-input
+        class="slds-m-top_medium"
+        type="checkbox"
+        label="I agree to the terms and policies"
+        onchange={handleCheck}>
+    </lightning-input>
+
+</div>
+
+                <!-- FOOTER -->
+                <footer class="slds-modal__footer">
+
+                    <lightning-button
+                        label="Cancel"
+                        onclick={handleCancel}>
+                    </lightning-button>
+
+                    <lightning-button
+                        variant="brand"
+                        label="Submit Order"
+                        onclick={handleSubmit}
+                        disabled={isDisabled}>
+                    </lightning-button>
+
+                </footer>
+
+            </div>
+        </section>
+
+        <!-- PROPER BACKDROP -->
+        <div class="slds-backdrop slds-backdrop_open"></div>
+
+    </template>
+
+</template>

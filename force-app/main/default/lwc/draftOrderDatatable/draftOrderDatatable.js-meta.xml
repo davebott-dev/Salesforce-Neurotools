@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>58.0</apiVersion>
+    <isExposed>true</isExposed>
+    <targets>
+        <target>lightning__FlowScreen</target>
+    </targets>
+    <targetConfigs>
+    <targetConfig targets="lightning__FlowScreen">
+        <property name="flowContactId" type="String" label="Contact Id" description="Optional contact Id from Flow"/>
+        <property name="selectedRowsOutput" type="String[]" label="Selected Draft Orders" role="outputOnly"/>
+        <property name="selectedRowsInput" type="String[]" label="Previous Selected Draft Orders" role="inputOnly"/>
+    </targetConfig>
+</targetConfigs>
+</LightningComponentBundle>

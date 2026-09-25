@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>58.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Draft Order Files</masterLabel>
+    <description>Displays and manages files for a Draft Virus Order in Experience Cloud and Flow screens</description>
+    
+    <!-- Make available on Experience Cloud / Community pages -->
+    <targets>
+        <target>lightning__RecordPage</target>
+        <target>lightning__AppPage</target>
+        <target>lightning__FlowScreen</target>
+        <target>lightning__HomePage</target>
+    </targets>
+
+    <!-- Expose properties to Flow -->
+    <targetConfigs>
+        <targetConfig targets="lightning__FlowScreen">
+            <property name="draftOrderId" type="String" label="Draft Order Id" description="The Id of the Draft Virus Order record"/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

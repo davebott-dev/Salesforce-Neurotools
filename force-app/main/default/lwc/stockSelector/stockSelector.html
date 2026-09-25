@@ -1,0 +1,609 @@
+<template>
+
+    <div class="stock-selector">
+
+        <div class="selector-container">
+
+            <!-- ================================================= -->
+            <!-- LENTI - NO STOCK AVAILABLE -->
+            <!-- ================================================= -->
+
+            <template if:true={isLenti}>
+
+                <div class="no-stock-message">
+
+                    <div class="no-stock-icon">
+                        !
+                    </div>
+
+                    <div class="no-stock-content">
+
+                        <h3>
+                            No Lentivirus Stocks Currently Available
+                        </h3>
+
+                        <p>
+                            There are currently no lentivirus stocks available.
+                            Please choose another virus type to continue.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </template>
+
+
+            <!-- ================================================= -->
+            <!-- ALL OTHER VIRUS TYPES -->
+            <!-- ================================================= -->
+
+            <template if:false={isLenti}>
+
+
+                <!-- ================================================= -->
+                <!-- LOADING -->
+                <!-- ================================================= -->
+
+                <template if:true={isLoading}>
+
+                    <lightning-spinner
+                        alternative-text="Loading stock..."
+                        size="medium">
+                    </lightning-spinner>
+
+                </template>
+
+
+                <!-- ================================================= -->
+                <!-- ERROR -->
+                <!-- ================================================= -->
+
+                <template if:true={error}>
+
+                    <div class="error-state">
+
+                        {errorMessage}
+
+                    </div>
+
+                </template>
+
+
+                <template if:false={isLoading}>
+
+                    <template if:false={error}>
+
+
+                        <!-- ========================================= -->
+                        <!-- PRODUCT SELECTION -->
+                        <!-- ========================================= -->
+
+                        <template if:false={hasSelectedStock}>
+
+
+                            <!-- FILTERS -->
+
+                            <div class="filter-container">
+
+                                <!-- SEARCH -->
+
+                                <div class="search-filter">
+
+                                    <lightning-input
+                                        type="search"
+                                        label="Search Stock"
+                                        placeholder="Search by stock, construct, or capsid..."
+                                        value={searchTerm}
+                                        onchange={handleSearch}>
+                                    </lightning-input>
+
+                                </div>
+
+
+                                <!-- AAV FILTERS -->
+
+                                <template if:true={showSeroTypeFilter}>
+
+
+                                    <!-- CAPSId -->
+
+                                    <div class="filter">
+
+                                        <lightning-combobox
+                                            label="Capsid"
+                                            value={selectedSeroType}
+                                            options={seroTypeOptions}
+                                            onchange={handleSeroTypeChange}>
+                                        </lightning-combobox>
+
+                                    </div>
+
+
+                                    <!-- PROMOTER -->
+
+                                    <div class="filter">
+
+                                        <lightning-combobox
+                                            label="Promoter"
+                                            value={selectedPromoter}
+                                            options={promoterOptions}
+                                            onchange={handlePromoterChange}>
+                                        </lightning-combobox>
+
+                                    </div>
+
+                                </template>
+
+
+                                <!-- RABIES / LENTI FILTER -->
+
+                                <template if:true={showEnvelopeFilter}>
+
+                                    <div class="filter">
+
+                                        <lightning-combobox
+                                            label="Envelope"
+                                            value={selectedEnvelope}
+                                            options={envelopeOptions}
+                                            onchange={handleEnvelopeChange}>
+                                        </lightning-combobox>
+
+                                    </div>
+
+                                </template>
+
+
+                                <!-- HSV FILTER -->
+
+                                <template if:true={showEndUseFilter}>
+
+                                    <div class="filter">
+
+                                        <lightning-combobox
+                                            label="End Use"
+                                            value={selectedEndUse}
+                                            options={endUseOptions}
+                                            onchange={handleEndUseChange}>
+                                        </lightning-combobox>
+
+                                    </div>
+
+                                </template>
+
+                            </div>
+
+
+                            <!-- STOCK LIST -->
+
+                            <template if:true={hasStocks}>
+
+                                <div class="stock-list">
+
+                                    <template
+                                        for:each={filteredStocks}
+                                        for:item="stock"
+                                    >
+
+                                        <div
+                                            key={stock.Id}
+                                            class="stock-card"
+                                            data-id={stock.Id}
+                                            onclick={handleStockSelect}
+                                        >
+
+                                            <div class="stock-card-header">
+
+                                                <div class="stock-name">
+                                                    {stock.Name}
+                                                </div>
+
+                                                <div class="select-button">
+                                                    Select →
+                                                </div>
+
+                                            </div>
+
+
+                                            <div class="stock-details">
+
+
+                                                <!-- CONSTRUCT -->
+
+                                                <div class="detail">
+
+                                                    <span class="label">
+                                                        Construct
+                                                    </span>
+
+                                                    <span class="value">
+                                                        {stock.constructName}
+                                                    </span>
+
+                                                </div>
+
+
+                                                <!-- CAPSId / ENVELOPE -->
+                                                <!-- Hidden for HSV -->
+
+                                                <template if:false={isHSV}>
+
+                                                    <div class="detail">
+
+                                                        <span class="label">
+                                                            Capsid / Envelope
+                                                        </span>
+
+                                                        <span class="value">
+                                                            {stock.capsidEnvelopeName}
+                                                        </span>
+
+                                                    </div>
+
+                                                </template>
+
+
+                                                <!-- AVAILABLE BATCHES -->
+
+                                                <div class="detail">
+
+                                                    <span class="label">
+                                                        Available Batches
+                                                    </span>
+
+                                                    <span class="value">
+                                                        {stock.batchCount}
+                                                    </span>
+
+                                                </div>
+
+
+                                                <!-- AVAILABLE TUBES -->
+
+                                                <div class="detail">
+
+                                                    <span class="label">
+                                                        Available Tubes
+                                                    </span>
+
+                                                    <span class="value">
+                                                        {stock.availableTubes}
+                                                    </span>
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </template>
+
+                                </div>
+
+                            </template>
+
+
+                            <!-- NO STOCK -->
+
+                            <template if:false={hasStocks}>
+
+                                <div class="empty-state">
+
+                                    No stock is currently available
+                                    for {virusType}.
+
+                                </div>
+
+                            </template>
+
+                        </template>
+
+
+                        <!-- ========================================= -->
+                        <!-- SELECTED STOCK -->
+                        <!-- ========================================= -->
+
+                        <template if:true={hasSelectedStock}>
+
+                            <div class="selected-stock-section">
+
+                                <div class="section-header">
+
+                                    <div>
+
+                                        <div class="section-label">
+                                            Selected Stock
+                                        </div>
+
+                                        <div class="selected-stock-name">
+                                            {selectedStockDisplayName}
+                                        </div>
+
+                                    </div>
+
+
+                                    <button
+                                        class="change-button"
+                                        onclick={handleChangeStock}
+                                    >
+                                        Change Stock
+                                    </button>
+
+                                </div>
+
+
+                                <div class="selected-stock-details">
+
+
+                                    <!-- CONSTRUCT -->
+
+                                    <div class="detail">
+
+                                        <span class="label">
+                                            Construct
+                                        </span>
+
+                                        <span class="value">
+                                            {selectedStockConstructName}
+                                        </span>
+
+                                    </div>
+
+
+                                    <!-- CAPSId / ENVELOPE -->
+                                    <!-- Hidden for HSV -->
+
+                                    <template if:false={isHSV}>
+
+                                        <div class="detail">
+
+                                            <span class="label">
+                                                Capsid / Envelope
+                                            </span>
+
+                                            <span class="value">
+                                                {selectedStockCapsidEnvelopeName}
+                                            </span>
+
+                                        </div>
+
+                                    </template>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- ===================================== -->
+                            <!-- BATCH SELECTION -->
+                            <!-- ===================================== -->
+
+                            <div class="batch-section">
+
+                                <div class="batch-header">
+
+                                    <div class="batch-step">
+                                        STEP 2
+                                    </div>
+
+                                    <h3>
+                                        Choose a Stock Batch
+                                    </h3>
+
+                                    <p>
+                                        Select one of the available
+                                        batches below.
+                                    </p>
+
+                                </div>
+
+
+                                <template if:true={hasBatches}>
+
+                                    <div class="batch-list">
+
+                                        <template
+                                            for:each={availableBatches}
+                                            for:item="batch"
+                                        >
+
+                                            <div
+                                                key={batch.Id}
+                                                class="batch-card"
+                                                data-id={batch.Id}
+                                                onclick={handleBatchSelect}
+                                            >
+
+                                                <div class="batch-top">
+
+
+                                                    <!-- DATE -->
+
+                                                    <div class="batch-date">
+
+                                                        <span class="label">
+                                                            {batchDateLabel}
+                                                        </span>
+
+                                                        <span class="value">
+                                                            {batch.displayDate}
+                                                        </span>
+
+                                                    </div>
+
+
+                                                    <!-- SELECT INDICATOR -->
+
+                                                    <template
+                                                        if:true={batch.isSelected}
+                                                    >
+
+                                                        <div class="selected-check">
+                                                            ✓ Selected
+                                                        </div>
+
+                                                    </template>
+
+
+                                                    <template
+                                                        if:false={batch.isSelected}
+                                                    >
+
+                                                        <div class="batch-action">
+                                                            Select →
+                                                        </div>
+
+                                                    </template>
+
+                                                </div>
+
+
+                                                <!-- BATCH DETAILS -->
+
+                                                <div class="batch-details">
+
+
+                                                    <!-- TITER -->
+
+                                                    <div class="detail">
+
+                                                        <span class="label">
+                                                            Titer
+                                                        </span>
+
+                                                        <span class="value">
+                                                            {batch.Titer__c}
+                                                        </span>
+
+                                                    </div>
+
+
+                                                    <!-- END VOLUME -->
+
+                                                    <div class="detail">
+
+                                                        <span class="label">
+                                                            End Volume
+                                                        </span>
+
+                                                        <span class="value">
+                                                            {batch.End_Volume__c}
+                                                        </span>
+
+                                                    </div>
+
+
+                                                    <!-- AVAILABLE TUBES -->
+
+                                                    <div class="detail">
+
+                                                        <span class="label">
+                                                            Available Tubes
+                                                        </span>
+
+                                                        <span class="value">
+                                                            {batch.Tubes_Remaining_num_val__c}
+                                                        </span>
+
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
+                                        </template>
+
+                                    </div>
+
+                                </template>
+
+
+                                <template if:false={hasBatches}>
+
+                                    <div class="empty-state">
+
+                                        There are no available batches
+                                        for this stock.
+
+                                    </div>
+
+                                </template>
+
+                            </div>
+
+
+                            <!-- ===================================== -->
+                            <!-- FINAL SELECTION -->
+                            <!-- ===================================== -->
+
+                            <template if:true={hasSelectedBatch}>
+
+                                <div class="selection-summary">
+
+                                    <div class="summary-check">
+                                        ✓
+                                    </div>
+
+
+                                    <div class="summary-content">
+
+                                        <div class="summary-title">
+                                            Stock Batch Selected
+                                        </div>
+
+                                        <div class="summary-stock">
+                                            {selectedStockDisplayName}
+                                        </div>
+
+
+                                        <div class="summary-details">
+
+                                            <span>
+                                                {batchDateLabel}:
+                                                {selectedStockBatchDate}
+                                            </span>
+
+                                            <span>
+                                                Titer:
+                                                {selectedStockBatchTiter}
+                                            </span>
+
+                                            <span>
+                                                End Volume:
+                                                {selectedStockBatchEndVolume}
+                                            </span>
+
+                                            <span>
+                                                Available Tubes:
+                                                {selectedStockBatchTubes}
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <button
+                                        class="change-batch-button"
+                                        onclick={handleChangeBatch}
+                                    >
+                                        Change Batch
+                                    </button>
+
+                                </div>
+
+                            </template>
+
+                        </template>
+
+                    </template>
+
+                </template>
+
+            </template>
+
+        </div>
+
+    </div>
+
+</template>

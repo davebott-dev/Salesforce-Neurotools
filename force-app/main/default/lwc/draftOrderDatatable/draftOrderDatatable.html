@@ -1,0 +1,53 @@
+<template>
+    <!-- Cart Status (left-aligned) -->
+    <div class="slds-var-p-around_medium slds-text-align_left slds-text-heading_small">
+        <strong>Cart Status: </strong>
+        <span>{cartStatus}</span>
+        <template if:true={isSubmitted}>
+            <br/>
+            <strong>Last Submitted On: </strong>
+            <span>{submittedDateText}</span>
+        </template>
+    </div>
+
+    <!-- Draft Orders Table -->
+    <lightning-datatable
+        key-field="draftOrderId"
+        data={draftOrders}
+        columns={columns}
+        selected-rows={selectedRowIds}
+        onrowaction={handleRowAction}
+        onrowselection={handleRowSelection}
+        hide-checkbox-column={hideCheckbox}>
+    </lightning-datatable>
+
+    <!-- Total Price (right-aligned) -->
+    <template if:true={draftOrders.length}>
+        <div class="slds-var-p-around_medium slds-text-align_right slds-text-heading_small">
+            <strong>Total Price: </strong>
+            <lightning-formatted-number 
+                value={totalCartPrice}
+                format-style="currency"
+                currency-code="USD">
+            </lightning-formatted-number>
+        </div>
+    </template>
+
+<!-- Action Buttons side by side, vertically centered -->
+<div class="slds-var-p-around_medium" style="display: flex; gap: 1rem; align-items: center;">
+    <!-- Back Button -->
+    <lightning-button
+        label="Back to Order Form"
+        variant="neutral"
+        onclick={handleBackToOrderForm}>
+    </lightning-button>
+
+    <!-- Flow button container (no fixed width) -->
+    <div style="display: flex; align-items: center;">
+        <lightning-flow
+            flow-api-name="Create_Quote_From_Cart_Items"
+            onstatuschange={handleQuoteFlowStatusChange}>
+        </lightning-flow>
+    </div>
+</div>
+</template>

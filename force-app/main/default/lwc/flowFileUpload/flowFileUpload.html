@@ -1,0 +1,89 @@
+<template>
+
+    <div class="slds-form-element">
+
+        <!-- LABEL -->
+        <label class="slds-form-element__label">
+            {fileUploadLabel}
+        </label>
+
+        <!-- NATIVE SALESFORCE FILE UPLOAD -->
+        <div class="slds-form-element__control">
+
+            <lightning-file-upload
+                name="fileUploader"
+                record-id={relatedRecordId}
+                accept={acceptedFormats}
+                multiple={allowMultipleFiles}
+                disabled={disabled}
+                title={hoverText}
+                onuploadfinished={handleUploadFinished}>
+            </lightning-file-upload>
+
+        </div>
+
+
+        <!-- ============================= -->
+        <!-- UPLOAD SUCCESS INDICATOR -->
+        <!-- ============================= -->
+
+        <template if:true={hasUploadedFiles}>
+
+            <div class="slds-box slds-theme_success slds-m-top_small">
+
+                <div class="slds-grid slds-grid_vertical-align-center">
+
+                    <lightning-icon
+                        icon-name="utility:success"
+                        alternative-text="Success"
+                        size="small"
+                        class="slds-m-right_small">
+                    </lightning-icon>
+
+                    <div>
+                        <strong>
+                            File uploaded successfully
+                        </strong>
+                    </div>
+
+                </div>
+
+
+                <!-- ============================= -->
+                <!-- FILE NAMES -->
+                <!-- ============================= -->
+
+                <div class="slds-m-top_small">
+
+                    <template
+                        for:each={uploadedFiles}
+                        for:item="file">
+
+                        <div
+                            key={file.documentId}
+                            class="slds-grid slds-grid_vertical-align-center slds-m-top_x-small">
+
+                            <lightning-icon
+                                icon-name="doctype:attachment"
+                                alternative-text="File"
+                                size="x-small"
+                                class="slds-m-right_x-small">
+                            </lightning-icon>
+
+                            <span>
+                                {file.name}
+                            </span>
+
+                        </div>
+
+                    </template>
+
+                </div>
+
+            </div>
+
+        </template>
+
+    </div>
+
+</template>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+
+    <apiVersion>66.0</apiVersion>
+
+    <isExposed>true</isExposed>
+
+    <targets>
+        <target>lightning__FlowScreen</target>
+    </targets>
+
+    <targetConfigs>
+
+        <targetConfig targets="lightning__FlowScreen">
+
+            <!-- Existing Flow input -->
+            <property
+                name="flowContactId"
+                type="String"
+                label="Contact Id"
+                description="Contact Id passed from Flow"
+                role="inputOnly"
+            />
+
+            <!-- Existing selection input -->
+            <property
+                name="selectedRowsInput"
+                type="String[]"
+                label="Previous Selected Draft Orders"
+                description="Previously selected Draft Order IDs"
+                role="inputOnly"
+            />
+
+            <!-- Existing selection output -->
+            <property
+                name="selectedRowsOutput"
+                type="String[]"
+                label="Selected Draft Orders"
+                description="Currently selected Draft Order IDs"
+                role="outputOnly"
+            />
+
+            <!-- New billing output -->
+            <property
+                name="billingAssignmentsOutput"
+                type="String"
+                label="Billing Assignments"
+                description="JSON containing billing information assigned to each selected Draft Order"
+                role="outputOnly"
+            />
+<property
+    name="contactCountry"
+    type="String"
+    label="Contact Country"
+    description="Country from the Contact record"
+    role="inputOnly"
+/>
+
+<property
+    name="contactOrganization"
+    type="String"
+    label="Contact Organization"
+    description="Organization from the Contact record"
+    role="inputOnly"
+/>
+            
+<property
+    name="creditCardRecords"
+    type="@salesforce/schema/Credit_Card__c[]"
+    label="Credit Cards"
+    role="inputOnly"/>
+
+<property
+    name="purchaseOrderRecords"
+    type="@salesforce/schema/Purchase_Order__c[]"
+    label="Purchase Orders"
+    role="inputOnly"/>
+
+<property
+    name="chartfieldRecords"
+    type="@salesforce/schema/Chartfield_Strings__c[]"
+    label="Chartfield Strings"
+    role="inputOnly"/>
+            <property
+    name="labType"
+    type="String"
+    label="Lab Type"
+    description="Lab type used to determine available billing methods"
+    role="inputOnly"
+/>
+
+        </targetConfig>
+
+    </targetConfigs>
+
+</LightningComponentBundle>

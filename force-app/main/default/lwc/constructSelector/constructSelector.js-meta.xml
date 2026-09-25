@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+
+    <apiVersion>60.0</apiVersion>
+
+    <isExposed>true</isExposed>
+
+    <targets>
+        <target>lightning__FlowScreen</target>
+    </targets>
+
+    <targetConfigs>
+        <targetConfig targets="lightning__FlowScreen">
+
+            <!-- FLOW INPUT -->
+            <property
+                name="virusType"
+                type="String"
+                label="Virus Type"
+            />
+
+            <!-- EXISTING OUTPUTS -->
+
+            <property
+                name="selectedInventoryId"
+                type="String"
+                label="Selected Inventory ID"
+                role="outputOnly"
+            />
+
+            <property
+                name="selectedInventoryName"
+                type="String"
+                label="Selected Inventory Name"
+                role="outputOnly"
+            />
+
+            <property
+                name="selectedInventoryAlias"
+                type="String"
+                label="Selected Inventory Alias"
+                role="outputOnly"
+            />
+
+            <!-- NEW OUTPUTS -->
+
+            <property
+                name="selectedConstructFullLength"
+                type="Integer"
+                label="Selected Construct Full Length"
+                role="outputOnly"
+            />
+
+            <property
+                name="selectedAddgeneConstruct"
+                type="String"
+                label="Selected Addgene Construct"
+                role="outputOnly"
+            />
+
+            <property
+                name="selectedITRLength"
+                type="Integer"
+                label="Selected ITR-ITR Length (bp)"
+                role="outputOnly"
+            />
+
+            <property
+                name="selectedExpectedTransfectionFluorescence"
+                type="String"
+                label="Selected Expected Transfection Fluorescence"
+                role="outputOnly"
+            />
+
+        </targetConfig>
+    </targetConfigs>
+
+</LightningComponentBundle>

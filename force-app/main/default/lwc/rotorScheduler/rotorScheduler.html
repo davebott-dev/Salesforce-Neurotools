@@ -1,0 +1,60 @@
+<template>
+    <lightning-card title="Rotor Scheduler">
+
+<!-- Legend -->
+<template if:true={legendArray}>
+    <div class="legend slds-m-bottom_medium slds-grid slds-wrap">
+        <template for:each={legendArray} for:item="entry">
+            <div key={entry.name} class="slds-box slds-m-around_xx-small slds-text-align_center"
+                 style="background-color: {entry.color}; padding:0.5rem; border-radius:0.25rem;">
+                {entry.name}
+            </div>
+        </template>
+    </div>
+</template>
+
+
+        <!-- Available Orders Pool -->
+        <div class="available-orders slds-m-bottom_medium">
+            <h3>Available Orders</h3>
+            <div class="order-pool-dropzone slds-grid slds-wrap" ondrop={handleDropToPool} ondragover={allowDrop}>
+                <template for:each={availableOrders} for:item="order">
+                    <div key={order.Id} class="card slds-p-around_small slds-m-around_xx-small"
+                         draggable="true" data-id={order.Id} ondragstart={handleDragStart}
+                         style={order.colorStyle}>
+                        {order.displayLabel}
+                    </div>
+                </template>
+                <template if:true={noAvailableOrders}>
+    <div class="slds-text-color_weak slds-p-around_small">All orders assigned</div>
+</template>
+
+            </div>
+        </div>
+
+        <!-- Rotor Columns -->
+        <div class="board slds-grid slds-grid_pull-padded">
+            <template for:each={rotors} for:item="rotor">
+                <div key={rotor.name} class="rotor-column slds-p-horizontal_small">
+                    <h3>{rotor.label}</h3>
+                    <div class="dropzone" data-rotor={rotor.name} ondrop={handleDrop} ondragover={allowDrop}>
+                        <template for:each={rotor.slots} for:item="slot">
+                            <div key={slot.id} class="slot slds-box slds-m-bottom_x-small slds-text-align_center" style="height:50px;">
+                                <template if:true={slot.detail}>
+                                    <div class="card slds-p-around_x-small slds-text-body_small"
+                                         draggable="true" data-id={slot.detail.Id} ondragstart={handleDragStart}
+                                         style={slot.detail.colorStyle}>
+                                        {slot.detail.displayLabel}
+                                    </div>
+                                </template>
+                                <template if:false={slot.detail}>
+                                    <div class="empty-slot slds-text-color_weak">Empty</div>
+                                </template>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>

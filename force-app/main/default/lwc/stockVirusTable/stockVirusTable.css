@@ -1,0 +1,74 @@
+.filters {
+    background: #ffffff;
+}
+
+.filter-section {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.filter-label {
+    font-weight: 600;
+    margin-right: 4px;
+}
+
+.filter-button {
+    margin-right: 4px;
+    margin-bottom: 4px;
+}
+
+
+/* =========================================================
+   PRODUCT SUMMARY
+   ========================================================= */
+
+.product-summary {
+    display: flex;
+    gap: 30px;
+    padding: 12px;
+    margin-bottom: 20px;
+    background: #f8f9fb;
+    border: 1px solid #e5e5e5;
+    border-radius: 6px;
+}
+
+.product-summary div {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.product-summary strong {
+    font-size: 12px;
+    color: #5c5c5c;
+}
+
+.product-summary span {
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   SELECTED BATCH
+   ========================================================= */
+
+.selected-batch {
+    display: flex;
+    align-items: center;
+    padding: 10px 12px;
+    background: #f3f9f4;
+    border: 1px solid #b7d8bd;
+    border-radius: 6px;
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   DATATABLE
+   ========================================================= */
+
+lightning-datatable {
+    width: 100%;
+}
