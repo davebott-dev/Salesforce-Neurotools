@@ -1,0 +1,64 @@
+<template>
+    <lightning-card title="Orders that haven't moved in 21 days" icon-name="standard:opportunity">
+        <div class="slds-var-p-around_medium">
+            <!-- Search input -->
+            <lightning-input
+                type="search"
+                label="Search by Name"
+                value={searchTerm}
+                placeholder="Enter order name"
+                onchange={handleSearchChange}
+                class="slds-m-bottom_small"
+            ></lightning-input>
+
+            <!-- Virus Type picklist -->
+            <lightning-combobox
+                name="virusType"
+                label="Filter by Virus Type"
+                value={selectedVirusType}
+                placeholder="Select Virus Type"
+                options={virusTypeOptions}
+                onchange={handleVirusTypeChange}
+                class="slds-m-bottom_medium"
+            ></lightning-combobox>
+
+            <!-- Table -->
+            <template if:true={filteredOrders.length}>
+    <div class="slds-scrollable_x" style="max-width: 100%; overflow-x: auto;">
+        <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+            <thead>
+                <tr class="slds-line-height_reset">
+                    <th scope="col"><div class="slds-truncate" title="Order Name">Order Name</div></th>
+                    <th scope="col"><div class="slds-truncate" title="Stage">Stage</div></th>
+                    <th scope="col"><div class="slds-truncate" title="Last Stage Change">Last Stage Change</div></th>
+                </tr>
+            </thead>
+            <tbody>
+                <template for:each={filteredOrders} for:item="order">
+                    <tr key={order.Id}>
+                        <td>
+                            <a href={order.url} target="_blank" class="slds-truncate" title={order.Name}>
+                                {order.Name}
+                            </a>
+                        </td>
+                        <td>{order.StageName}</td>
+                        <td>{order.formattedLastStageChangeDate}</td>
+                    </tr>
+                </template>
+            </tbody>
+        </table>
+    </div>
+</template>
+
+            <!-- No Results Message -->
+            <template if:false={filteredOrders.length}>
+                <p class="slds-m-top_medium">No stale virus orders found.</p>
+            </template>
+
+            <!-- Error Message -->
+            <template if:true={error}>
+                <p class="slds-text-color_error slds-p-top_medium">{errorMessage}</p>
+            </template>
+        </div>
+    </lightning-card>
+</template>

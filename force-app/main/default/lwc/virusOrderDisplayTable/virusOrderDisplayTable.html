@@ -1,0 +1,118 @@
+<template>
+  <lightning-card>
+    <div class="slds-box slds-box_xx-small">
+      <!-- Search and Filter stacked vertically with padding -->
+      <div class="slds-grid slds-wrap slds-m-bottom_medium slds-flex-direction_column slds-p-horizontal_small">
+        <div class="slds-col slds-size_1-of-1 slds-m-bottom_small">
+          <lightning-input
+            type="search"
+            name="search"
+            label="Search by Order Name"
+            value={searchTerm}
+            onchange={handleSearchChange}
+            placeholder="Enter order name"
+          ></lightning-input>
+        </div>
+        <div class="slds-col slds-size_1-of-1">
+          <lightning-combobox
+            name="typeFilter"
+            label="Filter by Type"
+            value={typeFilter}
+            options={typeOptions}
+            placeholder="All Types"
+            onchange={handleTypeChange}
+          ></lightning-combobox>
+        </div>
+      </div>
+
+      <!-- Orders List full width, with padding inside items -->
+      <template for:each={pagedOrders} for:item="order">
+        <div
+          key={order.Id}
+          class="slds-grid slds-wrap slds-m-bottom_medium slds-border_bottom slds-p-around_small slds-align_absolute-stretch"
+        >
+          <lightning-input
+            type="checkbox"
+            class="slds-col slds-size_1-of-12 slds-p-horizontal_small"
+            data-id={order.Id}
+            checked={order.isSelected}
+            onchange={handleCheckboxChange}
+          ></lightning-input>
+
+          <div class="slds-col slds-size_2-of-12 slds-p-horizontal_small">
+            <p class="slds-text-title slds-m-bottom_xx-small">Name</p>
+            <p>{order.Name}</p>
+          </div>
+
+          <div class="slds-col slds-size_2-of-12 slds-p-horizontal_small">
+            <p class="slds-text-title slds-m-bottom_xx-small">Stage</p>
+            <p>{order.StageName}</p>
+          </div>
+
+          <div class="slds-col slds-size_2-of-12 slds-p-horizontal_small">
+            <lightning-input
+              type="date"
+              label="New Ship Date"
+              value={order.CloseDate}
+              data-id={order.Id}
+              onchange={handleDateChange}
+              required=""
+            ></lightning-input>
+          </div>
+
+          <div class="slds-col slds-size_4-of-12 slds-p-left_small">
+            <lightning-combobox
+              label="Delay Reason"
+              value={order.Delay_Reason__c}
+              options={delayReasonOptions}
+              data-id={order.Id}
+              placeholder="Select reason"
+              onchange={handleReasonChange}
+              required
+            ></lightning-combobox>
+          </div>
+        </div>
+      </template>
+
+<div class="slds-m-top_medium slds-grid slds-grid_align-spread slds-align_absolute-center slds-p-around_small">
+  
+  <div class="slds-grid slds-align_absolute-center slds-wrap">
+    <div class="slds-text-body_regular slds-p-horizontal_small slds-align_absolute-center">
+      Rows per page:
+    </div>
+    <template for:each={pageSizeOptionsWithVariant} for:item="option">
+      <lightning-button
+        key={option.size}
+        label={option.size}
+        variant={option.variant}
+        class="slds-m-horizontal_xx-small"
+        onclick={handlePageSizeChange}
+        data-size={option.size}
+      ></lightning-button>
+    </template>
+  </div>
+
+  <div class="slds-grid slds-align_absolute-center">
+    <lightning-button
+      label="Previous"
+      onclick={handlePrevious}
+      disabled={isFirstPage}
+      class="slds-m-right_small"
+    ></lightning-button>
+
+    <div class="slds-align_absolute-center slds-p-horizontal_small slds-text-body_regular">
+      Page {currentPage} of {totalPages}
+    </div>
+
+    <lightning-button
+      label="Next"
+      onclick={handleNext}
+      disabled={isLastPage}
+      class="slds-m-left_small"
+    ></lightning-button>
+  </div>
+
+</div>
+    </div>
+  </lightning-card>
+</template>

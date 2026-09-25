@@ -1,0 +1,70 @@
+<template>
+    <template if:true={virusOrders}>
+        <lightning-card title="Related Virus Orders">
+            <template if:true={virusOrders.length}>
+                <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                    <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Stage</th>
+                            <th scope="col">Ship Date</th>
+                            <th scope="col">Stock Batches</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={virusOrders} for:item="order">
+                            <tr key={order.id}>
+                                <td>
+                                    <a href={order.recordUrl} target="_blank" rel="noopener noreferrer">
+                                        {order.name}
+                                    </a>
+                                </td>
+                                <td>{order.stage}</td>
+                                <td>
+                                    <lightning-formatted-date-time 
+                                        value={order.closeDate}
+                                        year="numeric"
+                                        month="short"
+                                        day="2-digit">
+                                    </lightning-formatted-date-time>
+                                </td>
+                                <td>
+    <template if:true={order.stockBatchLinks}>
+        <template if:true={order.stockBatchLinks.length}>
+            <ul class="slds-list_dotted">
+                <template for:each={order.stockBatchLinks} for:item="batch">
+                    <li key={batch.id}>
+                        <a href={batch.url} target="_blank" rel="noopener noreferrer">
+                            {batch.label}
+                        </a>
+                    </li>
+                </template>
+            </ul>
+        </template>
+        <template if:false={order.stockBatchLinks.length}>
+            —
+        </template>
+    </template>
+    <template if:false={order.stockBatchLinks}>
+        —
+    </template>
+</td>
+
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </template>
+
+            <template if:false={virusOrders.length}>
+                <p class="slds-p-around_medium">No virus orders found for this product.</p>
+            </template>
+        </lightning-card>
+    </template>
+
+    <template if:true={error}>
+        <div class="slds-text-color_error slds-p-around_medium">
+            <p>Error loading virus orders.</p>
+        </div>
+    </template>
+</template>

@@ -1,0 +1,19 @@
+.error {
+    color: red;
+    font-weight: bold;
+    margin-top: 10px;
+}
+.highlighted-row {
+  background-color: #ffeb3b !important; 
+}
+
+.highlighted-cell {
+  background-color: #ffeb3b !important; 
+  cursor: pointer;
+}
+
+tr.highlighted-row:hover,
+.highlighted-cell:hover {
+  background-color: inherit !important; 
+}
+

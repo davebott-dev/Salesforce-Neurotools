@@ -1,0 +1,63 @@
+<template>
+    <lightning-card title="Virus Orders">
+        <div class="slds-m-around_medium">
+    <div class="slds-m-bottom_small">
+        <lightning-input
+            type="search"
+            placeholder="Search by Order Number, Capsid, Expression Construct..."
+            onchange={handleSearchChange}>
+        </lightning-input>
+    </div>
+
+    <div class="slds-m-bottom_small">
+        <lightning-combobox
+            name="virusType"
+            label="Filter by Virus Type"
+            options={virusTypeOptions}
+            value={selectedVirusType}
+            onchange={handleTypeChange}>
+        </lightning-combobox>
+    </div>
+
+    <div class="slds-m-bottom_small">
+        <lightning-button
+            label={showMyOrdersLabel}
+            variant={toggleButtonVariant}
+            onclick={handleToggleShowMyOrders}>
+        </lightning-button>
+    </div>
+</div>
+
+
+        <lightning-datatable
+            key-field="Id"
+            data={paginatedOrders}
+            columns={columns}
+            sorted-by={sortedBy}
+            sorted-direction={sortedDirection}
+            onsort={handleSort}>
+        </lightning-datatable>
+
+        <div class="slds-grid slds-m-around_medium slds-align_absolute-center slds-wrap">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-text-align_left">
+                <span class="slds-m-right_small">Rows per page:</span>
+               <template for:each={pageSizeButtons} for:item="option">
+    <button
+        key={option.value}
+        class={option.class}
+        data-size={option.value}
+        onclick={handlePageSizeButtonClick}>
+        {option.label}
+    </button>
+</template>
+
+            </div>
+
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-text-align_right">
+                <button class="slds-button slds-button_neutral" onclick={handlePrevPage} disabled={isPrevDisabled}>Previous</button>
+                <span class="slds-m-horizontal_small">Page {pageNumber} of {totalPages}</span>
+                <button class="slds-button slds-button_neutral" onclick={handleNextPage} disabled={isNextDisabled}>Next</button>
+            </div>
+        </div>
+    </lightning-card>
+</template>

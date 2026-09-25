@@ -1,0 +1,875 @@
+<template>
+
+    <lightning-card>
+
+        <!-- ================================================= -->
+        <!-- HEADER -->
+        <!-- ================================================= -->
+
+        <div class="cart-header">
+
+            <div>
+
+                <h1 class="cart-title">
+                    Your Cart
+                </h1>
+
+                <p class="cart-subtitle">
+                    Review your orders and select billing information.
+                </p>
+
+            </div>
+
+
+            <div class="cart-status">
+
+                <strong>Cart Status:</strong>
+
+                <span>
+                    {cartStatus}
+                </span>
+
+
+                <template if:true={isSubmitted}>
+
+                    <div>
+
+                        <strong>
+                            Last Submitted:
+                        </strong>
+
+                        {submittedDateText}
+
+                    </div>
+
+                </template>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- CART -->
+        <!-- ================================================= -->
+
+        <div class="section">
+
+            <div class="section-header">
+
+                <div>
+
+                    <h2>
+                        Draft Orders
+                    </h2>
+
+                    <p>
+                        Select the orders you would like to submit.
+                    </p>
+
+                </div>
+
+
+                <div class="selection-summary">
+
+                    {selectionSummary}
+
+                </div>
+
+            </div>
+
+
+            <template if:true={hasOrders}>
+
+                <lightning-datatable
+
+                    key-field="draftOrderId"
+
+                    data={draftOrders}
+
+                    columns={columns}
+
+                    selected-rows={selectedRowIds}
+
+                    onrowaction={handleRowAction}
+
+                    onrowselection={handleRowSelection}>
+
+                </lightning-datatable>
+
+
+                <div class="cart-total">
+
+                    <div class="total-line">
+
+                        <span>
+                            Selected Total
+                        </span>
+
+
+                        <lightning-formatted-number
+
+                            value={totalSelectedPrice}
+
+                            format-style="currency"
+
+                            currency-code="USD">
+
+                        </lightning-formatted-number>
+
+                    </div>
+
+
+                    <div class="total-line">
+
+                        <span>
+                            Shipping Charge
+                        </span>
+
+
+                        <lightning-formatted-number
+
+                            value={shippingCharge}
+
+                            format-style="currency"
+
+                            currency-code="USD">
+
+                        </lightning-formatted-number>
+
+                    </div>
+
+
+                    <div class="total-line grand-total">
+
+                        <strong>
+                            Grand Total
+                        </strong>
+
+
+                        <strong>
+
+                            <lightning-formatted-number
+
+                                value={grandTotal}
+
+                                format-style="currency"
+
+                                currency-code="USD">
+
+                            </lightning-formatted-number>
+
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </template>
+
+
+            <template if:false={hasOrders}>
+
+                <div class="empty-cart">
+
+                    <p>
+                        Your cart is currently empty.
+                    </p>
+
+                </div>
+
+            </template>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- BILLING -->
+        <!-- ================================================= -->
+
+        <template if:true={hasSelection}>
+
+            <div class="section billing-section">
+
+                <div class="section-header">
+
+                    <div>
+
+                        <h2>
+                            Billing Information
+                        </h2>
+
+                        <p>
+                            You can use the same billing method for
+                            multiple orders, or assign a different
+                            billing method to each order.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ========================================= -->
+                <!-- BULK BILLING -->
+                <!-- ========================================= -->
+
+                <div class="bulk-billing">
+
+                    <h3>
+                        Apply Billing to Selected Orders
+                    </h3>
+
+                    <p class="help-text">
+                        Select several orders above and use this
+                        section when they should use the same
+                        billing account.
+                    </p>
+
+
+                    <div class="bulk-controls">
+
+                        <div class="bulk-type">
+
+                            <lightning-combobox
+
+                                label="Billing Method"
+
+                                value={bulkBillingType}
+
+                                options={billingTypeOptions}
+
+                                placeholder="Select billing method"
+
+                                onchange={handleBulkBillingTypeChange}>
+
+                            </lightning-combobox>
+
+                        </div>
+
+
+                        <template if:true={bulkBillingNeedsValue}>
+
+                            <div class="bulk-value">
+
+                                <template if:true={bulkIsPo}>
+
+                                    <lightning-combobox
+
+                                        label="Purchase Order"
+
+                                        value={bulkBillingValue}
+
+                                        options={purchaseOrderOptions}
+
+                                        placeholder="Select a purchase order"
+
+                                        onchange={handleBulkBillingValueChange}>
+
+                                    </lightning-combobox>
+
+                                </template>
+
+
+                                <template if:true={bulkIsCreditCard}>
+
+                                    <lightning-combobox
+
+                                        label="Credit Card"
+
+                                        value={bulkBillingValue}
+
+                                        options={creditCardOptions}
+
+                                        placeholder="Select a credit card"
+
+                                        onchange={handleBulkBillingValueChange}>
+
+                                    </lightning-combobox>
+
+                                </template>
+
+
+                                <template if:true={showBulkChartfield}>
+
+                                    <lightning-combobox
+
+                                        label="Chartfield String"
+
+                                        value={bulkBillingValue}
+
+                                        options={chartfieldOptions}
+
+                                        placeholder="Select a chartfield"
+
+                                        onchange={handleBulkBillingValueChange}>
+
+                                    </lightning-combobox>
+
+                                </template>
+
+                            </div>
+
+                        </template>
+
+
+                        <div class="bulk-button">
+
+                            <lightning-button
+
+                                label="Apply to Selected"
+
+                                variant="brand"
+
+                                disabled={disableBulkApply}
+
+                                onclick={applyBillingToSelected}>
+
+                            </lightning-button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ADD NEW BILLING RECORDS -->
+
+                    <div class="add-billing">
+
+                        <span class="add-label">
+                            Need something else?
+                        </span>
+
+
+             <template if:false={isInternalLab}>
+
+    <lightning-button
+
+        label="Add Purchase Order"
+
+        variant="neutral"
+
+        onclick={openCreatePurchaseOrder}>
+
+    </lightning-button>
+
+</template>
+
+
+                        <lightning-button
+
+                            label="Add Credit Card"
+
+                            variant="neutral"
+
+                            onclick={openCreateCreditCard}>
+
+                        </lightning-button>
+
+
+                        <template if:true={isInternalLab}>
+
+                            <lightning-button
+
+                                label="Add Chartfield String"
+
+                                variant="neutral"
+
+                                onclick={openCreateChartfield}>
+
+                            </lightning-button>
+
+                        </template>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ========================================= -->
+                <!-- INDIVIDUAL ORDERS -->
+                <!-- ========================================= -->
+
+                <div class="individual-billing">
+
+                    <h3>
+                        Billing by Order
+                    </h3>
+
+                    <p class="help-text">
+                        Each selected order can have its own billing
+                        method.
+                    </p>
+
+
+                    <template
+                        for:each={billingOrderRows}
+                        for:item="order">
+
+                        <div
+
+                            key={order.draftOrderId}
+
+                            class="billing-order">
+
+
+                            <!-- ORDER INFORMATION -->
+
+                            <div class="order-info">
+
+                                <div class="order-number">
+
+                                    {order.draftOrder1Label}
+
+                                </div>
+
+
+                                <div class="order-details">
+
+                                    <span>
+                                        {order.virusType}
+                                    </span>
+
+                                    <span>•</span>
+
+                                    <span>
+                                        {order.constructName}
+                                    </span>
+
+                                    <span>•</span>
+
+                                    <span>
+                                        {order.capsidName}
+                                    </span>
+
+                                </div>
+
+
+                                <div class="order-price">
+
+                                    <lightning-formatted-number
+
+                                        value={order.totalPrice}
+
+                                        format-style="currency"
+
+                                        currency-code="USD">
+
+                                    </lightning-formatted-number>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- BILLING TYPE -->
+
+                            <div class="billing-control">
+
+                                <lightning-combobox
+
+                                    label="Billing Method"
+
+                                    data-id={order.draftOrderId}
+
+                                    value={order.billingType}
+
+                                    options={billingTypeOptions}
+
+                                    placeholder="Select billing method"
+
+                                    onchange={handleOrderBillingTypeChange}>
+
+                                </lightning-combobox>
+
+                            </div>
+
+
+                            <!-- PURCHASE ORDER -->
+
+                            <template if:true={order.showPO}>
+
+                                <div class="billing-control">
+
+                                    <lightning-combobox
+
+                                        label="Purchase Order"
+
+                                        data-id={order.draftOrderId}
+
+                                        value={order.purchaseOrderValue}
+
+                                        options={purchaseOrderOptions}
+
+                                        placeholder="Select purchase order"
+
+                                        onchange={handleOrderBillingValueChange}>
+
+                                    </lightning-combobox>
+
+                                </div>
+
+                            </template>
+
+
+                            <!-- CREDIT CARD -->
+
+                            <template if:true={order.showCC}>
+
+                                <div class="billing-control">
+
+                                    <lightning-combobox
+
+                                        label="Credit Card"
+
+                                        data-id={order.draftOrderId}
+
+                                        value={order.creditCardId}
+
+                                        options={creditCardOptions}
+
+                                        placeholder="Select credit card"
+
+                                        onchange={handleOrderBillingValueChange}>
+
+                                    </lightning-combobox>
+
+                                </div>
+
+                            </template>
+
+
+                            <!-- CHARTFIELD -->
+
+                            <template if:true={order.showChartfield}>
+
+                                <div class="billing-control">
+
+                                    <lightning-combobox
+
+                                        label="Chartfield String"
+
+                                        data-id={order.draftOrderId}
+
+                                        value={order.chartfield}
+
+                                        options={chartfieldOptions}
+
+                                        placeholder="Select chartfield"
+
+                                        onchange={handleOrderBillingValueChange}>
+
+                                    </lightning-combobox>
+
+                                </div>
+
+                            </template>
+
+
+                            <!-- PO LATER -->
+
+                            <template if:true={order.showPoLater}>
+
+                                <div class="po-later-message">
+
+                                    <lightning-icon
+
+                                        icon-name="utility:info"
+
+                                        size="x-small">
+
+                                    </lightning-icon>
+
+
+                                    <span>
+
+                                        You can add the purchase order later.
+
+                                    </span>
+
+                                </div>
+
+                            </template>
+
+                        </div>
+
+                    </template>
+
+                </div>
+
+            </div>
+
+        </template>
+
+
+        <!-- ================================================= -->
+        <!-- ACTIONS -->
+        <!-- ================================================= -->
+
+        <div class="actions">
+
+            <lightning-button
+
+                label="Back to Order Form"
+
+                variant="neutral"
+
+                onclick={handleBackToOrderForm}>
+
+            </lightning-button>
+
+
+            <div class="right-actions">
+
+                <lightning-button
+
+                    label="Create Quote"
+
+                    variant="neutral"
+
+                    disabled={disableQuote}
+
+                    onclick={handleCreateQuote}>
+
+                </lightning-button>
+
+
+                <lightning-button
+
+                    label="Continue to Review"
+
+                    variant="brand"
+
+                    disabled={disableContinue}
+
+                    onclick={handleContinue}>
+
+                </lightning-button>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- CREATE BILLING RECORD MODAL -->
+        <!-- ================================================= -->
+
+        <template if:true={showCreateFlow}>
+
+            <section
+
+                role="dialog"
+
+                tabindex="-1"
+
+                aria-modal="true"
+
+                class="slds-modal slds-fade-in-open">
+
+
+                <div class="slds-modal__container">
+
+
+                    <!-- HEADER -->
+
+                    <header class="slds-modal__header">
+
+                        <lightning-button-icon
+
+                            icon-name="utility:close"
+
+                            alternative-text="Close"
+
+                            variant="bare"
+
+                            class="close-button"
+
+                            onclick={closeCreateFlow}>
+
+                        </lightning-button-icon>
+
+
+                        <template if:true={isCreatingPO}>
+
+                            <h2 class="slds-text-heading_medium">
+
+                                Add Purchase Order
+
+                            </h2>
+
+                            <p class="modal-subtitle">
+
+                                Create a new purchase order for this customer.
+
+                            </p>
+
+                        </template>
+
+
+                        <template if:true={isCreatingCC}>
+
+                            <h2 class="slds-text-heading_medium">
+
+                                Add Credit Card
+
+                            </h2>
+
+                            <p class="modal-subtitle">
+
+                                Add a new credit card for this customer.
+
+                            </p>
+
+                        </template>
+
+
+                        <template if:true={isCreatingChartfield}>
+
+                            <h2 class="slds-text-heading_medium">
+
+                                Add Chartfield String
+
+                            </h2>
+
+                            <p class="modal-subtitle">
+
+                                Add a new chartfield string for this customer.
+
+                            </p>
+
+                        </template>
+
+                    </header>
+
+
+                    <!-- FLOW -->
+
+                    <div class="slds-modal__content slds-p-around_medium">
+
+                        <template if:true={hasCreateFlow}>
+
+                            <lightning-flow
+
+                                flow-api-name={createFlowApiName}
+
+                                flow-input-variables={createFlowInputVariables}
+
+                                onstatuschange={handleCreateFlowStatusChange}>
+
+                            </lightning-flow>
+
+                        </template>
+
+
+                        <template if:false={hasCreateFlow}>
+
+                            <div class="flow-not-configured">
+
+                                <lightning-icon
+
+                                    icon-name="utility:info"
+
+                                    size="small">
+
+                                </lightning-icon>
+
+
+                                <div>
+
+                                    <strong>
+                                        Creation Flow
+                                    </strong>
+
+                                    <p>
+
+                                        The creation Flow has not been assigned
+                                        to this component yet.
+
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </template>
+
+                    </div>
+
+
+                    <!-- FOOTER -->
+
+                    <footer class="slds-modal__footer">
+
+                        <lightning-button
+
+                            label="Cancel"
+
+                            variant="neutral"
+
+                            onclick={closeCreateFlow}>
+
+                        </lightning-button>
+
+                    </footer>
+
+                </div>
+
+            </section>
+
+
+            <div
+                class="slds-backdrop slds-backdrop_open">
+            </div>
+
+        </template>
+
+
+        <!-- ================================================= -->
+        <!-- QUOTE FLOW -->
+        <!-- ================================================= -->
+        <!--
+            This Flow is only rendered after the user clicks
+            Create Quote.
+
+            renderedCallback() starts it.
+
+            The container keeps the Flow off-screen so the
+            user never sees the Flow UI.
+        -->
+
+        <template if:true={showQuoteFlow}>
+
+            <div class="quote-flow-container">
+
+                <lightning-flow
+
+                    onstatuschange={handleQuoteStatusChange}>
+
+                </lightning-flow>
+
+            </div>
+
+        </template>
+
+
+        <!-- ================================================= -->
+        <!-- LOADING -->
+        <!-- ================================================= -->
+
+        <template if:true={isLoading}>
+
+            <lightning-spinner
+
+                alternative-text="Working..."
+
+                size="medium">
+
+            </lightning-spinner>
+
+        </template>
+
+
+    </lightning-card>
+
+</template>

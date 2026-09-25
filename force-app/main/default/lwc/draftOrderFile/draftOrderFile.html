@@ -1,0 +1,28 @@
+<template>
+    <!-- Files Datatable -->
+    <template if:true={files.length}>
+        <div class="slds-p-top_medium slds-p-horizontal_medium">
+            <lightning-datatable
+                key-field="contentDocumentId"
+                data={files}
+                columns={columns}
+                hide-checkbox-column
+                onrowaction={handleRowAction}>
+            </lightning-datatable>
+        </div>
+    </template>
+
+    <template if:false={files.length}>
+        <div class="slds-p-around_medium">No files uploaded yet.</div>
+    </template>
+
+    <!-- File Upload at Bottom with Padding -->
+    <div class="slds-p-vertical_medium slds-p-horizontal_medium">
+        <lightning-file-upload
+            label="Upload Sequencing Files"
+            record-id={draftOrderId}
+            multiple
+            onuploadfinished={handleUploadFinished}>
+        </lightning-file-upload>
+    </div>
+</template>

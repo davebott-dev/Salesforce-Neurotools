@@ -1,0 +1,25 @@
+<template>
+  <lightning-card title={cardTitle} >
+    <template if:true={hasInventory}>
+  <lightning-datatable
+  key-field="Id"
+  data={inventory}
+  columns={columns}
+  max-row-selection="10"
+  onrowselection={handleRowSelection}
+  selected-rows={selectedRowArray}
+></lightning-datatable>
+    </template>
+
+    <template if:true={hasError}>
+      <div class="slds-text-color_error">Error: {error}</div>
+    </template>
+
+    <template if:true={showNoRecords}>
+      <div class="slds-p-around_medium">No expression constructs found for the selected Virus Type.</div>
+    </template>
+  </lightning-card>
+</template>
+
+
+

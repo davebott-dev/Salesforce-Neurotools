@@ -1,0 +1,28 @@
+<template>
+    <div class="bulk-order-container">
+
+        <div class="bulk-order-content">
+
+            <div class="text-container">
+                <div class="title">
+                    Submitting more than 5 orders?
+                </div>
+
+                <div class="description">
+                    Use our bulk order template instead and email it to <a href="mailto:neurotools@unc.edu">neurotools@unc.edu</a>
+                </div>
+            </div>
+
+            <lightning-button
+                variant="neutral"
+                label="Download Template"
+                icon-name="utility:download"
+                icon-position="left"
+                disabled
+                onclick={handleDownload}>
+            </lightning-button>
+
+        </div>
+
+    </div>
+</template>

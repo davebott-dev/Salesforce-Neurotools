@@ -1,0 +1,36 @@
+<template>
+  <div class="slds-p-around_medium">
+    <!-- SLDS warning banner -->
+    <template if:true={showBanner}>
+      <div class="slds-notify slds-notify_alert slds-theme_warning slds-m-bottom_medium" role="alert">
+        <span class="slds-assistive-text">warning</span>
+        <h2>{bannerMessage}</h2>
+      </div>
+    </template>
+
+    <lightning-combobox
+      name="typeFilter"
+      label="Filter by Virus Type"
+      value={selectedType}
+      options={typeOptions}
+      onchange={handleTypeChange}
+      class="slds-m-bottom_medium"
+    ></lightning-combobox>
+
+    <template if:true={filteredOrders.length}>
+      <lightning-datatable
+        key-field="Id"
+        data={filteredOrders}
+        columns={columns}
+        onrowaction={handleRowAction}
+        hide-checkbox-column
+      ></lightning-datatable>
+    </template>
+
+    <template if:false={filteredOrders.length}>
+      <div class="no-records">
+        Nothing to see here. All clear!
+      </div>
+    </template>
+  </div>
+</template>

@@ -1,0 +1,618 @@
+.stock-selector {
+    width: 100%;
+}
+
+
+/* =========================================================
+   MAIN CONTAINER
+   ========================================================= */
+
+.selector-container {
+    border: 1px solid #c9cdd3;
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    background: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+
+/* =========================================================
+   FILTERS
+   ========================================================= */
+
+.filter-container {
+    display: grid;
+
+    grid-template-columns:
+        2fr 1fr 1fr;
+
+    gap: 0.75rem;
+
+    margin-bottom: 1.25rem;
+
+    padding: 1rem;
+
+    border: 1px solid #d8dde6;
+
+    border-radius: 0.5rem;
+
+    background: #f8f9fb;
+}
+
+.search-filter {
+    min-width: 0;
+}
+
+.filter {
+    min-width: 0;
+}
+
+
+/* =========================================================
+   STOCK LIST
+   ========================================================= */
+
+.stock-list {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 0.75rem;
+}
+
+
+.stock-card {
+    border: 1px solid #d8dde6;
+
+    border-radius: 0.5rem;
+
+    padding: 1rem;
+
+    cursor: pointer;
+
+    background: white;
+
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease,
+        transform 0.15s ease;
+}
+
+
+.stock-card:hover {
+    border-color: #0176d3;
+
+    box-shadow:
+        0 3px 8px rgba(0, 0, 0, 0.10);
+
+    transform: translateY(-1px);
+}
+
+
+.stock-card-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 0.85rem;
+}
+
+
+.stock-name {
+    font-size: 1.05rem;
+
+    font-weight: 600;
+}
+
+
+.select-button {
+    color: #0176d3;
+
+    font-weight: 600;
+
+    font-size: 0.85rem;
+}
+
+
+/* =========================================================
+   DETAILS
+   ========================================================= */
+
+.stock-details,
+.selected-stock-details,
+.batch-details {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(150px, 1fr)
+        );
+
+    gap: 0.75rem;
+}
+
+
+.detail {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 0.2rem;
+}
+
+
+.label {
+    font-size: 0.75rem;
+
+    color: #5f6b7a;
+}
+
+
+.value {
+    font-weight: 500;
+}
+
+
+/* =========================================================
+   SELECTED STOCK
+   ========================================================= */
+
+.selected-stock-section {
+
+    border: 1px solid #d8dde6;
+
+    border-radius: 0.5rem;
+
+    padding: 1rem;
+
+    margin-bottom: 1.5rem;
+
+    background: #f8f9fb;
+}
+
+
+.section-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-start;
+}
+
+
+.section-label {
+
+    font-size: 0.75rem;
+
+    color: #5f6b7a;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.04em;
+}
+
+
+.selected-stock-name {
+
+    font-size: 1.15rem;
+
+    font-weight: 600;
+
+    margin-top: 0.2rem;
+}
+
+
+.selected-stock-details {
+
+    margin-top: 1rem;
+}
+
+
+.change-button,
+.change-batch-button {
+
+    border: none;
+
+    background: transparent;
+
+    color: #0176d3;
+
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+
+.change-button:hover,
+.change-batch-button:hover {
+
+    text-decoration: underline;
+}
+
+
+/* =========================================================
+   BATCH SECTION
+   ========================================================= */
+
+.batch-section {
+
+    margin-top: 1.5rem;
+
+    padding-top: 1.25rem;
+
+    border-top: 1px solid #d8dde6;
+}
+
+
+.batch-header {
+
+    margin-bottom: 1rem;
+}
+
+
+.batch-step {
+
+    font-size: 0.7rem;
+
+    font-weight: 700;
+
+    color: #0176d3;
+
+    letter-spacing: 0.08em;
+
+    margin-bottom: 0.2rem;
+}
+
+
+.batch-header h3 {
+
+    margin: 0;
+
+    font-size: 1.1rem;
+}
+
+
+.batch-header p {
+
+    margin-top: 0.25rem;
+
+    color: #5f6b7a;
+}
+
+
+/* =========================================================
+   BATCH LIST
+   ========================================================= */
+
+.batch-list {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 0.75rem;
+}
+
+
+.batch-card {
+
+    border: 1px solid #c9cdd3;
+
+    border-radius: 0.5rem;
+
+    padding: 1rem;
+
+    cursor: pointer;
+
+    background: white;
+
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease,
+        transform 0.15s ease;
+}
+
+
+.batch-card:hover {
+
+    border-color: #0176d3;
+
+    box-shadow:
+        0 3px 8px rgba(0, 0, 0, 0.10);
+
+    transform: translateY(-1px);
+}
+
+
+.batch-top {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 0.85rem;
+}
+
+
+.batch-date {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 0.2rem;
+}
+
+
+.batch-action {
+
+    color: #0176d3;
+
+    font-weight: 600;
+
+    font-size: 0.85rem;
+}
+
+
+.selected-check {
+
+    color: #2e844a;
+
+    font-weight: 600;
+}
+
+/* ================================================= */
+/* NO STOCK MESSAGE */
+/* ================================================= */
+
+.no-stock-message {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+
+    padding: 1.25rem 1.5rem;
+
+    margin: 1rem 0;
+
+    border: 1px solid #c9cdd3;
+    border-radius: 0.75rem;
+
+    background: #f8f9fa;
+
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.no-stock-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 2rem;
+    height: 2rem;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background: #706e6b;
+    color: #ffffff;
+
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.no-stock-content {
+    flex: 1;
+}
+
+.no-stock-content h3 {
+    margin: 0 0 0.35rem 0;
+
+    color: #181818;
+
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.no-stock-content p {
+    margin: 0;
+
+    color: #444444;
+
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+/* =========================================================
+   FINAL SELECTION
+   ========================================================= */
+
+.selection-summary {
+
+    margin-top: 1.25rem;
+
+    padding: 1rem;
+
+    border: 1px solid #2e844a;
+
+    border-radius: 0.5rem;
+
+    background: #f3faf5;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 1rem;
+}
+
+
+.summary-check {
+
+    width: 2rem;
+
+    height: 2rem;
+
+    border-radius: 50%;
+
+    background: #2e844a;
+
+    color: white;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-weight: bold;
+
+    flex-shrink: 0;
+}
+
+
+.summary-content {
+
+    flex: 1;
+}
+
+
+.summary-title {
+
+    font-size: 0.75rem;
+
+    color: #2e844a;
+
+    text-transform: uppercase;
+
+    font-weight: 600;
+}
+
+
+.summary-stock {
+
+    font-size: 1.05rem;
+
+    font-weight: 600;
+
+    margin-top: 0.15rem;
+}
+
+
+.summary-details {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 0.75rem 1.25rem;
+
+    margin-top: 0.4rem;
+
+    color: #3e4b59;
+
+    font-size: 0.85rem;
+}
+
+
+/* =========================================================
+   EMPTY / ERROR
+   ========================================================= */
+
+.empty-state,
+.error-state {
+
+    padding: 2rem;
+
+    text-align: center;
+
+    border-radius: 0.5rem;
+}
+
+
+.empty-state {
+
+    color: #5f6b7a;
+
+    border: 1px dashed #c9cdd3;
+
+    background: #fafafa;
+}
+
+
+.error-state {
+
+    color: #ba0517;
+
+    border: 1px solid #ea001e;
+
+    background: #fef1f2;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .filter-container {
+
+        grid-template-columns:
+            1fr 1fr;
+    }
+
+    .search-filter {
+
+        grid-column: 1 / -1;
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .filter-container {
+
+        grid-template-columns: 1fr;
+    }
+
+    .search-filter {
+
+        grid-column: auto;
+    }
+
+
+    .section-header,
+    .batch-top {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 0.75rem;
+    }
+
+
+    .selection-summary {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+
+
+    .summary-details {
+
+        flex-direction: column;
+
+        gap: 0.3rem;
+    }
+}

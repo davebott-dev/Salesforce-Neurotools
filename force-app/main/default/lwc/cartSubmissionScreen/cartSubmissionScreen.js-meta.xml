@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+
+    <apiVersion>66.0</apiVersion>
+
+    <isExposed>true</isExposed>
+
+    <masterLabel>Cart Submission Screen</masterLabel>
+
+    <description>
+        Displays selected cart orders, billing information, shipping charges,
+        grand total, and validates payment requirements before submission.
+    </description>
+
+    <targets>
+        <target>lightning__FlowScreen</target>
+    </targets>
+
+    <targetConfigs>
+
+        <targetConfig targets="lightning__FlowScreen">
+
+            <!-- Selected Draft Order IDs -->
+            <property
+                name="selectedOrderIds"
+                type="String[]"
+                label="Selected Draft Order IDs"
+                description="Draft Virus Order IDs selected by the customer."
+            />
+
+            <!-- Created Virus Order IDs -->
+            <property
+                name="virusOrderIds"
+                type="String[]"
+                label="Virus Order IDs"
+                description="Virus Order IDs created during cart submission."
+            />
+
+            <!-- Billing assignments as JSON -->
+            <property
+                name="billingAssignments"
+                type="String"
+                label="Billing Assignments"
+                description="JSON containing billing assignments for the selected orders."
+            />
+
+            <!-- Contact ID -->
+            <property
+                name="flowContactId"
+                type="String"
+                label="Contact ID"
+                description="Contact associated with the current customer."
+            />
+
+            <!-- Lab Type -->
+            <property
+                name="labType"
+                type="String"
+                label="Lab Type"
+                description="Internal or external lab type."
+            />
+
+            <!-- Country -->
+            <property
+                name="contactCountry"
+                type="String"
+                label="Contact Country"
+                description="Country associated with the contact."
+            />
+
+        </targetConfig>
+
+    </targetConfigs>
+
+</LightningComponentBundle>

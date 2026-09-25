@@ -1,0 +1,37 @@
+<template>
+    <lightning-card title="Shipment Checklist" icon-name="utility:check">
+        <div class="slds-p-around_medium">
+            <template for:each={sections} for:item="section">
+                <div key={section.header} class="slds-m-bottom_medium">
+                    <!-- Section Header -->
+                    <h2 class="slds-text-heading_small slds-m-bottom_small">{section.header}</h2>
+
+                    <!-- Checklist table -->
+                    <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_striped">
+                        <thead>
+                            <tr>
+                                <th>Completed</th>
+                                <th>Task Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={section.items} for:item="item">
+                                <tr key={item.Id}>
+                                    <td>
+                                        <lightning-input
+                                            type="checkbox"
+                                            checked={item.isCompleted}
+                                            data-id={item.Id}
+                                            onchange={handleCheckboxChange}>
+                                        </lightning-input>
+                                    </td>
+                                    <td>{item.Task_Name__c}</td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>

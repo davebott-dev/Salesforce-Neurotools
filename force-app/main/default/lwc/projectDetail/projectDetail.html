@@ -1,0 +1,321 @@
+<template>
+
+    <!-- =========================
+         LOADING
+    ========================== -->
+    <template if:true={loading}>
+        <div class="empty-state">
+            Loading project details...
+        </div>
+    </template>
+
+    <!-- =========================
+         DATA
+    ========================== -->
+    <template if:true={data}>
+
+        <div class="detail-container">
+
+            <!-- =========================
+                 HEADER
+            ========================== -->
+            <div class="project-header">
+
+                <div class="title">
+                    {data.projectName}
+                </div>
+
+                <div class="meta">
+                    <span>Project #: {data.projectNumber}</span>
+                    <span>Created: {data.createdDate}</span>
+
+                    <span class="financial">
+                        ${data.totalAmount}
+                    </span>
+                </div>
+
+            </div>
+
+                <!-- =========================
+                QUICK DETAILS (REPLACED WITH FLOW)
+            ========================== -->
+            <div class="section">
+                <lightning-flow
+                    flow-api-name="project_details_screen"
+                    flow-input-variables={flowInputs}
+                    onstatuschange={handleFlowStatusChange}>
+                </lightning-flow>
+            </div>
+
+            <!-- =========================
+                 LABS SECTION (UPGRADED)
+            ========================== -->
+            <div class="section">
+
+                <div class="section-header">
+                    <h2>Collaborating Labs</h2>
+
+                    <button class="section-btn" onclick={handleAddLab}>
+                        + Add Lab
+                    </button>
+                </div>
+
+                <template if:true={data.labs}>
+
+                    <div class="list-item header-row">
+                        <div>Name</div>
+                        <div>Status</div>
+                        <div>Added</div>
+                    </div>
+
+                    <template for:each={data.labs} for:item="lab">
+                        <div key={lab.linkId} class="list-item">
+                            <div class="name">{lab.accountName}</div>
+                            <div class="status">{lab.status}</div>
+                            <div>{lab.createdDate}</div>
+                        </div>
+                    </template>
+
+                </template>
+
+                <template if:false={data.labs}>
+                    <div class="empty-inline">
+                        No labs connected to this project.
+                    </div>
+                </template>
+
+            </div>
+
+            <!-- =========================
+                 VIRUS ORDERS (CLEAN ROW VIEW)
+            ========================== -->
+            <div class="section">
+
+                <div class="section-header">
+                    <h2>Virus Orders</h2>
+
+                    <button class="section-btn" onclick={handleAddVirusOrder}>
+                        + Add Order
+                    </button>
+                </div>
+
+                <template if:true={data.virusOrders}>
+
+                    <!-- HEADER ROW -->
+                    <div class="list-item header-row">
+                        <div>Order</div>
+                        <div>Status / Amount</div>
+                        <div>Capsid - Construct</div>
+                    </div>
+
+                    <!-- DATA ROWS -->
+                    <template for:each={data.virusOrders} for:item="order">
+
+                        <div key={order.orderId}
+                             class="list-item clickable"
+                             data-id={order.orderId}
+                             onclick={handleOpenOrder}>
+
+                            <div class="name">
+                                {order.orderName}
+                            </div>
+
+                            <div class="status">
+                                <div>{order.status}</div>
+
+                                <div style="font-weight:600; color:#2e7d32; margin-top:3px;">
+                                    ${order.amount}
+                                </div>
+                            </div>
+
+                            <div>
+                                <div style="font-size:12px; font-weight:500;">
+                                    {order.capsid} - {order.construct}
+                                </div>
+
+                                <div style="font-size:11px; color:#777; margin-top:3px;">
+                                    Titer: {order.titer}
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </template>
+
+                </template>
+
+                <template if:false={data.virusOrders}>
+                    <div class="empty-inline">
+                        No virus orders found for this project.
+                    </div>
+                </template>
+
+            </div>
+
+        </div>
+
+    </template>
+
+    <!-- =========================
+         EMPTY STATE
+    ========================== -->
+    <template if:false={data}>
+        <template if:false={loading}>
+            <div class="empty-state">
+                No project data found for this record.
+            </div>
+        </template>
+    </template>
+
+    <!-- =========================
+         ERROR
+    ========================== -->
+    <template if:true={error}>
+        <div class="empty-state">
+            Error loading project details.
+        </div>
+    </template>
+
+    <!-- =========================
+         ADD LAB MODAL
+    ========================== -->
+    <template if:true={showLabModal}>
+
+        <section role="dialog" class="modal-overlay">
+
+            <div class="modal-container">
+
+                <div class="modal-header">
+                    <div>
+                        <h2>Add Collaborating Labs</h2>
+                        <div class="dev-banner">
+                            Select labs to add or remove from this project.
+                        </div>
+                    </div>
+
+                    <button class="close-btn" onclick={closeLabModal}>✕</button>
+                </div>
+
+                <div class="modal-body">
+
+                    <lightning-dual-listbox
+                        name="labs"
+                        label="Select Collaborating Labs"
+                        source-label="Available Labs"
+                        selected-label="Selected Labs"
+                        options={labOptions}
+                        value={selectedLabs}
+                        onchange={handleLabChange}>
+                    </lightning-dual-listbox>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn secondary" onclick={closeLabModal}>Cancel</button>
+                    <button class="btn primary" onclick={handleSaveLabs}>Save</button>
+                </div>
+
+            </div>
+
+        </section>
+
+    </template>
+
+    <!-- =========================
+         VIRUS ORDER MODAL
+    ========================== -->
+    <template if:true={showVirusOrderModal}>
+
+        <section role="dialog" class="modal-overlay">
+
+            <div class="modal-container xlarge-modal">
+
+                <div class="modal-header">
+
+                    <div>
+                        <h2>Add Virus Orders</h2>
+                        <div class="dev-banner">
+                            Select virus orders to associate with this project. Newly created orders must be manually linked after creation.
+                        </div>
+                    </div>
+
+                    <button class="close-btn" onclick={closeVirusOrderModal}>✕</button>
+                </div>
+
+                <div class="modal-body">
+
+                <lightning-input
+                    type="search"
+                    label="Search Orders"
+                    placeholder="Search by order name, capsid, construct..."
+                    onchange={handleSearch}
+                    class="search-box">
+                </lightning-input>
+
+                    <template if:true={availableVirusOrders.length}>
+
+                        <div class="order-table">
+                            <div class="order-table-scroll">
+
+                            <div class="order-row header">
+                                <div></div>
+                                <div>Order</div>
+                                <div>Status</div>
+                                <div>Capsid</div>
+                                <div>Construct</div>
+                                <div>Titer</div>
+                                <div>Amount</div>
+                            </div>
+
+                            <template for:each={availableVirusOrders} for:item="order">
+
+                                <div key={order.orderId} class="order-row">
+
+                                    <div class="checkbox-col">
+                                        <lightning-input
+                                            type="checkbox"
+                                            data-id={order.orderId}
+                                            checked={order.selected}
+                                            onchange={handleVirusOrderSelect}>
+                                        </lightning-input>
+                                    </div>
+
+                                    <div class="order-name">{order.orderName}</div>
+                                    <div>{order.status}</div>
+                                    <div>{order.capsid}</div>
+                                    <div class="construct-cell">{order.construct}</div>
+                                    <div>{order.titer}</div>
+                                    <div class="amount-cell">${order.amount}</div>
+
+                                </div>
+
+                            </template>
+                            </div>
+                        </div>
+
+                    </template>
+
+                    <template if:false={availableVirusOrders.length}>
+                        <div class="empty-inline">
+                            No available virus orders found.
+                        </div>
+                    </template>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn secondary" onclick={closeVirusOrderModal}>Cancel</button>
+                    <button class="btn secondary" onclick={handleCreateNewVirusOrder}>+ Create New Order</button>
+<button class="btn primary"
+        onclick={saveVirusOrders}
+        disabled={isSaveDisabled}>
+    Save
+</button>                </div>
+
+            </div>
+
+        </section>
+
+    </template>
+
+</template>

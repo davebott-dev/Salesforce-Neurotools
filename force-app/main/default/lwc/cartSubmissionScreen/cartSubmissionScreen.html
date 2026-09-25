@@ -1,0 +1,713 @@
+<template>
+
+    <lightning-card>
+
+        <!-- =========================================================
+             HEADER
+             ========================================================= -->
+
+        <div class="submission-header">
+
+            <div>
+                <h1 class="submission-title">
+                    Review &amp; Submit Order
+                </h1>
+
+                <p class="submission-subtitle">
+                    Review your orders and billing information before
+                    submitting.
+                </p>
+            </div>
+
+        </div>
+
+
+        <!-- =========================================================
+             LOADING
+             ========================================================= -->
+
+        <template if:true={isLoading}>
+
+            <div class="loading-container">
+
+                <lightning-spinner
+                    alternative-text="Loading order information..."
+                    size="medium">
+                </lightning-spinner>
+
+            </div>
+
+        </template>
+
+
+        <!-- =========================================================
+             NO ORDERS
+             ========================================================= -->
+
+        <template if:true={showNoOrders}>
+
+            <div class="empty-state">
+
+                <lightning-icon
+                    icon-name="utility:info"
+                    size="small">
+                </lightning-icon>
+
+                <div>
+
+                    <strong>
+                        No Orders Selected
+                    </strong>
+
+                    <p>
+                        Please return to the billing screen and select
+                        at least one order.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </template>
+
+
+        <!-- =========================================================
+             ORDER REVIEW
+             ========================================================= -->
+
+        <template if:true={hasOrders}>
+
+            <div class="section">
+
+                <div class="section-header">
+
+                    <div>
+
+                        <h2>
+                            Order Information
+                        </h2>
+
+                        <p>
+                            Review each selected order and its billing
+                            information.
+                        </p>
+
+                    </div>
+
+                    <div class="order-count">
+
+                        {selectedOrderCount}
+
+                        {selectedOrderLabel}
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     INDIVIDUAL ORDERS
+                     ================================================= -->
+
+                <template
+                    for:each={orderRows}
+                    for:item="order">
+
+                    <div
+                        key={order.draftOrderId}
+                        class="order-card">
+
+
+                        <!-- ORDER HEADER -->
+
+                        <div class="order-card-header">
+
+                            <div>
+
+                                <div class="order-number">
+                                    {order.draftOrderLabel}
+                                </div>
+
+                                <div class="order-description">
+
+                                    <span>
+                                        {order.virusType}
+                                    </span>
+
+                                    <span>•</span>
+
+                                    <span>
+                                        {order.constructName}
+                                    </span>
+
+                                    <span>•</span>
+
+                                    <span>
+                                        {order.capsidName}
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="order-price">
+
+                                <span class="price-label">
+                                    Order Total
+                                </span>
+
+                                <lightning-formatted-number
+                                    value={order.totalPrice}
+                                    format-style="currency"
+                                    currency-code="USD">
+                                </lightning-formatted-number>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ORDER DETAILS -->
+
+                        <div class="order-grid">
+
+                            <div class="detail-item">
+
+                                <span class="field-label">
+                                    Order Type
+                                </span>
+
+                                <span class="field-value">
+                                    {order.customOrStock}
+                                </span>
+
+                            </div>
+
+
+                            <div class="detail-item">
+
+                                <span class="field-label">
+                                    End Volume
+                                </span>
+
+                                <span class="field-value">
+                                    {order.endVolume}
+                                </span>
+
+                            </div>
+
+
+                            <div class="detail-item">
+
+                                <span class="field-label">
+                                    Quantity
+                                </span>
+
+                                <span class="field-value">
+                                    {order.quantity}
+                                </span>
+
+                            </div>
+
+
+                            <div class="detail-item">
+
+                                <span class="field-label">
+                                    Virus Type
+                                </span>
+
+                                <span class="field-value">
+                                    {order.virusType}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- =================================================
+                             BILLING
+                             ================================================= -->
+
+                        <div class="billing-summary">
+
+                            <div class="billing-heading">
+                                Billing Information
+                            </div>
+
+
+                            <div class="billing-grid">
+
+                                <div class="detail-item">
+
+                                    <span class="field-label">
+                                        Billing Method
+                                    </span>
+
+                                    <span class="field-value">
+                                        {order.billingMethodLabel}
+                                    </span>
+
+                                </div>
+
+
+                                <template if:true={order.isPO}>
+
+                                    <div class="detail-item">
+
+                                        <span class="field-label">
+                                            Purchase Order
+                                        </span>
+
+                                        <span class="field-value">
+
+                                            <template
+                                                if:true={order.poLater}>
+
+                                                Add PO Later
+
+                                            </template>
+
+                                            <template
+                                                if:false={order.poLater}>
+
+                                                {order.purchaseOrderLabel}
+
+                                            </template>
+
+                                        </span>
+
+                                    </div>
+
+                                </template>
+
+
+                                <template if:true={order.isCC}>
+
+                                    <div class="detail-item">
+
+                                        <span class="field-label">
+                                            Credit Card
+                                        </span>
+
+                                        <span class="field-value">
+                                            {order.creditCardLabel}
+                                        </span>
+
+                                    </div>
+
+                                </template>
+
+
+                                <template if:true={order.isChartfield}>
+
+                                    <div class="detail-item">
+
+                                        <span class="field-label">
+                                            Chartfield String
+                                        </span>
+
+                                        <span class="field-value">
+                                            {order.chartfieldLabel}
+                                        </span>
+
+                                    </div>
+
+                                </template>
+
+                            </div>
+
+
+                            <!-- PO LATER -->
+
+                            <template if:true={order.poLater}>
+
+                                <div class="info-message">
+
+                                    <lightning-icon
+                                        icon-name="utility:info"
+                                        size="x-small">
+                                    </lightning-icon>
+
+                                    <span>
+                                        Purchase order will be provided later.
+                                    </span>
+
+                                </div>
+
+                            </template>
+
+
+                            <!-- MISSING BILLING -->
+
+                            <template if:true={order.missingBilling}>
+
+                                <div class="error-message">
+
+                                    <lightning-icon
+                                        icon-name="utility:error"
+                                        size="x-small">
+                                    </lightning-icon>
+
+                                    <span>
+                                        Billing information is required
+                                        before this order can be submitted.
+                                    </span>
+
+                                </div>
+
+                            </template>
+
+
+                            <!-- CREDIT CARD OVER $5,000 -->
+
+                            <template if:true={order.requiresCCConfirmation}>
+
+                                <div class="warning-message">
+
+                                    <lightning-icon
+                                        icon-name="utility:warning"
+                                        size="small">
+                                    </lightning-icon>
+
+                                    <div class="warning-content">
+
+                                        <strong>
+                                            Credit Card Confirmation Required
+                                        </strong>
+
+                                        <p>
+                                            This order exceeds $5,000.
+                                            Please confirm that the selected
+                                            credit card has a spending limit
+                                            sufficient to cover this order.
+                                        </p>
+
+                                        <lightning-input
+                                            type="checkbox"
+                                            label="I confirm that this credit card has a spending limit sufficient to cover this order."
+                                            data-id={order.draftOrderId}
+                                            checked={order.ccLimitConfirmed}
+                                            onchange={handleCCConfirmation}>
+                                        </lightning-input>
+
+                                    </div>
+
+                                </div>
+
+                            </template>
+
+
+                            <!-- CREDIT CARD CONFIRMED -->
+
+                            <template if:true={order.ccLimitConfirmed}>
+
+                                <div class="success-message">
+
+                                    <lightning-icon
+                                        icon-name="utility:success"
+                                        size="x-small">
+                                    </lightning-icon>
+
+                                    <span>
+                                        Credit card spending limit confirmed.
+                                    </span>
+
+                                </div>
+
+                            </template>
+
+
+                            <!-- PO BALANCE ERROR -->
+
+                            <template if:true={order.poBalanceError}>
+
+                                <div class="error-message">
+
+                                    <lightning-icon
+                                        icon-name="utility:error"
+                                        size="x-small">
+                                    </lightning-icon>
+
+                                    <span>
+                                        The selected purchase order does not
+                                        have sufficient funds to cover this
+                                        order.
+                                    </span>
+
+                                </div>
+
+                            </template>
+
+                        </div>
+
+                    </div>
+
+                </template>
+
+            </div>
+
+
+            <!-- =========================================================
+                 SHIPPING PREFERENCE
+                 ========================================================= -->
+
+            <template if:true={showShippingPreference}>
+
+                <div class="shipping-preference-section">
+
+                    <div class="shipping-preference-header">
+
+                        <div class="shipping-preference-icon">
+
+                            <lightning-icon
+                                icon-name="utility:shipping"
+                                alternative-text="Shipping"
+                                size="small">
+                            </lightning-icon>
+
+                        </div>
+
+
+                        <div class="shipping-preference-content">
+
+                            <h2>
+                                Shipping Preference
+                            </h2>
+
+                            <p>
+                                You selected multiple orders. Please choose
+                                how you would like these orders shipped.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="shipping-preference-options">
+
+                        <lightning-combobox
+                            name="shippingPreference"
+                            label="How would you like your orders shipped?"
+                            value={shippingPreference}
+                            options={shippingPreferenceOptions}
+                            onchange={handleShippingPreferenceChange}
+                            required>
+                        </lightning-combobox>
+
+                    </div>
+
+
+                    <!-- MULTIPLE SHIPMENTS -->
+
+                    <template if:true={isMultipleShipmentPreference}>
+
+                        <div class="shipping-info-message">
+
+                            <lightning-icon
+                                icon-name="utility:info"
+                                alternative-text="Information"
+                                size="x-small">
+                            </lightning-icon>
+
+                            <span>
+                                Orders will be shipped as they become
+                                available. This may result in multiple
+                                shipments.
+                            </span>
+
+                        </div>
+
+                    </template>
+
+
+                    <!-- SINGLE SHIPMENT -->
+
+                    <template if:true={isSingleShipmentPreference}>
+
+                        <div class="shipping-info-message">
+
+                            <lightning-icon
+                                icon-name="utility:info"
+                                alternative-text="Information"
+                                size="x-small">
+                            </lightning-icon>
+
+                            <span>
+                                Your orders will be held until all selected
+                                orders are ready, then shipped together in
+                                one shipment.
+                            </span>
+
+                        </div>
+
+                    </template>
+
+                </div>
+
+            </template>
+
+
+            <!-- =========================================================
+                 TOTALS
+                 ========================================================= -->
+
+            <div class="totals-section">
+
+                <div class="total-line">
+
+                    <span>
+                        Selected Total
+                    </span>
+
+                    <lightning-formatted-number
+                        value={totalSelectedPrice}
+                        format-style="currency"
+                        currency-code="USD">
+                    </lightning-formatted-number>
+
+                </div>
+
+
+                <div class="total-line">
+
+                    <span>
+                        Shipping Charge
+                    </span>
+
+                    <lightning-formatted-number
+                        value={shippingCharge}
+                        format-style="currency"
+                        currency-code="USD">
+                    </lightning-formatted-number>
+
+                </div>
+
+
+                <div class="total-line grand-total">
+
+                    <strong>
+                        Grand Total
+                    </strong>
+
+                    <strong>
+
+                        <lightning-formatted-number
+                            value={grandTotal}
+                            format-style="currency"
+                            currency-code="USD">
+                        </lightning-formatted-number>
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================================================
+                 VALIDATION SUMMARY
+                 ========================================================= -->
+
+            <template if:true={hasValidationErrors}>
+
+                <div class="validation-summary error-summary">
+
+                    <lightning-icon
+                        icon-name="utility:error"
+                        size="small">
+                    </lightning-icon>
+
+                    <div>
+
+                        <strong>
+                            Order Cannot Be Submitted
+                        </strong>
+
+                        <p>
+                            Please resolve the billing issues above
+                            before submitting your order.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </template>
+
+
+            <template if:true={canSubmit}>
+
+                <div class="validation-summary success-summary">
+
+                    <lightning-icon
+                        icon-name="utility:success"
+                        size="small">
+                    </lightning-icon>
+
+                    <div>
+
+                        <strong>
+                            Ready to Submit
+                        </strong>
+
+                        <p>
+                            Your order information and billing selections
+                            are ready for submission.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </template>
+
+
+            <!-- =========================================================
+                 ACTIONS
+                 ========================================================= -->
+
+            <div class="actions">
+
+                <lightning-button
+                    label="Back"
+                    variant="neutral"
+                    onclick={handleBack}>
+                </lightning-button>
+
+
+                <lightning-button
+                    label="Submit Cart"
+                    variant="brand"
+                    disabled={disableSubmit}
+                    onclick={handleSubmit}>
+                </lightning-button>
+
+            </div>
+
+        </template>
+
+
+        <!-- =========================================================
+             SUBMIT CART FLOW
+             ========================================================= -->
+
+<template if:true={showSubmitCartFlow}>
+
+    <div class="submit-flow-container">
+
+        <lightning-flow
+            flow-api-name="Submit_Cart"
+            flow-input-variables={submitCartFlowInputs}
+            onstatuschange={handleSubmitCartFlowStatusChange}>
+        </lightning-flow>
+
+    </div>
+
+</template>
+
+    </lightning-card>
+
+</template>

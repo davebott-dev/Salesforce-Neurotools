@@ -1,0 +1,19 @@
+<template>
+    <lightning-card>
+        <template if:true={clones}>
+            <template if:true={clones.length}>
+                <lightning-datatable
+                    key-field="Id"
+                    data={clones}
+                    columns={columns}>
+                </lightning-datatable>
+            </template>
+            <template if:false={clones.length}>
+                <p class="slds-p-around_small">No clones found for this Virus Order.</p>
+            </template>
+        </template>
+        <template if:true={error}>
+            <p class="slds-text-color_error">{error}</p>
+        </template>
+    </lightning-card>
+</template>

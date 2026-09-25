@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+
+    <apiVersion>66.0</apiVersion>
+
+    <isExposed>true</isExposed>
+
+    <targets>
+        <target>lightning__FlowScreen</target>
+    </targets>
+
+    <targetConfigs>
+
+        <targetConfig targets="lightning__FlowScreen">
+
+            <!-- ==========================================
+                 NEW INPUT
+                 ========================================== -->
+
+            <property
+                name="virusOrderIds"
+                type="String[]"
+                role="inputOnly"
+                label="Virus Order IDs"
+                description="Text Collection containing the Virus Order IDs created by the Submit Cart Flow."
+            />
+
+            <!-- ==========================================
+                 LEGACY INPUTS
+                 Kept for compatibility with existing
+                 Flow versions.
+                 ========================================== -->
+
+            <property
+                name="requestorContactId"
+                type="String"
+                label="Requestor Contact ID"
+                description="Legacy Requestor Contact ID retained for compatibility with existing Flow versions."
+            />
+
+            <property
+                name="submissionTime"
+                type="DateTime"
+                label="Submission Time"
+                description="Existing submission time variable retained for compatibility with the current Flow."
+            />
+
+            <!-- ==========================================
+                 OTHER INPUTS
+                 ========================================== -->
+
+            <property
+                name="orderFormUrl"
+                type="String"
+                role="inputOnly"
+                label="Order Form URL"
+                description="URL used by the Start Another Order button."
+            />
+
+            <property
+                name="cartUrl"
+                type="String"
+                role="inputOnly"
+                label="Cart URL"
+                description="URL used by the Return to Cart button."
+            />
+
+            <property
+                name="isSendingDna"
+                type="Boolean"
+                role="inputOnly"
+                label="Is Client Sending DNA"
+            />
+
+        </targetConfig>
+
+    </targetConfigs>
+
+</LightningComponentBundle>

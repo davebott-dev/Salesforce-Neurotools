@@ -1,0 +1,118 @@
+<template>
+    <template if:true={showScreen1}>
+
+        <p class={platesRemainingClass}>Plates Remaining: {platesRemaining}</p>
+        <p class="error">{errorMsg}</p>
+
+        <lightning-input
+            type="number"
+            label="Total Plates Available"
+            value={plateTotal}
+            onchange={handlePlateInputChange}
+        ></lightning-input>
+
+        <lightning-datatable
+            key-field="productionDetailId"
+            data={orders}
+            columns={columns}
+            onrowselection={handleRowSelection}
+            onsort={handleSort}
+            sorted-by={sortBy}
+            sorted-direction={sortDirection}
+            selected-rows={selectedOrderIds}
+            draft-values={draftValues}
+            onsave = {handleSaveDraftValues}
+        >
+        </lightning-datatable>
+
+        <lightning-button
+            label="Next"
+            onclick={handleNext}
+            disabled={isDisabled}
+        ></lightning-button>
+    </template>
+    <template if:true={showScreen2}>
+    <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+        <thead>
+            <tr>
+                <th>Order Name</th>
+                <th>Assigned To</th>
+                <th>Calculation</th>
+                <th>Transfection Date</th>
+                <th>VO Construct</th>
+                <th>VO Construct Tube Location</th>
+                <th>Construct Tfx Volume</th>
+                <th>Capsid</th>
+                <th>Capsid Location</th>
+                <th>Capsid Tfxn Volume</th>
+                <th>Phelper Location</th>
+                <th>Phelper Tfxn Volume</th>
+                <th>SFM</th>
+                <th>PEI</th>
+                <th>Plates Used</th>
+            </tr>
+        </thead>
+        <tbody>
+            <template for:each={selectedOrders} for:item="row">
+                <tr key={row.productionDetailId} class={row.rowClass}>
+                    <td>{row.orderName}</td>
+                    <td>{row.assignedTo}</td>
+                    <td>{row.transfectionCalculation}</td>
+                    <td>{row.transfectionDateLot}</td>
+                    <td>{row.voConstruct}</td>
+                    <td>{row.voConstructTubeLocation}</td>
+
+                    <!-- Construct clickable cell -->
+                    <td class={row.constructClass}
+    data-id={row.productionDetailId}
+    data-type="construct"
+    onclick={handleCellClick}>
+    {row.constructTfxVol}
+</td>
+
+                    <td>{row.capsid}</td>
+                    <td>{row.capsidLocation}</td>
+
+                    <!-- Capsid clickable cell -->
+                    <td class={row.capsidClass}
+    data-id={row.productionDetailId}
+    data-type="capsid"
+    onclick={handleCellClick}>
+    {row.capsidTfxVol}
+</td>
+
+                    <td>{row.phelperLocation}</td>
+
+                    <!-- Phelper clickable cell -->
+                    <td class={row.phelperClass}
+    data-id={row.productionDetailId}
+    data-type="phelper"
+    onclick={handleCellClick}>
+    {row.phelperVol}
+</td>
+
+                    <td>{row.sfm}</td>
+                    <td>{row.pei}</td>
+                    <td>{row.platesUsed}</td>
+                </tr>
+            </template>
+        </tbody>
+    </table>
+
+    <lightning-button label="Back" onclick={handleBack}></lightning-button>
+    <lightning-button label="Export Transfection Sheet" onclick={exportToExcel}></lightning-button>
+    <lightning-button label="Export DNA Pull Sheet" onclick={exportDnaPullSheet}></lightning-button>
+
+    <lightning-button 
+    label="Move to Virus Prep In Progress" 
+    onclick={handleMoveToVirusPrep} 
+    class="slds-m-left_small"
+>
+</lightning-button>
+
+<p class="success-message">{successMessage}</p>
+
+</template>
+
+
+</template>

@@ -1,0 +1,60 @@
+.input-container {
+    position: relative;
+}
+
+.label-row {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-bottom: 0.3rem;
+}
+
+.custom-label {
+    font-size: 0.75rem;
+    color: #5A5A5A;
+}
+
+.tooltip-container {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.help-icon {
+    cursor: pointer;
+}
+
+/* Tooltip styling */
+.custom-tooltip {
+    visibility: hidden;
+    opacity: 0;
+
+    position: absolute;
+    top: 140%;
+    left: 0;
+
+    width: 280px;
+
+    background-color: #ffffff;
+    color: #000000;
+
+    border: 1px solid #d8dde6;
+    border-radius: 8px;
+
+    padding: 0.75rem;
+
+    font-size: 0.75rem;
+    line-height: 1.4;
+
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+
+    z-index: 100;
+
+    transition: opacity 0.2s ease;
+}
+
+/* Show on hover */
+.tooltip-container:hover .custom-tooltip {
+    visibility: visible;
+    opacity: 1;
+}

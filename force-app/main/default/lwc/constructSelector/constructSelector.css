@@ -1,0 +1,281 @@
+.construct-container {
+    width: 100%;
+}
+
+
+/* ================================================================
+   HEADER
+   ================================================================ */
+
+.header {
+    margin-bottom: 1rem;
+}
+
+.virus-label {
+    margin-top: 0.25rem;
+    color: #444;
+}
+
+
+/* ================================================================
+   TABS
+   ================================================================ */
+
+.tabs {
+    display: flex;
+    border-bottom: 1px solid #d8dde6;
+    margin-bottom: 1rem;
+}
+
+.tab {
+    background: transparent;
+    border: none;
+
+    padding: 0.75rem 1.25rem;
+
+    font-size: 0.95rem;
+    font-weight: 600;
+
+    color: #444;
+
+    cursor: pointer;
+
+    border-bottom: 3px solid transparent;
+}
+
+.tab:hover {
+    background: #f3f6f9;
+}
+
+.tab.active {
+    color: #0176d3;
+    border-bottom: 3px solid #0176d3;
+}
+
+.count {
+    display: inline-block;
+
+    margin-left: 0.4rem;
+
+    padding: 0.1rem 0.45rem;
+
+    border-radius: 1rem;
+
+    background: #eef1f6;
+
+    font-size: 0.75rem;
+}
+
+
+/* ================================================================
+   FILTERS
+   ================================================================ */
+
+.filters {
+    display: flex;
+    gap: 1rem;
+
+    margin-bottom: 1rem;
+}
+
+.search {
+    flex: 1;
+}
+
+.promoter {
+    flex: 1;
+}
+
+
+/* ================================================================
+   TABLE
+   ================================================================ */
+
+.table-container {
+    width: 100%;
+
+    max-height: 450px;
+
+    overflow-y: auto;
+}
+
+.construct-name {
+    font-weight: 600;
+}
+
+.not-provided {
+    color: #777;
+    font-style: italic;
+}
+
+
+/* ================================================================
+   SOURCE BADGES
+   ================================================================ */
+
+.inventory-badge {
+    display: inline-block;
+
+    padding: 0.25rem 0.5rem;
+
+    border-radius: 0.25rem;
+
+    font-size: 0.75rem;
+
+    font-weight: 600;
+}
+
+.inventory-badge.neurotools {
+    background: #eef4ff;
+    color: #1b5297;
+}
+
+.inventory-badge.customer {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+
+/* ================================================================
+   MESSAGES
+   ================================================================ */
+
+.message-box {
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.75rem;
+
+    padding: 1rem;
+
+    margin-top: 1rem;
+
+    border: 1px solid #d8dde6;
+
+    border-radius: 0.25rem;
+
+    background: #f8f9fb;
+}
+
+
+/* ================================================================
+   SELECTED CONSTRUCT
+   ================================================================ */
+
+.selected-box {
+    margin-top: 1rem;
+
+    padding: 0.75rem 1rem;
+
+    border-radius: 0.25rem;
+
+    background: #f3f6f9;
+}
+
+.selected-name {
+    margin-left: 0.5rem;
+
+    font-weight: 600;
+}
+/* ================================================================
+   SELECTED / NON-SELECTED ROWS
+   ================================================================ */
+
+.normal-row {
+    opacity: 1;
+}
+
+.selected-row {
+    background-color: #eef6ff !important;
+}
+
+.selected-row td {
+    font-weight: 600;
+}
+
+.dimmed-row {
+    opacity: 0.4;
+}
+
+.dimmed-row:hover {
+    opacity: 0.7;
+}
+
+.clear-button {
+    margin-left: 1rem;
+}
+/* ============================================================
+   ADDGENE BADGE
+   ============================================================ */
+
+.addgene-badge {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    background: #e8f1ff;
+    color: #245a9b;
+    vertical-align: middle;
+}
+
+
+/* ============================================================
+   ADDGENE REFERENCE
+   ============================================================ */
+
+.addgene-reference {
+    margin-top: 3px;
+    font-size: 0.75rem;
+    color: #5c6b73;
+}
+
+
+/* ============================================================
+   ADDGENE NOTICE
+   ============================================================ */
+
+.addgene-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-top: 16px;
+    padding: 14px 16px;
+    border: 1px solid #9ec5e8;
+    border-radius: 6px;
+    background: #eef6ff;
+}
+
+
+.addgene-notice-content {
+    flex: 1;
+}
+
+
+.addgene-notice-content strong {
+    font-weight: 700;
+}
+
+
+.addgene-notice-content p {
+    margin: 4px 0 0 0;
+    line-height: 1.5;
+}
+
+
+/* ============================================================
+   SELECTED ADDGENE LABEL
+   ============================================================ */
+
+.selected-addgene-label {
+    display: inline-block;
+    margin-left: 10px;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    background: #e8f1ff;
+    color: #245a9b;
+}

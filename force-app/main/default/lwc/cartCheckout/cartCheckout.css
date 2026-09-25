@@ -1,0 +1,471 @@
+:host {
+    display: block;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.cart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    padding: 1.25rem 1.5rem;
+
+    border-bottom: 1px solid #dddbda;
+}
+
+
+.cart-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+
+    margin: 0;
+}
+
+
+.cart-subtitle {
+    margin-top: 0.25rem;
+
+    color: #706e6b;
+}
+
+
+.cart-status {
+    text-align: right;
+
+    color: #3e3e3c;
+}
+
+
+/* =========================================================
+   SECTIONS
+   ========================================================= */
+
+.section {
+    padding: 1.25rem 1.5rem;
+}
+
+
+.section + .section {
+    border-top: 1px solid #dddbda;
+}
+
+
+.section-header {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: flex-start;
+
+    margin-bottom: 1rem;
+}
+
+
+.section-header h2 {
+    font-size: 1.15rem;
+    font-weight: 600;
+
+    margin: 0;
+}
+
+
+.section-header p {
+    margin-top: 0.25rem;
+
+    color: #706e6b;
+}
+
+
+.selection-summary {
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   CART TOTAL
+   ========================================================= */
+
+.cart-total {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-end;
+
+    gap: 0.5rem;
+
+    padding: 1rem 0 0;
+
+    font-size: 1.05rem;
+}
+
+
+.total-line {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    width: 320px;
+
+    gap: 2rem;
+}
+
+
+.total-line lightning-formatted-number {
+    font-weight: 600;
+
+    text-align: right;
+}
+
+
+.grand-total {
+    border-top: 1px solid #dddbda;
+
+    margin-top: 0.25rem;
+
+    padding-top: 0.75rem;
+
+    font-size: 1.15rem;
+}
+
+
+/* =========================================================
+   EMPTY CART
+   ========================================================= */
+
+.empty-cart {
+    padding: 2rem;
+
+    text-align: center;
+
+    color: #706e6b;
+}
+
+
+/* =========================================================
+   BILLING
+   ========================================================= */
+
+.billing-section {
+    background: #fafaf9;
+}
+
+
+.bulk-billing {
+    background: white;
+
+    border: 1px solid #dddbda;
+
+    border-radius: 0.25rem;
+
+    padding: 1rem;
+
+    margin-bottom: 1.25rem;
+}
+
+
+.bulk-billing h3,
+.individual-billing h3 {
+    font-size: 1rem;
+
+    font-weight: 600;
+
+    margin: 0;
+}
+
+
+.help-text {
+    color: #706e6b;
+
+    margin-top: 0.25rem;
+
+    margin-bottom: 1rem;
+}
+
+
+.bulk-controls {
+    display: flex;
+
+    align-items: flex-end;
+
+    gap: 0.75rem;
+
+    flex-wrap: wrap;
+}
+
+
+.bulk-type {
+    min-width: 220px;
+}
+
+
+.bulk-value {
+    min-width: 300px;
+}
+
+
+.bulk-button {
+    padding-bottom: 0.05rem;
+}
+
+
+/* =========================================================
+   ADD BILLING
+   ========================================================= */
+
+.add-billing {
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.5rem;
+
+    flex-wrap: wrap;
+
+    border-top: 1px solid #dddbda;
+
+    margin-top: 1rem;
+
+    padding-top: 1rem;
+}
+
+
+.add-label {
+    font-weight: 600;
+
+    margin-right: 0.25rem;
+}
+
+
+/* =========================================================
+   INDIVIDUAL BILLING
+   ========================================================= */
+
+.individual-billing {
+    margin-top: 1.5rem;
+}
+
+
+.billing-order {
+    display: grid;
+
+    grid-template-columns:
+        minmax(180px, 1.3fr)
+        minmax(180px, 1fr)
+        minmax(240px, 1.3fr);
+
+    gap: 1rem;
+
+    align-items: center;
+
+    background: white;
+
+    border: 1px solid #dddbda;
+
+    border-radius: 0.25rem;
+
+    padding: 1rem;
+
+    margin-top: 0.75rem;
+}
+
+
+.order-info {
+    min-width: 0;
+}
+
+
+.order-number {
+    font-weight: 600;
+
+    color: #0176d3;
+}
+
+
+.order-details {
+    color: #706e6b;
+
+    font-size: 0.85rem;
+
+    margin-top: 0.25rem;
+}
+
+
+.order-details span {
+    padding: 0 0.25rem;
+}
+
+
+.order-price {
+    font-weight: 600;
+
+    margin-top: 0.35rem;
+}
+
+
+.billing-control {
+    min-width: 0;
+}
+
+
+.po-later-message {
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.4rem;
+
+    color: #706e6b;
+
+    font-size: 0.9rem;
+}
+
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.actions {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 1rem 1.5rem;
+
+    border-top: 1px solid #dddbda;
+
+    background: white;
+}
+
+
+.right-actions {
+    display: flex;
+
+    gap: 0.75rem;
+
+    align-items: center;
+}
+
+
+/* =========================================================
+   CREATE FLOW MODAL
+   ========================================================= */
+
+.slds-modal__container {
+    max-width: 55rem;
+
+    width: 90%;
+}
+
+
+.close-button {
+    position: absolute;
+
+    top: 0.75rem;
+
+    right: 0.75rem;
+}
+
+
+.quote-flow-container {
+    position: fixed;
+    left: -10000px;
+    top: 0;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* =========================================================
+   CREATION FLOW MODAL
+   ========================================================= */
+
+.modal-subtitle {
+    margin-top: 0.25rem;
+    color: #706e6b;
+}
+
+
+.flow-not-configured {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+
+    padding: 1.5rem;
+
+    background: #f3f3f3;
+
+    border: 1px solid #dddbda;
+
+    border-radius: 0.25rem;
+
+    color: #3e3e3c;
+}
+
+
+.flow-not-configured p {
+    margin-top: 0.25rem;
+    color: #706e6b;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media only screen and (max-width: 900px) {
+
+    .cart-header {
+        flex-direction: column;
+
+        gap: 0.75rem;
+    }
+
+
+    .cart-status {
+        text-align: left;
+    }
+
+
+    .billing-order {
+        grid-template-columns: 1fr;
+    }
+
+
+    .bulk-controls {
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+
+    .bulk-type,
+    .bulk-value {
+        width: 100%;
+
+        min-width: 0;
+    }
+
+
+    .actions {
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 0.75rem;
+    }
+
+
+    .right-actions {
+        justify-content: flex-end;
+    }
+
+}

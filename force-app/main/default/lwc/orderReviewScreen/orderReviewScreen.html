@@ -1,0 +1,470 @@
+<template>
+
+    <div class="review-container">
+
+        <!-- ======================================================
+             HEADER
+             ====================================================== -->
+
+        <div class="header">
+
+            <h2 class="slds-text-heading_medium">
+                Review Your Order
+            </h2>
+
+            <p class="header-subtitle">
+                Please review your order information before
+                continuing.
+            </p>
+
+        </div>
+
+
+        <!-- ======================================================
+             ORDER SUMMARY
+             ====================================================== -->
+
+        <section class="section">
+
+            <div class="section-header">
+
+                <h3 class="section-title">
+                    Order Summary
+                </h3>
+
+            </div>
+
+
+            <div class="product-card">
+
+                <template if:true={hasProducts}>
+
+                    <template
+                        for:each={displayProducts}
+                        for:item="product"
+                    >
+
+                        <div
+                            key={product.id}
+                            class="product-row"
+                        >
+
+                            <div class="product-information">
+
+                                <div class="product-name">
+                                    {product.name}
+                                </div>
+
+
+                                <template
+                                    if:true={product.description}
+                                >
+
+                                    <div
+                                        class="product-description"
+                                    >
+                                        {product.description}
+                                    </div>
+
+                                </template>
+
+                            </div>
+
+
+                            <div class="product-price">
+                                {product.formattedPrice}
+                            </div>
+
+                        </div>
+
+                    </template>
+
+
+                    <!-- TOTAL -->
+
+                    <div class="total-row">
+    <div class="total-label">
+        Order Total
+    </div>
+
+    <div class="total-price">
+        {formattedTotal}
+    </div>
+</div>
+
+                </template>
+
+
+                <template if:false={hasProducts}>
+
+                    <div class="no-products">
+                        No products were selected for this order.
+                    </div>
+
+                </template>
+
+            </div>
+
+        </section>
+
+
+        <!-- ======================================================
+             CONSTRUCT INFORMATION
+             ====================================================== -->
+
+     <section class="section">
+
+    <div class="section-header">
+        <h3 class="section-title">
+            Order Details
+        </h3>
+    </div>
+
+    <div class="summary-card">
+
+        <template if:true={constructName}>
+            <div class="summary-row">
+                <div class="summary-label">
+                    Construct
+                </div>
+                <div class="summary-value">
+                    {constructName}
+                </div>
+            </div>
+        </template>
+
+        <template if:true={capsidEnvelope}>
+            <div class="summary-row">
+                <div class="summary-label">
+                    Capsid / Envelope
+                </div>
+                <div class="summary-value">
+                    {capsidEnvelope}
+                </div>
+            </div>
+        </template>
+
+        <template if:true={endVolume}>
+            <div class="summary-row">
+                <div class="summary-label">
+                    End Volume
+                </div>
+                <div class="summary-value">
+                    {endVolume}
+                </div>
+            </div>
+        </template>
+
+        <template if:true={quantity}>
+            <div class="summary-row">
+                <div class="summary-label">
+                    Quantity
+                </div>
+                <div class="summary-value">
+                    {quantity}
+                </div>
+            </div>
+        </template>
+
+        <div class="summary-row">
+            <div class="summary-label">
+                Sending DNA
+            </div>
+            <div class="summary-value">
+                {sendingDNADisplay}
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+
+        <!-- ======================================================
+             DONOR DNA INSTRUCTIONS
+             ====================================================== -->
+
+        <template if:true={showDnaInstructions}>
+
+            <section class="section">
+
+                <div class="section-header">
+
+                    <h3 class="section-title">
+                        Donor Plasmid Packaging Instructions
+                    </h3>
+
+                </div>
+
+
+                <div class="information-box">
+<p>
+    Please send DNA in a parafilm-wrapped
+    1.5 mL tube labeled with
+    <strong> Construct Name, Order Number,
+        and concentration (µg/µL)</strong>.
+</p>
+
+
+                    <p>
+                        <strong>Please note: </strong>
+                        Better DNA quality = higher viral titer.
+                        Please ensure that the DNA you are sending
+                        is endotoxin-free.
+                    </p>
+
+<p>
+    For more information on sending DNA please
+    visit our
+    <a
+        href="https://www.unc-neurotools.org/sending-samples"
+        target="_blank"
+        rel="noopener noreferrer"
+    > DNA Prep Guide</a>.
+</p>
+
+
+
+                    <div class="shipping-instructions">
+
+                        <p class="instruction-title">
+                            Please ship your sample to:
+                        </p>
+
+
+                        <p>
+
+                            <strong>
+                                Neurotools (Ritola Lab)
+                            </strong>
+
+                            <br />
+
+                            Mary Ellen Jones Building
+
+                            <br />
+
+                            116 Manning Drive
+
+                            <br />
+
+                            5102 UNC Neuroscience Center
+                            Campus Box 7250
+
+                            <br />
+
+                            Chapel Hill, North Carolina, 27599
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </template>
+
+        <!-- ======================================================
+             BASELINE PASSING TITER
+             ====================================================== -->
+
+        <template if:true={showBaselineTiter}>
+
+            <section class="section">
+
+                <div class="section-header">
+
+                    <h3 class="section-title">
+                        Baseline Passing Titer
+                    </h3>
+
+                </div>
+
+
+                <div class="titer-box">
+
+                    <div class="titer-virus">
+                        {virusType}
+                    </div>
+
+
+                    <div class="titer-value">
+                        {baselineTiterDisplay}
+                    </div>
+
+
+                    <p class="titer-description">
+
+                        This is the baseline passing titer for
+                        the selected virus production.
+
+                    </p>
+
+                </div>
+
+            </section>
+
+        </template>
+
+
+        <!-- ======================================================
+             SHIPPING ADDRESS
+             ====================================================== -->
+
+        <section class="section">
+
+            <div class="section-header">
+
+                <h3 class="section-title">
+                    Shipping Address
+                </h3>
+
+            </div>
+
+
+            <!-- DEFAULT ADDRESS -->
+
+            <template if:false={showDifferentShippingAddress}>
+
+                <div class="address-card">
+
+                    <p class="address-label">
+                        Ship your completed order to:
+                    </p>
+
+
+                    <template
+                        for:each={defaultShippingAddressDisplay}
+                        for:item="line"
+                    >
+
+                        <div
+                            key={line}
+                            class="address-line"
+                        >
+                            {line}
+                        </div>
+
+                    </template>
+
+                </div>
+
+            </template>
+
+
+            <!-- DIFFERENT ADDRESS -->
+
+            <div class="different-address-toggle">
+
+                <lightning-input
+                    type="checkbox"
+                    label="Ship to a different address"
+                    checked={useDifferentShippingAddress}
+                    onchange={handleDifferentAddressChange}
+                >
+                </lightning-input>
+
+            </div>
+
+
+            <!-- EDITABLE ADDRESS -->
+
+            <template if:true={showDifferentShippingAddress}>
+
+                <div class="edit-address-card">
+
+                    <p class="edit-address-heading">
+                        Enter the shipping address for this order.
+                    </p>
+
+
+                    <lightning-input
+                        label="Organization"
+                        value={shippingOrganization}
+                        data-field="organization"
+                        onchange={handleShippingChange}
+                    >
+                    </lightning-input>
+
+
+                    <lightning-input
+                        label="Street Address"
+                        value={shippingStreet}
+                        data-field="street"
+                        required
+                        onchange={handleShippingChange}
+                    >
+                    </lightning-input>
+
+
+                    <lightning-input
+                        label="City"
+                        value={shippingCity}
+                        data-field="city"
+                        required
+                        onchange={handleShippingChange}
+                    >
+                    </lightning-input>
+
+
+                    <div class="address-grid">
+
+                        <lightning-input
+                            label="State / Province"
+                            value={shippingState}
+                            data-field="state"
+                            required
+                            onchange={handleShippingChange}
+                        >
+                        </lightning-input>
+
+
+                        <lightning-input
+                            label="Postal Code"
+                            value={shippingPostalCode}
+                            data-field="postalCode"
+                            required
+                            onchange={handleShippingChange}
+                        >
+                        </lightning-input>
+
+                    </div>
+
+
+                    <lightning-input
+                        label="Country"
+                        value={shippingCountry}
+                        data-field="country"
+                        required
+                        onchange={handleShippingChange}
+                    >
+                    </lightning-input>
+
+                </div>
+
+            </template>
+
+        </section>
+
+
+        <!-- ======================================================
+             FINAL NOTICE
+             ====================================================== -->
+
+        <div class="review-notice">
+
+            <strong>
+                Please review your order carefully.
+            </strong>
+
+            <span>
+                The shipping address shown above will be saved
+                with this order when you continue.
+            </span>
+
+        </div>
+
+    </div>
+
+</template>

@@ -1,0 +1,103 @@
+<template>
+     <div class="slds-grid slds-gutters slds-p-around_small">
+        <div class="slds-col slds-size_1-of-2">
+            <lightning-input
+                type="search"
+                label="Search"
+                placeholder="Search by Name or Order Number"
+                value={searchTerm}
+                onchange={handleSearchChange}
+            ></lightning-input>
+        </div>
+        <div class="slds-col slds-size_1-of-2">
+            <lightning-combobox
+                label="Filter by Virus Type"
+                options={virusTypeOptions}
+                value={selectedVirusType}
+                onchange={handleVirusTypeChange}
+            ></lightning-combobox>
+        </div>
+    </div>
+
+    <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped" role="grid">
+        <thead>
+            <tr>
+                <th>Select</th>
+                <th>Order Name</th>
+                <th>Order Number</th>
+                <th>Order Status</th>
+                <th>Virus Type</th>              
+                <th>Label Type</th>
+                <th>Label Count</th>
+            </tr>
+        </thead>
+        <tbody>
+            <template for:each={paginatedData} for:item="order" for:index="index">
+                <tr key={order.Id}>
+                    <td>
+                        <lightning-input
+                            type="checkbox"
+                            data-id ={order.OrderNumber}
+                            data-field="selected"
+                            checked={order.selected}
+                            onchange={handleChange}
+                        ></lightning-input>
+                    </td>
+                    <td>{order.Name}</td>
+                    <td>{order.OrderNumber}</td>
+                    <td>{order.StageName}</td>
+                    <td>{order.Type}</td>
+                    <td>
+                        <lightning-combobox
+                            data-id ={order.OrderNumber}
+                            data-field="labelType"
+                            options={labelTypeOptions}
+                            value={order.labelType}
+                            onchange={handleChange}
+                        ></lightning-combobox>
+                    </td>
+                    <td>
+                        <lightning-input
+                            type="number"
+                            data-id ={order.OrderNumber}
+                            data-field="labelCount"
+                            value={order.labelCount}
+                            min="1"
+                            onchange={handleChange}
+                            disabled={order.isLabelCountDisabled}
+                        ></lightning-input>
+                    </td>
+                </tr>
+            </template>
+        </tbody>
+    </table>
+
+    <!-- Pagination Controls -->
+    <div class="slds-grid slds-grid_align-spread slds-m-top_medium slds-wrap">
+    <div class="slds-col">
+        <lightning-button
+            label="Previous"
+            onclick={handlePrevPage}
+            disabled={isPrevDisabled}
+            variant="neutral"
+        ></lightning-button>
+
+        <span class="slds-p-horizontal_small">Page {currentPage} of {totalPages}</span>
+
+        <lightning-button
+            label="Next"
+            onclick={handleNextPage}
+            disabled={isNextDisabled}
+            variant="neutral"
+        ></lightning-button>
+    </div>
+
+    <div class="slds-col">
+        <lightning-button
+            label="Generate Labels"
+            onclick={handleDownloadExcel}
+            variant="brand"
+        ></lightning-button>
+    </div>
+</div>
+</template>

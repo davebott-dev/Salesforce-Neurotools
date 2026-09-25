@@ -1,0 +1,358 @@
+/* ============================================================
+   MAIN CONTAINER
+   ============================================================ */
+
+.review-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1rem 1.25rem 2rem;
+}
+
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+.header {
+    margin-bottom: 1.75rem;
+}
+
+.header h2 {
+    margin: 0 0 0.35rem;
+    font-weight: 600;
+}
+
+.header-subtitle {
+    color: #5c5c5c;
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+
+/* ============================================================
+   SECTIONS
+   ============================================================ */
+
+.section {
+    margin-bottom: 1.75rem;
+}
+
+.section-header {
+    margin-bottom: 0.65rem;
+}
+
+.section-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+    color: #181818;
+}
+
+
+/* ============================================================
+   PRODUCT SUMMARY
+   ============================================================ */
+
+.product-card {
+    border: 1px solid #d8dde6;
+    border-radius: 0.5rem;
+    background: #ffffff;
+    overflow: hidden;
+}
+
+
+/* Individual product */
+
+.product-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.product-information {
+    min-width: 0;
+    flex: 1;
+}
+
+.product-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #181818;
+    margin-bottom: 0.2rem;
+}
+
+.product-description {
+    color: #5c5c5c;
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+.product-price {
+    font-weight: 600;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    color: #181818;
+}
+
+
+/* ============================================================
+   ORDER TOTAL
+   ============================================================ */
+
+.total-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.1rem 1.25rem;
+    background: #f7f7f7;
+}
+
+.total-label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #181818;
+}
+
+.total-price {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #181818;
+}
+
+
+/* ============================================================
+   NO PRODUCTS
+   ============================================================ */
+
+.no-products {
+    padding: 1.25rem;
+    color: #5c5c5c;
+    text-align: center;
+}
+
+
+/* ============================================================
+   CONSTRUCT INFORMATION
+   ============================================================ */
+
+.summary-card {
+    border: 1px solid #d8dde6;
+    border-radius: 0.5rem;
+    background: #ffffff;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    overflow: hidden;
+}
+
+.summary-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.9rem 1rem;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.summary-row:nth-child(odd) {
+    border-right: 1px solid #e5e5e5;
+}
+
+.summary-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #5c5c5c;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.summary-value {
+    color: #181818;
+    font-size: 0.95rem;
+    word-break: break-word;
+}
+
+
+/* ============================================================
+   INFORMATION BOX
+   ============================================================ */
+
+.information-box {
+    border: 1px solid #d8dde6;
+    border-radius: 0.5rem;
+    padding: 1.1rem 1.25rem;
+    background: #fafafa;
+    color: #181818;
+}
+
+.information-box p {
+    margin-top: 0;
+    margin-bottom: 0.9rem;
+    line-height: 1.5;
+}
+
+.information-box p:last-child {
+    margin-bottom: 0;
+}
+
+.information-box a {
+    text-decoration: none;
+}
+
+.shipping-instructions {
+    margin-top: 1.15rem;
+    padding-top: 1rem;
+    border-top: 1px solid #d8dde6;
+}
+
+.instruction-title {
+    font-weight: 600;
+}
+
+
+/* ============================================================
+   TITER
+   ============================================================ */
+
+.titer-box {
+    border: 1px solid #d8dde6;
+    border-radius: 0.5rem;
+    padding: 1.1rem 1.25rem;
+    background: #fafafa;
+}
+
+.titer-virus {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #5c5c5c;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    margin-bottom: 0.35rem;
+}
+
+.titer-value {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #181818;
+    margin-bottom: 0.45rem;
+}
+
+.titer-description {
+    margin: 0;
+    color: #5c5c5c;
+    font-size: 0.85rem;
+}
+
+
+/* ============================================================
+   SHIPPING ADDRESS
+   ============================================================ */
+
+.address-card {
+    border: 1px solid #d8dde6;
+    border-radius: 0.5rem;
+    padding: 1.1rem 1.25rem;
+    background: #ffffff;
+}
+
+.address-label {
+    font-weight: 600;
+    margin: 0 0 0.75rem;
+    color: #181818;
+}
+
+.address-line {
+    line-height: 1.5;
+    color: #444;
+}
+
+.different-address-toggle {
+    margin-top: 0.75rem;
+}
+
+
+/* ============================================================
+   EDIT ADDRESS
+   ============================================================ */
+
+.edit-address-card {
+    margin-top: 1rem;
+    padding: 1.1rem 1.25rem;
+    border: 1px solid #d8dde6;
+    border-radius: 0.5rem;
+    background: #fafafa;
+}
+
+.edit-address-heading {
+    font-weight: 600;
+    margin: 0 0 1rem;
+    color: #181818;
+}
+
+.address-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+
+/* ============================================================
+   FINAL NOTICE
+   ============================================================ */
+
+.review-notice {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding: 1rem 1.1rem;
+    border: 1px solid #d8dde6;
+    border-radius: 0.5rem;
+    background: #f7f7f7;
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    line-height: 1.45;
+}
+
+.review-notice strong {
+    color: #181818;
+}
+
+.review-notice span {
+    color: #5c5c5c;
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 600px) {
+
+    .review-container {
+        padding: 0.75rem;
+    }
+
+    .product-row {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .product-price {
+        align-self: flex-end;
+    }
+
+    .summary-card {
+        grid-template-columns: 1fr;
+    }
+
+    .summary-row:nth-child(odd) {
+        border-right: none;
+    }
+
+    .address-grid {
+        grid-template-columns: 1fr;
+    }
+
+}

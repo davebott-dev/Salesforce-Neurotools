@@ -1,0 +1,438 @@
+<template>
+
+    <!-- ========================================== -->
+    <!-- LOADING -->
+    <!-- ========================================== -->
+
+    <template if:true={isLoading}>
+
+        <div class="loading-container">
+
+            <lightning-spinner
+                alternative-text="Preparing your order confirmation"
+                size="medium">
+            </lightning-spinner>
+
+            <p class="loading-text">
+                Preparing your order confirmation...
+            </p>
+
+        </div>
+
+    </template>
+
+
+    <!-- ========================================== -->
+    <!-- ERROR -->
+    <!-- ========================================== -->
+
+    <template if:true={hasError}>
+
+        <div class="error-card">
+
+            <div class="error-icon">
+                <lightning-icon
+                    icon-name="utility:error"
+                    alternative-text="Error"
+                    size="medium">
+                </lightning-icon>
+            </div>
+
+            <div class="error-content">
+
+                <h2 class="error-title">
+                    We couldn't load your order information
+                </h2>
+
+                <p class="error-message">
+                    {errorMessage}
+                </p>
+
+                <p class="error-help">
+                    If you believe your order was submitted successfully,
+                    please contact NeuroTools for assistance.
+                </p>
+
+            </div>
+
+        </div>
+
+    </template>
+
+
+    <!-- ========================================== -->
+    <!-- SUCCESS PAGE -->
+    <!-- ========================================== -->
+
+    <template if:false={isLoading}>
+
+        <template if:false={hasError}>
+
+            <div class="page-container">
+
+
+                <!-- ================================== -->
+                <!-- SUCCESS -->
+                <!-- ================================== -->
+
+                <section class="success-section">
+
+                    <div class="success-icon">
+
+                        <lightning-icon
+                            icon-name="utility:success"
+                            alternative-text="Order submitted successfully"
+                            size="large">
+                        </lightning-icon>
+
+                    </div>
+
+                    <h1 class="success-title">
+                        Order Submitted Successfully
+                    </h1>
+
+                    <p class="success-message">
+                        Your order has been submitted successfully.
+                    </p>
+
+                </section>
+
+
+                <template if:true={hasOrders}>
+
+
+                    <!-- ================================== -->
+                    <!-- ORDER NUMBERS -->
+                    <!-- ================================== -->
+
+                    <section class="card">
+
+                        <div class="card-header">
+
+                            <h2 class="card-title">
+                                Order Number
+                            </h2>
+
+                            <p class="card-subtitle">
+                                {orderCountLabel}
+                            </p>
+
+                        </div>
+
+
+                        <div class="order-number-list">
+
+                            <template
+                                for:each={virusOrders}
+                                for:item="order">
+
+                                <div
+                                    key={order.Id}
+                                    class="order-number">
+
+                                    {order.Order_Number__c}
+
+                                </div>
+
+                            </template>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- ================================== -->
+                    <!-- DNA SHIPMENT -->
+                    <!-- ================================== -->
+
+<template if:true={isSendingDna}>
+
+    <section class="card dna-card">
+
+        <div class="dna-header">
+
+            <div class="dna-icon">
+
+                <lightning-icon
+                    icon-name="doctype:pdf"
+                    alternative-text="PDF packing list"
+                    size="medium">
+                </lightning-icon>
+
+            </div>
+
+            <div>
+
+                <h2 class="card-title">
+                    DNA Shipment
+                </h2>
+
+                <p class="card-subtitle">
+                    Please include the packing list
+                    with your DNA shipment.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="dna-button-container">
+
+            <lightning-button
+                variant="brand"
+                label="Download Packing List"
+                icon-name="utility:download"
+                icon-position="left"
+                onclick={handleDownloadPdf}
+                disabled={isGeneratingPdf}>
+            </lightning-button>
+
+        </div>
+
+    </section>
+
+</template>
+
+
+                    <!-- ================================== -->
+                    <!-- DONOR DNA INSTRUCTIONS -->
+                    <!-- ================================== -->
+
+                <template if:true={isSendingDna}>
+
+                    <section class="card">
+
+                        <h2 class="card-title">
+                            Donor Plasmid Packaging Instructions
+                        </h2>
+
+                        <div class="instructions">
+
+                            <div class="instruction">
+
+                                <div class="instruction-icon">
+                                    1
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        Package your DNA
+                                    </strong>
+
+                                    <p>
+                                        Place DNA in a parafilm-wrapped
+                                        1.5 mL tube.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="instruction">
+
+                                <div class="instruction-icon">
+                                    2
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        Label the tube
+                                    </strong>
+
+                                    <p>
+                                        Label the tube with the
+                                        Construct Name, Order Number,
+                                        and Concentration (µg/µL).
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="instruction">
+
+                                <div class="instruction-icon">
+                                    3
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        Use high-quality DNA
+                                    </strong>
+
+                                    <p>
+                                        Better DNA quality results in
+                                        higher viral titer. Please ensure
+                                        that your DNA is endotoxin-free.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="instruction">
+
+                                <div class="instruction-icon">
+                                    4
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        Insufficient DNA
+                                    </strong>
+
+                                    <p>
+                                        If you do not send enough DNA to
+                                        complete a virus preparation,
+                                        NeuroTools may amplify your DNA
+                                        and add the DNA preparation charge
+                                        to your order.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="guide-link">
+
+                            For additional information on sending DNA,
+                            please visit the 
+                            <a
+                                href="https://neurotools.unc.edu/sending-samples/"
+                                target="_blank">
+                                DNA Prep Guide
+                            </a>.
+
+                        </div>
+
+                    </section>
+             
+
+                    <!-- ================================== -->
+                    <!-- SHIPPING ADDRESS -->
+                    <!-- ================================== -->
+
+                    <section class="card">
+
+                        <h2 class="card-title">
+                            Shipping Address
+                        </h2>
+
+                        <div class="shipping-address">
+
+                            <strong>
+                                Neurotools (Ritola Lab)
+                            </strong>
+
+                            <br />
+
+                            Mary Ellen Jones Building
+
+                            <br />
+
+                            116 Manning Drive
+
+                            <br />
+
+                            5102 UNC Neuroscience Center Campus Box 7250
+
+                            <br />
+
+                            Chapel Hill, NC 27599
+
+                        </div>
+
+                    </section>
+   </template>
+
+                    <!-- ================================== -->
+                    <!-- NEXT STEPS -->
+                    <!-- ================================== -->
+
+                    <section class="next-steps">
+
+                        <h2 class="next-steps-title">
+                            What's Next?
+                        </h2>
+
+                        <p class="next-steps-message">
+                            You can return to your cart or begin another
+                            virus order.
+                        </p>
+
+                        <div class="button-row">
+
+                            <template if:true={cartUrl}>
+
+                                <lightning-button
+                                    label="Return to Cart"
+                                    icon-name="utility:back"
+                                    onclick={handleReturnToCart}>
+                                </lightning-button>
+
+                            </template>
+
+
+                            <template if:true={orderFormUrl}>
+
+                                <lightning-button
+                                    variant="brand"
+                                    label="Start Another Order"
+                                    icon-name="utility:add"
+                                    onclick={handleStartAnotherOrder}>
+                                </lightning-button>
+
+                            </template>
+
+                        </div>
+
+                    </section>
+
+                </template>
+
+
+                <!-- ================================== -->
+                <!-- NO ORDERS -->
+                <!-- ================================== -->
+
+                <template if:false={hasOrders}>
+
+                    <section class="card no-orders">
+
+                        <lightning-icon
+                            icon-name="utility:info"
+                            alternative-text="Information"
+                            size="medium">
+                        </lightning-icon>
+
+                        <h2>
+                            No Virus Orders Found
+                        </h2>
+
+                        <p>
+                            We could not find any submitted virus orders
+                            associated with this submission.
+                        </p>
+
+                    </section>
+
+                </template>
+
+            </div>
+
+        </template>
+
+    </template>
+
+</template>

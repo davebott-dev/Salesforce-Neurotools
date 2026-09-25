@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+  <apiVersion>59.0</apiVersion>
+  <isExposed>true</isExposed>
+  <targets>
+    <target>lightning__FlowScreen</target>
+  </targets>
+  <targetConfigs>
+    <targetConfig targets="lightning__FlowScreen">
+      <property name="dnaNameInput" type="String" label="DNA Name (Input)" role="inputOnly"/>
+      <property name="dnaNameOutput" type="String" label="DNA Name (Output)" role="outputOnly"/>
+      <property name="isEditable" type="Boolean" label="Is Editable?" default="true" role="inputOnly"/>
+      <property name="selectedRecordName" type="String" label="Selected Record Name" role="inputOnly"/>
+    </targetConfig>
+  </targetConfigs>
+</LightningComponentBundle>

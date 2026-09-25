@@ -1,0 +1,35 @@
+<template>
+    <template if:true={summary}>
+        <lightning-card title="Production Summary" icon-name="custom:custom63">
+            <div class="slds-p-horizontal_medium">
+                <p><strong>Total:</strong> {summary.total}</p>
+                <p><strong>Pass:</strong> {summary.pass}</p>
+                <p><strong>Fail:</strong> {summary.fail}</p>
+                <p><strong>Pass Rate:</strong> {formattedPassRate}%</p>
+                <p><strong>Average Titer:</strong> {formattedAverageTiter}</p>
+                <p><strong>Average Plates Used:</strong> {formattedAveragePlatesUsed}</p>
+            </div>
+        </lightning-card>
+
+        <!-- Full-width table -->
+        <lightning-card title="Production Details" icon-name="standard:record">
+            <div class="table-container">
+                <lightning-datatable
+                    key-field="id"
+                    data={details}
+                    columns={columns}
+                    hide-checkbox-column
+                    class="full-width-table">
+                </lightning-datatable>
+            </div>
+        </lightning-card>
+    </template>
+
+    <template if:true={error}>
+        <lightning-card title="Error">
+            <p class="slds-p-horizontal_medium slds-text-color_error">
+                {error.body.message}
+            </p>
+        </lightning-card>
+    </template>
+</template>

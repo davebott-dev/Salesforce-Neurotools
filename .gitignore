@@ -24,9 +24,6 @@ yarn-error.log*
 # Dependency directories
 node_modules/
 
-# ApexPMD cache
-.pmdCache
-
 # Eslint cache
 .eslintcache
 
@@ -47,6 +44,6 @@ $RECYCLE.BIN/
 **/.venv/
 **/venv/
 
-# JSON files 
+# JSON Files
 
 *.json

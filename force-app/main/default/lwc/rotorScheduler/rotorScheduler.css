@@ -1,0 +1,52 @@
+/* Main board container */
+.board {
+    display: flex;
+    gap: 1rem; /* space between rotor columns */
+}
+
+/* Each rotor column panel */
+.rotor-column {
+    flex: 1;
+    background-color: #f9f9f9;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+}
+
+/* Dropzone inside each rotor */
+.dropzone {
+    min-height: 300px;
+    border: 2px dashed #ccc;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+}
+
+/* Individual slots */
+.slot {
+    margin: 0.25rem 0;
+}
+
+/* Draggable production detail cards */
+.card {
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    cursor: grab;
+    text-align: center;
+    font-size: 0.85rem;
+}
+
+/* Empty slot styling */
+.empty-slot {
+    text-align: center;
+    font-size: 0.8rem;
+    color: #888;
+    border: 1px dashed #ddd;
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+}
+
+/* Optional: highlight slot on dragover */
+.dropzone.dragover {
+    border-color: #0070d2;
+    background-color: #f0f8ff;
+}

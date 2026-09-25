@@ -1,0 +1,485 @@
+<template>
+
+    <lightning-card
+        title="Stock Viruses"
+        icon-name="standard:products">
+
+        <!-- ================================================= -->
+        <!-- FILTERS -->
+        <!-- ================================================= -->
+
+        <div class="slds-p-around_medium">
+
+            <lightning-combobox
+                name="virusType"
+                label="Filter by Virus Type"
+                options={virusTypeOptions}
+                value={virusType}
+                onchange={handleVirusTypeChange}>
+            </lightning-combobox>
+
+
+            <lightning-input
+                type="search"
+                name="search"
+                label="Search by Name"
+                placeholder="Enter virus name"
+                onchange={handleSearchChange}
+                class="slds-m-top_small">
+            </lightning-input>
+
+
+            <!-- ============================================= -->
+            <!-- AAV FILTERS -->
+            <!-- ============================================= -->
+
+            <template if:true={showAAVFilters}>
+
+                <div class="slds-m-top_small">
+
+                    <span class="slds-m-right_x-small">
+                        <strong>Serotype:</strong>
+                    </span>
+
+                    <template
+                        for:each={serotypeButtons}
+                        for:item="btn">
+
+                        <lightning-button
+                            key={btn.label}
+                            label={btn.label}
+                            variant={btn.variant}
+                            data-value={btn.label}
+                            onclick={handleSerotypeClick}
+                            class="slds-m-right_x-small">
+                        </lightning-button>
+
+                    </template>
+
+                </div>
+
+
+                <div class="slds-m-top_small">
+
+                    <span class="slds-m-right_x-small">
+                        <strong>Promoter:</strong>
+                    </span>
+
+                    <template
+                        for:each={promoterButtons}
+                        for:item="btn">
+
+                        <lightning-button
+                            key={btn.label}
+                            label={btn.label}
+                            variant={btn.variant}
+                            data-value={btn.label}
+                            onclick={handlePromoterClick}
+                            class="slds-m-right_x-small">
+                        </lightning-button>
+
+                    </template>
+
+                </div>
+
+            </template>
+
+
+            <!-- ============================================= -->
+            <!-- HSV FILTERS -->
+            <!-- ============================================= -->
+
+            <template if:true={showHSVFilters}>
+
+                <div class="slds-m-top_small">
+
+                    <span class="slds-m-right_x-small">
+                        <strong>End Use:</strong>
+                    </span>
+
+                    <template
+                        for:each={hsvButtons}
+                        for:item="btn">
+
+                        <lightning-button
+                            key={btn.label}
+                            label={btn.label}
+                            variant={btn.variant}
+                            data-value={btn.label}
+                            onclick={handleHSVClick}
+                            class="slds-m-right_x-small">
+                        </lightning-button>
+
+                    </template>
+
+                </div>
+
+            </template>
+
+
+            <!-- ============================================= -->
+            <!-- RABIES FILTERS -->
+            <!-- ============================================= -->
+
+            <template if:true={showRabiesFilters}>
+
+                <div class="slds-m-top_small">
+
+                    <span class="slds-m-right_x-small">
+                        <strong>Envelope:</strong>
+                    </span>
+
+                    <template
+                        for:each={rabiesButtons}
+                        for:item="btn">
+
+                        <lightning-button
+                            key={btn.label}
+                            label={btn.label}
+                            variant={btn.variant}
+                            data-value={btn.label}
+                            onclick={handleRabiesClick}
+                            class="slds-m-right_x-small">
+                        </lightning-button>
+
+                    </template>
+
+                </div>
+
+            </template>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- MAIN STOCK TABLE -->
+        <!-- ================================================= -->
+
+        <lightning-datatable
+            key-field="Id"
+            data={filteredData}
+            columns={columns}
+            hide-checkbox-column
+            onrowaction={handleRowAction}
+            class="slds-m-around_medium">
+        </lightning-datatable>
+
+
+        <!-- ================================================= -->
+        <!-- ERROR -->
+        <!-- ================================================= -->
+
+        <template if:true={error}>
+
+            <p class="slds-text-color_error slds-p-around_medium">
+                Error: {error}
+            </p>
+
+        </template>
+
+    </lightning-card>
+
+
+    <!-- ===================================================== -->
+    <!-- STOCK BATCH MODAL -->
+    <!-- ===================================================== -->
+
+    <template if:true={showBatchModal}>
+
+        <section
+            role="dialog"
+            tabindex="-1"
+            aria-modal="true"
+            aria-labelledby="batch-modal-heading"
+            class="slds-modal slds-fade-in-open">
+
+            <div class="slds-modal__container">
+
+                <!-- ========================================= -->
+                <!-- HEADER -->
+                <!-- ========================================= -->
+
+                <header class="slds-modal__header">
+
+                    <button
+                        class="slds-button slds-button_icon slds-modal__close"
+                        title="Close"
+                        onclick={closeBatchModal}
+                        disabled={addingToCart}>
+
+                        <lightning-icon
+                            icon-name="utility:close"
+                            alternative-text="Close"
+                            size="small">
+                        </lightning-icon>
+
+                        <span class="slds-assistive-text">
+                            Close
+                        </span>
+
+                    </button>
+
+
+                    <h2
+                        id="batch-modal-heading"
+                        class="slds-modal__title slds-hyphenate">
+
+                        Stock Batches
+
+                    </h2>
+
+
+                    <template if:true={selectedProduct}>
+
+                        <p class="slds-m-top_x-small">
+
+                            {selectedProduct.Name}
+
+                        </p>
+
+                    </template>
+
+                </header>
+
+
+                <!-- ========================================= -->
+                <!-- BODY -->
+                <!-- ========================================= -->
+
+                <div class="slds-modal__content slds-p-around_medium">
+
+                    <template if:true={selectedProduct}>
+
+                        <div class="slds-m-bottom_medium">
+
+                            <div>
+                                <strong>Construct:</strong>
+                                {selectedProduct.ConstructName}
+                            </div>
+
+                            <div>
+                                <strong>Capsid/Envelope:</strong>
+                                {selectedProduct.CapsidName}
+                            </div>
+
+                            <div>
+                                <strong>Virus Type:</strong>
+                                {selectedProduct.Virus_Type__c}
+                            </div>
+
+                            <template if:true={selectedProduct.EndUse}>
+
+                                <div>
+                                    <strong>End Use:</strong>
+                                    {selectedProduct.EndUse}
+                                </div>
+
+                            </template>
+
+                        </div>
+
+
+                        <!-- ================================= -->
+                        <!-- BATCH TABLE -->
+                        <!-- ================================= -->
+
+                        <lightning-datatable
+                            key-field="Id"
+                            data={selectedProduct.batches}
+                            columns={batchColumns}
+                            hide-checkbox-column
+                            onrowaction={handleBatchAction}>
+                        </lightning-datatable>
+
+                    </template>
+
+                </div>
+
+
+                <!-- ========================================= -->
+                <!-- FOOTER -->
+                <!-- ========================================= -->
+
+                <footer class="slds-modal__footer">
+
+                    <lightning-button
+                        label="Close"
+                        onclick={closeBatchModal}
+                        disabled={addingToCart}>
+                    </lightning-button>
+
+                </footer>
+
+            </div>
+
+        </section>
+
+
+        <div class="slds-backdrop slds-backdrop_open"></div>
+
+    </template>
+
+
+    <!-- ===================================================== -->
+    <!-- QUANTITY MODAL -->
+    <!-- ===================================================== -->
+
+    <template if:true={showQuantityModal}>
+
+        <section
+            role="dialog"
+            tabindex="-1"
+            aria-modal="true"
+            aria-labelledby="quantity-modal-heading"
+            class="slds-modal slds-fade-in-open">
+
+            <div class="slds-modal__container">
+
+                <!-- ========================================= -->
+                <!-- HEADER -->
+                <!-- ========================================= -->
+
+                <header class="slds-modal__header">
+
+                    <button
+                        class="slds-button slds-button_icon slds-modal__close"
+                        title="Close"
+                        onclick={closeQuantityModal}
+                        disabled={addingToCart}>
+
+                        <lightning-icon
+                            icon-name="utility:close"
+                            alternative-text="Close"
+                            size="small">
+                        </lightning-icon>
+
+                        <span class="slds-assistive-text">
+                            Close
+                        </span>
+
+                    </button>
+
+
+                    <h2
+                        id="quantity-modal-heading"
+                        class="slds-modal__title">
+
+                        Add Stock to Cart
+
+                    </h2>
+
+                </header>
+
+
+                <!-- ========================================= -->
+                <!-- BODY -->
+                <!-- ========================================= -->
+
+                <div class="slds-modal__content slds-p-around_medium">
+
+                    <template if:true={selectedBatch}>
+
+                        <div class="slds-m-bottom_medium">
+
+                            <p>
+                                <strong>Stock:</strong>
+                                {selectedProduct.Name}
+                            </p>
+
+                            <p>
+                                <strong>Transfection / Collection ID:</strong>
+                                {selectedBatch.Transfection_ID__c}
+                            </p>
+
+                            <p>
+                                <strong>Titer:</strong>
+                                {selectedBatch.Titer__c}
+                            </p>
+
+                            <p>
+                                <strong>End Volume:</strong>
+                                {selectedBatch.End_Volume__c}
+                            </p>
+
+                            <p class="slds-m-top_small">
+
+                                <strong>
+                                    Available:
+                                </strong>
+
+                                {selectedBatchAvailable}
+                                tube(s)
+
+                            </p>
+
+                        </div>
+
+
+                        <!-- ================================= -->
+                        <!-- QUANTITY -->
+                        <!-- ================================= -->
+
+                        <lightning-input
+                            type="number"
+                            name="requestedQuantity"
+                            label="Number of Tubes"
+                            value={requestedQuantity}
+                            min="1"
+                            max={selectedBatchAvailable}
+                            step="1"
+                            required
+                            message-when-range-overflow="You cannot request more tubes than are available."
+                            message-when-range-underflow="Please request at least one tube."
+                            onchange={handleQuantityChange}>
+
+                        </lightning-input>
+
+                    </template>
+
+                </div>
+
+
+                <!-- ========================================= -->
+                <!-- FOOTER -->
+                <!-- ========================================= -->
+
+                <footer class="slds-modal__footer">
+
+                    <lightning-button
+                        label="Cancel"
+                        onclick={closeQuantityModal}
+                        disabled={addingToCart}
+                        class="slds-m-right_small">
+                    </lightning-button>
+
+
+                    <lightning-button
+                        variant="brand"
+                        label="Add to Cart"
+                        onclick={handleAddToCart}
+                        disabled={addingToCart}>
+                    </lightning-button>
+
+
+                    <template if:true={addingToCart}>
+
+                        <lightning-spinner
+                            alternative-text="Adding to cart"
+                            size="small"
+                            class="slds-m-left_small">
+                        </lightning-spinner>
+
+                    </template>
+
+                </footer>
+
+            </div>
+
+        </section>
+
+
+        <div class="slds-backdrop slds-backdrop_open"></div>
+
+    </template>
+
+</template>
