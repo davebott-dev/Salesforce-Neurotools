@@ -1,0 +1,231 @@
+.container {
+    padding: 0 1rem 1rem 1rem;
+}
+
+
+/* Header */
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0 1rem 0;
+}
+
+.title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.subtitle {
+    margin: 0.2rem 0 0 0;
+    color: #5c5c5c;
+    font-size: 0.8rem;
+}
+
+.summary {
+    display: flex;
+    align-items: baseline;
+    white-space: nowrap;
+}
+
+.summary-number {
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.summary-text {
+    margin-left: 0.2rem;
+    color: #5c5c5c;
+    font-size: 0.85rem;
+}
+
+
+/* Progress */
+
+.progress-section {
+    margin-bottom: 1rem;
+}
+
+.progress-header,
+.progress-footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+}
+
+.progress-header {
+    margin-bottom: 0.3rem;
+    font-weight: 600;
+}
+
+.progress-footer {
+    margin-top: 0.3rem;
+    color: #5c5c5c;
+}
+
+.progress-bar {
+    height: 0.5rem;
+    width: 100%;
+    background: #e5e5e5;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #2e844a;
+    border-radius: 999px;
+    transition: width 0.3s ease;
+}
+
+
+/* Table */
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.shipment-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.shipment-table th {
+    text-align: left;
+    padding: 0.65rem 0.75rem;
+    border-bottom: 1px solid #d8dde6;
+    color: #444;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.shipment-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #e5e5e5;
+    vertical-align: middle;
+    font-size: 0.82rem;
+}
+
+.shipment-table th:nth-child(1) {
+    width: 22%;
+}
+
+.shipment-table th:nth-child(2) {
+    width: 18%;
+}
+
+.shipment-table th:nth-child(3) {
+    width: 18%;
+}
+
+.shipment-table th:nth-child(4) {
+    width: 14%;
+}
+
+.shipment-table th:nth-child(5) {
+    width: 28%;
+}
+
+.shipment-row:hover {
+    background: #f7f9fb;
+}
+
+.pending-row {
+    background: #fffdf5;
+}
+
+
+/* Links */
+
+.record-link {
+    color: #0176d3;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.record-link:hover {
+    text-decoration: underline;
+}
+
+
+/* Packing status */
+
+.packing-status {
+    display: flex;
+    flex-direction: column;
+}
+
+.status-line {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-weight: 600;
+}
+
+.packing-status.checked .status-line {
+    color: #2e844a;
+}
+
+.packing-status.pending .status-line {
+    color: #706e6b;
+}
+
+.checked-details {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin-top: 0.2rem;
+    color: #5c5c5c;
+    font-size: 0.72rem;
+}
+
+.separator {
+    color: #999;
+}
+
+
+/* Loading */
+
+.loading {
+    position: relative;
+    min-height: 4rem;
+}
+
+
+/* Error */
+
+.error-message {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    margin-top: 0.5rem;
+    border-radius: 0.25rem;
+    background: #fef1ee;
+    color: #ba0517;
+}
+
+
+/* Empty */
+
+.empty-state {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: #5c5c5c;
+}
+
+.empty-title {
+    margin-top: 0.75rem;
+    font-weight: 600;
+    color: #181818;
+}
+
+.empty-text {
+    margin-top: 0.25rem;
+    font-size: 0.8rem;
+}

@@ -1,0 +1,339 @@
+<template>
+
+    <lightning-card>
+
+        <div class="container">
+
+            <!-- Header -->
+            <div class="header">
+
+                <div>
+                    <h2 class="title">
+                        Virus Shipments
+                    </h2>
+
+                    <p class="subtitle">
+                        Packing status for tubes included in this shipment.
+                    </p>
+                </div>
+
+                <template if:true={hasRecords}>
+                    <div class="summary">
+                        <span class="summary-number">
+                            {checkedInCount}
+                        </span>
+
+                        <span class="summary-text">
+                            / {totalCount} Checked In
+                        </span>
+                    </div>
+                </template>
+
+            </div>
+
+
+            <!-- Progress -->
+            <template if:true={hasRecords}>
+
+                <div class="progress-section">
+
+                    <div class="progress-header">
+
+                        <span>
+                            Packing Progress
+                        </span>
+
+                        <span>
+                            {progressPercentage}%
+                        </span>
+
+                    </div>
+
+                    <div class="progress-bar">
+
+                        <div
+                            class="progress-fill"
+                            style={progressStyle}>
+                        </div>
+
+                    </div>
+
+                    <div class="progress-footer">
+
+                        <span>
+                            {checkedInCount} Checked In
+                        </span>
+
+                        <span>
+                            {remainingCount} Remaining
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </template>
+
+
+            <!-- Loading -->
+            <template if:true={isLoading}>
+
+                <div class="loading">
+
+                    <lightning-spinner
+                        alternative-text="Loading virus shipments"
+                        size="small">
+                    </lightning-spinner>
+
+                </div>
+
+            </template>
+
+
+            <!-- Error -->
+            <template if:true={errorMessage}>
+
+                <div class="error-message">
+
+                    <lightning-icon
+                        icon-name="utility:error"
+                        size="x-small"
+                        alternative-text="Error">
+                    </lightning-icon>
+
+                    <span>
+                        {errorMessage}
+                    </span>
+
+                </div>
+
+            </template>
+
+
+            <!-- Empty -->
+            <template if:true={showEmpty}>
+
+                <div class="empty-state">
+
+                    <lightning-icon
+                        icon-name="utility:package"
+                        size="medium"
+                        alternative-text="No virus shipments">
+                    </lightning-icon>
+
+                    <div class="empty-title">
+                        No Virus Shipments
+                    </div>
+
+                    <div class="empty-text">
+                        No virus shipments are currently associated with this shipment.
+                    </div>
+
+                </div>
+
+            </template>
+
+
+            <!-- Table -->
+            <template if:true={hasRecords}>
+
+                <div class="table-wrapper">
+
+                    <table class="shipment-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Production Tube
+                                </th>
+
+                                <th>
+                                    Virus Order
+                                </th>
+
+                                <th>
+                                    Requestor
+                                </th>
+
+                                <th>
+                                    Order Date
+                                </th>
+
+                                <th>
+                                    Packing Status
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            <template
+                                for:each={records}
+                                for:item="record">
+
+                                <tr
+                                    key={record.id}
+                                    class={record.rowClass}>
+
+                                    <!-- Production Detail -->
+                                    <td>
+
+                                        <template if:true={record.productionDetailUrl}>
+
+                                            <a
+                                                href={record.productionDetailUrl}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                class="record-link">
+
+                                                {record.productionDetailName}
+
+                                            </a>
+
+                                        </template>
+
+                                        <template if:false={record.productionDetailUrl}>
+
+                                            {record.productionDetailName}
+
+                                        </template>
+
+                                    </td>
+
+
+                                    <!-- Virus Order -->
+                                    <td>
+
+                                        <template if:true={record.virusOrderUrl}>
+
+                                            <a
+                                                href={record.virusOrderUrl}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                class="record-link">
+
+                                                {record.virusOrderName}
+
+                                            </a>
+
+                                        </template>
+
+                                        <template if:false={record.virusOrderUrl}>
+
+                                            {record.virusOrderName}
+
+                                        </template>
+
+                                    </td>
+
+
+                                    <!-- Requestor -->
+                                    <td>
+
+                                        <template if:true={record.requestorUrl}>
+
+                                            <a
+                                                href={record.requestorUrl}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                class="record-link">
+
+                                                {record.requestorName}
+
+                                            </a>
+
+                                        </template>
+
+                                        <template if:false={record.requestorUrl}>
+
+                                            {record.requestorName}
+
+                                        </template>
+
+                                    </td>
+
+
+                                    <!-- Opportunity Close Date -->
+                                    <td>
+
+                                        <lightning-formatted-date-time
+                                            value={record.closeDate}
+                                            year="numeric"
+                                            month="short"
+                                            day="numeric">
+                                        </lightning-formatted-date-time>
+
+                                    </td>
+
+
+                                    <!-- Packing Status -->
+                                    <td>
+
+                                        <div class={record.statusClass}>
+
+                                            <div class="status-line">
+
+                                                <lightning-icon
+                                                    icon-name={record.statusIcon}
+                                                    size="x-small"
+                                                    alternative-text={record.statusText}>
+                                                </lightning-icon>
+
+                                                <span class="status-text">
+                                                    {record.statusText}
+                                                </span>
+
+                                            </div>
+
+
+                                            <template if:true={record.checkedIn}>
+
+                                                <div class="checked-details">
+
+                                                    <span>
+                                                        {record.checkedByName}
+                                                    </span>
+
+                                                    <span class="separator">
+                                                        •
+                                                    </span>
+
+                                                    <lightning-formatted-date-time
+                                                        value={record.checkedInDate}
+                                                        year="numeric"
+                                                        month="short"
+                                                        day="numeric"
+                                                        hour="numeric"
+                                                        minute="2-digit"
+                                                        second="2-digit">
+                                                    </lightning-formatted-date-time>
+
+                                                </div>
+
+                                            </template>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+
+                            </template>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </template>
+
+        </div>
+
+    </lightning-card>
+
+</template>
