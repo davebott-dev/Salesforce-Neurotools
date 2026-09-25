@@ -1,5 +1,9 @@
 import { LightningElement } from 'lwc';
 
+import processBarcode
+    from '@salesforce/apex/BarcodePackingController.processBarcode';
+
+
 export default class BarcodePacking extends LightningElement {
 
     barcode = '';
@@ -63,11 +67,14 @@ export default class BarcodePacking extends LightningElement {
 
     async processScan() {
 
-        const scannedBarcode = (this.barcode || '').trim();
+        const scannedBarcode =
+            (this.barcode || '').trim();
+
 
         if (!scannedBarcode || this.scanInProgress) {
             return;
         }
+
 
         this.scanInProgress = true;
         this.isProcessing = true;
@@ -76,15 +83,156 @@ export default class BarcodePacking extends LightningElement {
         try {
 
             /*
-             * TEMPORARY MOCK SCAN
-             *
-             * Apex will replace this later.
+             * Send the scanned Production Detail
+             * identifier to Apex.
              */
+            const apexResult =
+                await processBarcode({
+                    scannedIdentifier: scannedBarcode
+                });
 
-            await this.mockScan(scannedBarcode);
+
+            /*
+             * Convert the Apex ScanResult into the
+             * structure used by the LWC.
+             *
+             * Apex calls this field productionDetailName.
+             * The existing LWC uses productionLotName.
+             */
+            const scanResult = {
+
+                success:
+                    apexResult.success,
+
+                alreadyChecked:
+                    apexResult.alreadyChecked,
+
+                message:
+                    apexResult.message,
+
+                shipmentName:
+                    apexResult.shipmentName,
+
+                virusOrderName:
+                    apexResult.virusOrderName,
+
+                productionLotName:
+                    apexResult.productionDetailName,
+
+                checkedDate:
+                    apexResult.checkedDate,
+
+                checkedByName:
+                    apexResult.checkedByName
+
+            };
+
+
+            /*
+             * Successful first-time scan.
+             */
+            if (scanResult.success) {
+
+                this.successfulScans++;
+
+                this.addToHistory(
+                    scanResult,
+                    'success'
+                );
+
+            }
+
+
+            /*
+             * Tube has already been checked.
+             */
+            else if (scanResult.alreadyChecked) {
+
+                this.duplicateScans++;
+
+                this.addToHistory(
+                    scanResult,
+                    'duplicate'
+                );
+
+            }
+
+
+            /*
+             * Any other error.
+             */
+            else {
+
+                this.failedScans++;
+
+                this.addToHistory(
+                    scanResult,
+                    'error'
+                );
+
+            }
+
+
+            /*
+             * Display the most recent scan.
+             */
+            this.lastScan = scanResult;
+
+
+        } catch (error) {
+
+            /*
+             * Handle unexpected Apex errors.
+             */
+            console.error(
+                'Barcode scan error:',
+                error
+            );
+
+
+            const errorMessage =
+                this.getErrorMessage(error);
+
+
+            const errorResult = {
+
+                success: false,
+
+                alreadyChecked: false,
+
+                message: errorMessage,
+
+                shipmentName: null,
+
+                virusOrderName: null,
+
+                productionLotName:
+                    scannedBarcode,
+
+                checkedDate: null,
+
+                checkedByName: null
+
+            };
+
+
+            this.failedScans++;
+
+            this.lastScan = errorResult;
+
+
+            this.addToHistory(
+                errorResult,
+                'error'
+            );
+
 
         } finally {
 
+            /*
+             * Clear the scanner input and prepare
+             * for the next barcode.
+             */
             this.barcode = '';
 
             this.isProcessing = false;
@@ -97,93 +245,6 @@ export default class BarcodePacking extends LightningElement {
             }, 100);
 
         }
-
-    }
-
-
-    mockScan(scannedBarcode) {
-
-        return new Promise((resolve) => {
-
-            setTimeout(() => {
-
-                const now = new Date();
-
-                const number =
-                    this.getMockNumber(scannedBarcode);
-
-
-                const mockResult = {
-
-                    success: true,
-
-                    alreadyChecked: false,
-
-                    message:
-                        'Tube successfully checked.',
-
-                    shipmentName:
-                        this.getMockShipment(scannedBarcode),
-
-                    virusOrderName:
-                        `Virus Order ${number}`,
-
-                    productionLotName:
-                        scannedBarcode,
-
-                    checkedDate:
-                        this.formatDateTime(now),
-
-                    checkedByName:
-                        'Current User'
-
-                };
-
-
-                this.successfulScans++;
-
-                this.lastScan = mockResult;
-
-
-                this.addToHistory(
-                    mockResult,
-                    'success'
-                );
-
-
-                resolve();
-
-            }, 350);
-
-        });
-
-    }
-
-
-    getMockNumber(value) {
-
-        const digits =
-            (value || '').replace(/\D/g, '');
-
-        return digits || '001';
-
-    }
-
-
-    getMockShipment(value) {
-
-        const number =
-            parseInt(
-                this.getMockNumber(value),
-                10
-            ) || 1;
-
-
-        const shipmentNumber =
-            ((number - 1) % 5) + 1;
-
-
-        return `SHIP-${String(shipmentNumber).padStart(4, '0')}`;
 
     }
 
@@ -268,23 +329,40 @@ export default class BarcodePacking extends LightningElement {
     }
 
 
-    formatDateTime(date) {
+    getErrorMessage(error) {
 
-        return date.toLocaleString([], {
+        /*
+         * Standard Apex/LWC error.
+         */
+        if (error?.body?.message) {
+            return error.body.message;
+        }
 
-            month: 'short',
 
-            day: 'numeric',
+        /*
+         * Multiple Apex errors.
+         */
+        if (
+            Array.isArray(error?.body)
+            && error.body.length > 0
+        ) {
 
-            year: 'numeric',
+            return error.body
+                .map(item => item.message)
+                .join(', ');
 
-            hour: 'numeric',
+        }
 
-            minute: '2-digit',
 
-            second: '2-digit'
+        /*
+         * Generic JavaScript error.
+         */
+        if (error?.message) {
+            return error.message;
+        }
 
-        });
+
+        return 'An unexpected error occurred while checking the tube.';
 
     }
 
