@@ -1,0 +1,311 @@
+.scanner-container {
+    padding: 1.25rem;
+}
+
+
+/* HEADER */
+
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+
+.page-title {
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 700;
+}
+
+
+.page-subtitle {
+    margin: 0.25rem 0 0;
+    color: #706e6b;
+    font-size: 0.85rem;
+}
+
+
+.session-status {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.65rem;
+    border-radius: 1rem;
+    background: #f3faf5;
+    color: #2e844a;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+
+.status-dot {
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: #2e844a;
+}
+
+
+/* SCANNER */
+
+.scanner-section {
+    padding: 1.1rem;
+    border: 1px solid #dddbda;
+    border-radius: 0.6rem;
+    background: #fafaf9;
+}
+
+
+.scanner-help {
+    margin: 0.5rem 0 0;
+    color: #706e6b;
+    font-size: 0.75rem;
+}
+
+
+.processing {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+    padding: 0.5rem;
+    color: #444;
+    font-size: 0.8rem;
+}
+
+
+/* SCAN RESULT */
+
+.scan-result {
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 0.6rem;
+    border: 1px solid;
+}
+
+
+.scan-result.success {
+    border-color: #2e844a;
+    background: #f3faf5;
+}
+
+
+.scan-result.duplicate {
+    border-color: #fe9339;
+    background: #fff8f0;
+}
+
+
+.scan-result.error {
+    border-color: #ea001e;
+    background: #fef5f5;
+}
+
+
+.result-header {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+
+.result-title {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+
+.result-message {
+    margin-top: 0.1rem;
+    color: #444;
+    font-size: 0.8rem;
+}
+
+
+/* RECORD DETAILS */
+
+.record-details {
+    margin-top: 1rem;
+}
+
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+}
+
+
+.detail-card {
+    padding: 0.75rem;
+    border-radius: 0.45rem;
+    background: rgba(255, 255, 255, 0.75);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+
+.shipment-card {
+    border-left: 4px solid #2e844a;
+}
+
+
+.detail-label {
+    color: #706e6b;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.04rem;
+}
+
+
+.detail-value {
+    margin-top: 0.2rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    word-break: break-word;
+}
+
+
+.check-meta {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 0.75rem;
+    color: #706e6b;
+    font-size: 0.75rem;
+}
+
+
+/* STATISTICS */
+
+.stats-section {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+
+.stat-card {
+    padding: 0.9rem;
+    text-align: center;
+    border: 1px solid #dddbda;
+    border-radius: 0.5rem;
+    background: #fff;
+}
+
+
+.stat-number {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+
+.stat-label {
+    margin-top: 0.15rem;
+    color: #706e6b;
+    font-size: 0.7rem;
+}
+
+
+/* HISTORY */
+
+.history-section {
+    margin-top: 1.5rem;
+}
+
+
+.section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+
+.section-heading h3 {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+
+.section-heading span {
+    color: #706e6b;
+    font-size: 0.7rem;
+}
+
+
+.history-list {
+    border-top: 1px solid #dddbda;
+}
+
+
+.history-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem 0.25rem;
+    border-bottom: 1px solid #dddbda;
+}
+
+
+.history-icon {
+    flex-shrink: 0;
+}
+
+
+.history-details {
+    flex: 1;
+    min-width: 0;
+}
+
+
+.history-primary {
+    font-weight: 600;
+    font-size: 0.8rem;
+}
+
+
+.history-secondary {
+    margin-top: 0.1rem;
+    color: #706e6b;
+    font-size: 0.7rem;
+}
+
+
+.separator {
+    margin: 0 0.25rem;
+}
+
+
+.history-time {
+    color: #706e6b;
+    font-size: 0.7rem;
+    white-space: nowrap;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    .header-section {
+        flex-direction: column;
+    }
+
+
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .check-meta {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+}

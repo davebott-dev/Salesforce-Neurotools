@@ -1,0 +1,270 @@
+<template>
+    <lightning-card title="Tube Packing Scanner" icon-name="utility:scan">
+
+        <div class="scanner-container">
+
+            <!-- Header -->
+            <div class="header-section">
+                <div>
+                    <h2 class="page-title">Tube Packing</h2>
+
+                    <p class="page-subtitle">
+                        Scan each tube barcode to verify it is included in the correct shipment.
+                    </p>
+                </div>
+
+                <div class="session-status">
+                    <span class="status-dot"></span>
+                    <span>Scanner Ready</span>
+                </div>
+            </div>
+
+            <!-- Scanner -->
+            <div class="scanner-section">
+
+                <lightning-input
+                    class="scanner-input"
+                    type="text"
+                    label="Scan Tube Barcode"
+                    value={barcode}
+                    onchange={handleBarcodeChange}
+                    onkeydown={handleKeyDown}
+                    placeholder="Scan barcode..."
+                    autocomplete="off">
+                </lightning-input>
+
+                <p class="scanner-help">
+                    Use the barcode scanner or type a barcode and press Enter.
+                </p>
+
+                <template if:true={isProcessing}>
+                    <div class="processing">
+
+                        <lightning-spinner
+                            alternative-text="Processing scan"
+                            size="small">
+                        </lightning-spinner>
+
+                        <span>Checking tube...</span>
+
+                    </div>
+                </template>
+
+            </div>
+
+            <!-- Scan Result -->
+            <template if:true={lastScan}>
+
+                <section class={lastScanClass}>
+
+                    <div class="result-header">
+
+                        <div class="result-icon">
+
+                            <lightning-icon
+                                icon-name={lastScanIcon}
+                                size="small"
+                                alternative-text="Scan result">
+                            </lightning-icon>
+
+                        </div>
+
+                        <div>
+
+                            <div class="result-title">
+                                {lastScanTitle}
+                            </div>
+
+                            <div class="result-message">
+                                {lastScan.message}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <template if:true={lastScan.success}>
+
+                        <div class="record-details">
+
+                            <!-- Shipment -->
+                            <div class="detail-card shipment-card">
+
+                                <div class="detail-label">
+                                    SHIPMENT
+                                </div>
+
+                                <div class="detail-value">
+                                    {lastScan.shipmentName}
+                                </div>
+
+                            </div>
+
+                            <div class="detail-grid">
+
+                                <!-- Virus Order -->
+                                <div class="detail-card">
+
+                                    <div class="detail-label">
+                                        VIRUS ORDER
+                                    </div>
+
+                                    <div class="detail-value">
+                                        {lastScan.virusOrderName}
+                                    </div>
+
+                                </div>
+
+                                <!-- Production Lot -->
+                                <div class="detail-card">
+
+                                    <div class="detail-label">
+                                        PRODUCTION LOT
+                                    </div>
+
+                                    <div class="detail-value">
+                                        {lastScan.productionLotName}
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="check-meta">
+
+                                <span>
+                                    <strong>Checked:</strong>
+                                    {lastScan.checkedDate}
+                                </span>
+
+                                <span>
+                                    <strong>By:</strong>
+                                    {lastScan.checkedByName}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </template>
+
+                </section>
+
+            </template>
+
+            <!-- Session Statistics -->
+            <section class="stats-section">
+
+                <div class="stat-card">
+
+                    <div class="stat-number">
+                        {successfulScans}
+                    </div>
+
+                    <div class="stat-label">
+                        Tubes Checked
+                    </div>
+
+                </div>
+
+                <div class="stat-card">
+
+                    <div class="stat-number">
+                        {duplicateScans}
+                    </div>
+
+                    <div class="stat-label">
+                        Already Checked
+                    </div>
+
+                </div>
+
+                <div class="stat-card">
+
+                    <div class="stat-number">
+                        {failedScans}
+                    </div>
+
+                    <div class="stat-label">
+                        Errors
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- Recent Scans -->
+            <template if:true={hasScanHistory}>
+
+                <section class="history-section">
+
+                    <div class="section-heading">
+
+                        <h3>
+                            Recent Scans
+                        </h3>
+
+                        <span>
+                            {scanHistory.length} recent
+                        </span>
+
+                    </div>
+
+                    <div class="history-list">
+
+                        <template
+                            for:each={scanHistory}
+                            for:item="scan">
+
+                            <div
+                                key={scan.id}
+                                class="history-row">
+
+                                <div class="history-icon">
+
+                                    <lightning-icon
+                                        icon-name={scan.icon}
+                                        size="x-small"
+                                        alternative-text="Status">
+                                    </lightning-icon>
+
+                                </div>
+
+                                <div class="history-details">
+
+                                    <div class="history-primary">
+                                        {scan.productionLotName}
+                                    </div>
+
+                                    <div class="history-secondary">
+
+                                        {scan.shipmentName}
+
+                                        <span class="separator">
+                                            •
+                                        </span>
+
+                                        {scan.virusOrderName}
+
+                                    </div>
+
+                                </div>
+
+                                <div class="history-time">
+                                    {scan.time}
+                                </div>
+
+                            </div>
+
+                        </template>
+
+                    </div>
+
+                </section>
+
+            </template>
+
+        </div>
+
+    </lightning-card>
+</template>
