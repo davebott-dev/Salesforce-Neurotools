@@ -71,6 +71,19 @@ export default class VirusShipmentList extends NavigationMixin(LightningElement)
 
     }
 
+    formatDate(dateString) {
+
+    if (!dateString) {
+        return '';
+    }
+
+    const [year, month, day] =
+        dateString.split('-');
+
+    return `${month}/${day}/${year}`;
+
+}
+
 
     async processRecords(rawRecords) {
 
@@ -115,7 +128,7 @@ export default class VirusShipmentList extends NavigationMixin(LightningElement)
                     'Unknown Requestor',
 
                 closeDate:
-                    virusOrder?.CloseDate?.value,
+                    this.formatDate(virusOrder?.CloseDate?.value),
 
                 productionDetailId:
                     fields.Production_Lot_Included__c?.value,
@@ -160,10 +173,6 @@ export default class VirusShipmentList extends NavigationMixin(LightningElement)
 
         });
 
-
-        /*
-         * Generate Salesforce navigation URLs.
-         */
         const recordsWithUrls =
             await Promise.all(
                 processed.map(async record => {

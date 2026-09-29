@@ -158,7 +158,7 @@
                                 </th>
 
                                 <th>
-                                    Order Date
+                                    Ship Date
                                 </th>
 
                                 <th>
@@ -260,12 +260,7 @@
                                     <!-- Opportunity Close Date -->
                                     <td>
 
-                                        <lightning-formatted-date-time
-                                            value={record.closeDate}
-                                            year="numeric"
-                                            month="short"
-                                            day="numeric">
-                                        </lightning-formatted-date-time>
+                                        {record.closeDate}
 
                                     </td>
 
