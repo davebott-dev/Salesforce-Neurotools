@@ -1,338 +1,46 @@
 <template>
 
-<div class="construct-container">
+    <div class="construct-container">
 
-    <!-- =========================================================
-         HEADER
-         ========================================================= -->
+        <!-- =========================================================
+             HEADER
+             ========================================================= -->
 
-    <div class="header">
+        <div class="header">
 
-        <h2 class="slds-text-heading_medium">
-            Select a Construct
-        </h2>
+            <h2 class="slds-text-heading_medium">
+                Select a Construct
+            </h2>
 
-        <template if:true={virusType}>
+            <template if:true={virusType}>
 
-            <p class="virus-label">
-                Available constructs for:
-                <strong>{virusType}</strong>
-            </p>
+                <p class="virus-label">
+                    Available constructs for:
+                    <strong>{virusType}</strong>
+                </p>
 
-        </template>
-
-    </div>
-
-
-    <!-- =========================================================
-         NO VIRUS TYPE
-         ========================================================= -->
-
-    <template if:false={virusType}>
-
-        <div class="message-box">
-
-            <lightning-icon
-                icon-name="utility:info"
-                size="small"
-                alternative-text="Information">
-            </lightning-icon>
-
-            <span>
-                Please select a virus type above to view
-                available constructs.
-            </span>
-
-        </div>
-
-    </template>
-
-
-    <template if:true={virusType}>
-
-
-        <!-- =====================================================
-             TABS
-             ===================================================== -->
-
-        <div class="tabs">
-
-            <button
-                class={neurotoolsTabClass}
-                data-tab="neurotools"
-                onclick={handleTabChange}>
-
-                NeuroTools Inventory
-
-                <span class="count">
-                    {neurotoolsCount}
-                </span>
-
-            </button>
-
-
-            <button
-                class={clientTabClass}
-                data-tab="client"
-                onclick={handleTabChange}>
-
-                Your Deposited DNA
-
-                <span class="count">
-                    {clientCount}
-                </span>
-
-            </button>
+            </template>
 
         </div>
 
 
-        <!-- =====================================================
-             FILTERS
-             ===================================================== -->
-
-        <div class="filters">
-
-            <div class="search">
-
-                <lightning-input
-                    type="search"
-                    label="Search Constructs"
-                    placeholder="Search construct name..."
-                    value={searchTerm}
-                    onchange={handleSearch}>
-                </lightning-input>
-
-            </div>
-
-
-            <div class="promoter">
-
-                <lightning-combobox
-                    label="Promoter / Enhancer"
-                    value={promoterFilter}
-                    options={promoterOptions}
-                    onchange={handlePromoterChange}>
-                </lightning-combobox>
-
-            </div>
-
-        </div>
-
-
-        <!-- =====================================================
-             TABLE
-             ===================================================== -->
-
-        <template if:true={showTable}>
-
-            <div class="table-container">
-
-                <table
-                    class="slds-table
-                           slds-table_cell-buffer
-                           slds-table_bordered
-                           slds-table_striped">
-
-                    <thead>
-
-                        <tr>
-
-                            <th
-                                scope="col"
-                                style="width:70px;">
-
-                                <div class="slds-truncate">
-                                    Select
-                                </div>
-
-                            </th>
-
-
-                            <th scope="col">
-
-                                <div class="slds-truncate">
-                                    Construct
-                                </div>
-
-                            </th>
-
-
-                            <th scope="col">
-
-                                <div class="slds-truncate">
-                                    Promoter / Enhancer
-                                </div>
-
-                            </th>
-
-
-                            <th scope="col">
-
-                                <div class="slds-truncate">
-                                    Source
-                                </div>
-
-                            </th>
-
-                        </tr>
-
-                    </thead>
-
-
-                    <tbody>
-
-                        <template
-                            for:each={filteredInventory}
-                            for:item="inventory">
-
-                            <tr
-                                key={inventory.Id}
-                                class={inventory.rowClass}>
-
-
-                                <!-- =================================
-                                     SELECT
-                                     ================================= -->
-
-                                <td>
-
-                                    <lightning-input
-                                        type="radio"
-                                        name="constructSelection"
-                                        value={inventory.Id}
-                                        checked={inventory.isSelected}
-                                        onchange={handleSelection}
-                                        variant="label-hidden">
-                                    </lightning-input>
-
-                                </td>
-
-
-                                <!-- =================================
-                                     CONSTRUCT
-                                     ================================= -->
-
-                                <td>
-
-                                    <div class="construct-name">
-
-                                        <span>
-                                            {inventory.Name}
-                                        </span>
-
-                                    </div>
-
-
-                                    <!-- ADDGENE INFORMATION -->
-
-                                    <template
-                                        if:true={inventory.isAddgene}>
-
-                                        <div class="addgene-reference">
-
-                                            <span class="addgene-badge">
-                                                Addgene
-                                            </span>
-
-                                            <span class="addgene-number">
-                                                {inventory.Addgene_Construct__c}
-                                            </span>
-
-                                        </div>
-
-                                    </template>
-
-                                </td>
-
-
-                                <!-- =================================
-                                     PROMOTER
-                                     ================================= -->
-
-                                <td>
-
-                                    <template
-                                        if:true={inventory.Promotor_Enhancer__c}>
-
-                                        {inventory.Promotor_Enhancer__c}
-
-                                    </template>
-
-                                    <template
-                                        if:false={inventory.Promotor_Enhancer__c}>
-
-                                        <span class="not-provided">
-                                            Not specified
-                                        </span>
-
-                                    </template>
-
-                                </td>
-
-
-                                <!-- =================================
-                                     SOURCE
-                                     ================================= -->
-
-                                <td>
-
-                                    <template
-                                        if:true={inventory.isCustomerInventory}>
-
-                                        <span
-                                            class="inventory-badge customer">
-
-                                            Your Deposited DNA
-
-                                        </span>
-
-                                    </template>
-
-
-                                    <template
-                                        if:false={inventory.isCustomerInventory}>
-
-                                        <span
-                                            class="inventory-badge neurotools">
-
-                                            NeuroTools Inventory
-
-                                        </span>
-
-                                    </template>
-
-                                </td>
-
-                            </tr>
-
-                        </template>
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </template>
-
-
-        <!-- =====================================================
-             NO RESULTS
-             ===================================================== -->
-
-        <template if:true={showNoResults}>
+        <!-- =========================================================
+             NO VIRUS TYPE
+             ========================================================= -->
+
+        <template if:false={virusType}>
 
             <div class="message-box">
 
                 <lightning-icon
-                    icon-name="utility:search"
+                    icon-name="utility:info"
                     size="small"
-                    alternative-text="No results">
+                    alternative-text="Information">
                 </lightning-icon>
 
                 <span>
-                    No constructs match your current filters.
+                    Please select a virus type above to view
+                    available constructs.
                 </span>
 
             </div>
@@ -340,83 +48,374 @@
         </template>
 
 
-        <!-- =====================================================
-             ADDGENE MTA NOTICE
-             ===================================================== -->
+        <template if:true={virusType}>
 
-        <template if:true={isSelectedAddgene}>
+            <!-- =====================================================
+                 TABS
+                 ===================================================== -->
 
-            <div class="addgene-notice">
+            <div class="tabs">
 
-                <lightning-icon
-                    icon-name="utility:info"
-                    alternative-text="Addgene MTA Required"
-                    size="small">
-                </lightning-icon>
+                <button
+                    class={neurotoolsTabClass}
+                    data-tab="neurotools"
+                    onclick={handleTabChange}>
+
+                    NeuroTools Inventory
+
+                    <span class="count">
+                        {neurotoolsCount}
+                    </span>
+
+                </button>
 
 
-                <div class="addgene-notice-content">
+                <button
+                    class={clientTabClass}
+                    data-tab="client"
+                    onclick={handleTabChange}>
 
-                    <strong>
-                        Addgene Material Transfer Agreement
-                    </strong>
+                    Your Deposited DNA
 
-<p>
-    You selected the Addgene construct
-    <strong> {selectedAddgeneConstruct}</strong>.
-    An Addgene Material Transfer Agreement (MTA)
-    may be required before this plasmid can be
-    provided or used.
-</p>
+                    <span class="count">
+                        {clientCount}
+                    </span>
 
+                </button>
+
+            </div>
+
+
+            <!-- =====================================================
+                 FILTERS
+                 ===================================================== -->
+
+            <div class="filters">
+
+                <div class="search">
+
+                    <lightning-input
+                        type="search"
+                        label="Search Constructs"
+                        placeholder="Search construct name..."
+                        value={searchTerm}
+                        onchange={handleSearch}>
+                    </lightning-input>
+
+                </div>
+
+
+                <div class="promoter">
+
+                    <lightning-combobox
+                        label="Promoter / Enhancer"
+                        value={promoterFilter}
+                        options={promoterOptions}
+                        onchange={handlePromoterChange}>
+                    </lightning-combobox>
 
                 </div>
 
             </div>
 
-        </template>
+
+            <!-- =====================================================
+                 TABLE
+                 ===================================================== -->
+
+            <template if:true={showTable}>
+
+                <div class="table-container">
+
+                    <table
+                        class="slds-table
+                               slds-table_cell-buffer
+                               slds-table_bordered
+                               slds-table_striped">
+
+                        <thead>
+
+                            <tr>
+
+                                <th
+                                    scope="col"
+                                    style="width:70px;">
+
+                                    <div class="slds-truncate">
+                                        Select
+                                    </div>
+
+                                </th>
 
 
-        <!-- =====================================================
-             SELECTED CONSTRUCT
-             ===================================================== -->
+                                <th scope="col">
 
-        <template if:true={selectedInventoryName}>
+                                    <div class="slds-truncate">
+                                        Construct
+                                    </div>
 
-            <div class="selected-box">
-
-                <strong>
-                    Selected Construct:
-                </strong>
-
-                <span class="selected-name">
-                    {selectedInventoryName}
-                </span>
+                                </th>
 
 
-                <template if:true={isSelectedAddgene}>
+                                <th scope="col">
 
-                    <span class="selected-addgene-label">
-                        Addgene plasmid:
-                        {selectedAddgeneConstruct}
+                                    <div class="slds-truncate">
+                                        Promoter / Enhancer
+                                    </div>
+
+                                </th>
+
+
+                                <th scope="col">
+
+                                    <div class="slds-truncate">
+                                        Source
+                                    </div>
+
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            <template
+                                for:each={filteredInventory}
+                                for:item="inventory">
+
+                                <tr
+                                    key={inventory.Id}
+                                    class={inventory.rowClass}
+                                    data-id={inventory.Id}>
+
+
+                                    <!-- =================================
+                                         SELECT
+                                         ================================= -->
+
+                                    <td>
+
+                                        <lightning-input
+                                            type="radio"
+                                            name="constructSelection"
+                                            value={inventory.Id}
+                                            checked={inventory.isSelected}
+                                            onchange={handleSelection}
+                                            variant="label-hidden">
+                                        </lightning-input>
+
+                                    </td>
+
+
+                                    <!-- =================================
+                                         CONSTRUCT
+                                         ================================= -->
+
+                                    <td>
+
+                                        <div class="construct-name">
+
+                                            <span>
+                                                {inventory.Name}
+                                            </span>
+
+                                        </div>
+
+
+                                        <!-- ADDGENE INFORMATION -->
+
+                                        <template
+                                            if:true={inventory.isAddgene}>
+
+                                            <div class="addgene-reference">
+
+                                                <span class="addgene-badge">
+                                                    Addgene
+                                                </span>
+
+                                                <span class="addgene-number">
+                                                    {inventory.Addgene_Construct__c}
+                                                </span>
+
+                                            </div>
+
+                                        </template>
+
+                                    </td>
+
+
+                                    <!-- =================================
+                                         PROMOTER
+                                         ================================= -->
+
+                                    <td>
+
+                                        <template
+                                            if:true={inventory.Promotor_Enhancer__c}>
+
+                                            {inventory.Promotor_Enhancer__c}
+
+                                        </template>
+
+                                        <template
+                                            if:false={inventory.Promotor_Enhancer__c}>
+
+                                            <span class="not-provided">
+                                                Not specified
+                                            </span>
+
+                                        </template>
+
+                                    </td>
+
+
+                                    <!-- =================================
+                                         SOURCE
+                                         ================================= -->
+
+                                    <td>
+
+                                        <template
+                                            if:true={inventory.isCustomerInventory}>
+
+                                            <span
+                                                class="inventory-badge customer">
+
+                                                Your Deposited DNA
+
+                                            </span>
+
+                                        </template>
+
+
+                                        <template
+                                            if:false={inventory.isCustomerInventory}>
+
+                                            <span
+                                                class="inventory-badge neurotools">
+
+                                                NeuroTools Inventory
+
+                                            </span>
+
+                                        </template>
+
+                                    </td>
+
+                                </tr>
+
+                            </template>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </template>
+
+
+            <!-- =====================================================
+                 NO RESULTS
+                 ===================================================== -->
+
+            <template if:true={showNoResults}>
+
+                <div class="message-box">
+
+                    <lightning-icon
+                        icon-name="utility:search"
+                        size="small"
+                        alternative-text="No results">
+                    </lightning-icon>
+
+                    <span>
+                        No constructs match your current filters.
                     </span>
 
-                </template>
+                </div>
+
+            </template>
 
 
-                <lightning-button
-                    class="clear-button"
-                    label="Clear Selection"
-                    variant="neutral"
-                    onclick={clearSelection}>
-                </lightning-button>
+            <!-- =====================================================
+                 ADDGENE MTA NOTICE
+                 ===================================================== -->
 
-            </div>
+            <template if:true={isSelectedAddgene}>
+
+                <div class="addgene-notice">
+
+                    <lightning-icon
+                        icon-name="utility:info"
+                        alternative-text="Addgene MTA Required"
+                        size="small">
+                    </lightning-icon>
+
+
+                    <div class="addgene-notice-content">
+
+                        <strong>
+                            Addgene Material Transfer Agreement
+                        </strong>
+
+                        <p>
+                            You selected the Addgene construct
+                            <strong>{selectedAddgeneConstruct}</strong>.
+                            An Addgene Material Transfer Agreement (MTA)
+                            may be required before this plasmid can be
+                            provided or used.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </template>
+
+
+            <!-- =====================================================
+                 SELECTED CONSTRUCT
+                 ===================================================== -->
+
+            <template if:true={selectedInventoryName}>
+
+                <div class="selected-box">
+
+                    <strong>
+                        Selected Construct:
+                    </strong>
+
+                    <span class="selected-name">
+                        {selectedInventoryName}
+                    </span>
+
+
+                    <template if:true={isSelectedAddgene}>
+
+                        <span class="selected-addgene-label">
+                            Addgene plasmid:
+                            {selectedAddgeneConstruct}
+                        </span>
+
+                    </template>
+
+
+                    <lightning-button
+                        class="clear-button"
+                        label="Clear Selection"
+                        variant="neutral"
+                        onclick={clearSelection}>
+                    </lightning-button>
+
+                </div>
+
+            </template>
 
         </template>
 
-    </template>
-
-</div>
+    </div>
 
 </template>
