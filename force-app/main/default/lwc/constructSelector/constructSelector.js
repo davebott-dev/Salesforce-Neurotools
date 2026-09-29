@@ -10,6 +10,7 @@ export default class ConstructSelector extends LightningElement {
     // ============================================================
 
     _virusType = '';
+    _previousConstructId = '';
 
     @api
     get virusType() {
@@ -37,6 +38,20 @@ export default class ConstructSelector extends LightningElement {
         this.updateFilteredInventory();
     }
 
+@api
+get previousConstructId() {
+    return this._previousConstructId;
+}
+
+set previousConstructId(value) {
+
+    this._previousConstructId = value || '';
+
+    // Inventory may already be loaded
+    if (this._previousConstructId) {
+        this.selectPreviousConstruct();
+    }
+}
 
     // ============================================================
     // FLOW OUTPUTS
@@ -81,27 +96,29 @@ export default class ConstructSelector extends LightningElement {
     // QUERY APEX
     // ============================================================
 
-    @wire(getInventory, { virusType: '$virusType' })
-    wiredInventory({ data, error }) {
+   @wire(getInventory, { virusType: '$virusType' })
+wiredInventory({ data, error }) {
 
-        if (data) {
+    if (data) {
 
-            this.inventoryRecords = data;
+        this.inventoryRecords = data;
 
-            this.updateFilteredInventory();
+        this.updateFilteredInventory();
 
-        } else if (error) {
+        this.selectPreviousConstruct();
 
-            console.error(
-                'Construct Selector - Error:',
-                JSON.stringify(error)
-            );
+    } else if (error) {
 
-            this.inventoryRecords = [];
+        console.error(
+            'Construct Selector - Error:',
+            JSON.stringify(error)
+        );
 
-            this.filteredInventory = [];
-        }
+        this.inventoryRecords = [];
+
+        this.filteredInventory = [];
     }
+}
 
 
     // ============================================================
@@ -400,173 +417,196 @@ export default class ConstructSelector extends LightningElement {
         this.updateFilteredInventory();
     }
 
+// ============================================================
+// AUTO-SELECT PREVIOUS CONSTRUCT
+// ============================================================
+
+selectPreviousConstruct() {
+
+    // No previous construct means this is a new order
+    if (!this.previousConstructId) {
+        return;
+    }
+
+    // Find the construct passed in from Flow
+    const previousConstruct =
+        this.inventoryRecords.find(
+            record =>
+                record.Id === this.previousConstructId
+        );
+
+    // Construct wasn't found in the returned inventory
+    if (!previousConstruct) {
+
+        console.warn(
+            'Construct Selector: Previous construct not found:',
+            this.previousConstructId
+        );
+
+        return;
+    }
+
+    // Use the exact same logic as a user clicking the construct
+    this.selectConstruct(previousConstruct);
+}
 
     // ============================================================
     // SELECT CONSTRUCT
     // ============================================================
 
-    handleSelection(event) {
+handleSelection(event) {
 
-        const inventoryId =
-            event.target.value;
+    const inventoryId = event.target.value;
 
+    const selected = this.inventoryRecords.find(
+        record => record.Id === inventoryId
+    );
 
-        const selected =
-            this.inventoryRecords.find(
-                record =>
-                    record.Id === inventoryId
-            );
+    if (!selected) {
 
-
-        if (!selected) {
-
-            console.error(
-                'Construct Selector: Could not find selected inventory record.'
-            );
-
-            return;
-        }
-
-
-        // --------------------------------------------------------
-        // BASIC CONSTRUCT INFORMATION
-        // --------------------------------------------------------
-
-        this.selectedInventoryId =
-            selected.Id;
-
-
-        this.selectedInventoryName =
-            selected.Name || '';
-
-
-        this.selectedInventoryAlias =
-            selected.Inventory_Alias__c || '';
-
-
-        // --------------------------------------------------------
-        // CONSTRUCT FULL LENGTH
-        // --------------------------------------------------------
-
-        this.selectedConstructFullLength =
-            selected.Construct_Full_Length__c != null
-                ? selected.Construct_Full_Length__c
-                : null;
-
-
-        // --------------------------------------------------------
-        // ADDGENE CONSTRUCT
-        // --------------------------------------------------------
-
-        this.selectedAddgeneConstruct =
-            selected.Addgene_Construct__c
-                ? String(
-                    selected.Addgene_Construct__c
-                ).trim()
-                : '';
-
-
-        // --------------------------------------------------------
-        // ITR LENGTH
-        // --------------------------------------------------------
-
-        this.selectedITRLength =
-            selected.ITR_ITR_Length_bp__c != null
-                ? selected.ITR_ITR_Length_bp__c
-                : null;
-
-
-        // --------------------------------------------------------
-        // TRANSFECTION FLUORESCENCE
-        // --------------------------------------------------------
-
-        this.selectedExpectedTransfectionFluorescence =
-            selected.Expected_Transfection_Fluorescence__c || '';
-
-
-        // ========================================================
-        // SEND VALUES TO FLOW
-        // ========================================================
-
-        this.dispatchEvent(
-            new FlowAttributeChangeEvent(
-                'selectedInventoryId',
-                this.selectedInventoryId
-            )
+        console.error(
+            'Construct Selector: Could not find selected inventory record.'
         );
 
-
-        this.dispatchEvent(
-            new FlowAttributeChangeEvent(
-                'selectedInventoryName',
-                this.selectedInventoryName
-            )
-        );
-
-
-        this.dispatchEvent(
-            new FlowAttributeChangeEvent(
-                'selectedInventoryAlias',
-                this.selectedInventoryAlias
-            )
-        );
-
-
-        this.dispatchEvent(
-            new FlowAttributeChangeEvent(
-                'selectedConstructFullLength',
-                this.selectedConstructFullLength
-            )
-        );
-
-
-        this.dispatchEvent(
-            new FlowAttributeChangeEvent(
-                'selectedAddgeneConstruct',
-                this.selectedAddgeneConstruct
-            )
-        );
-
-
-        this.dispatchEvent(
-            new FlowAttributeChangeEvent(
-                'selectedITRLength',
-                this.selectedITRLength
-            )
-        );
-
-
-        this.dispatchEvent(
-            new FlowAttributeChangeEvent(
-                'selectedExpectedTransfectionFluorescence',
-                this.selectedExpectedTransfectionFluorescence
-            )
-        );
-
-
-        // --------------------------------------------------------
-        // REFRESH TABLE
-        // --------------------------------------------------------
-
-        this.updateFilteredInventory();
-
-
-        // --------------------------------------------------------
-        // CUSTOM EVENT
-        // --------------------------------------------------------
-
-        this.dispatchEvent(
-            new CustomEvent(
-                'inventorychange',
-                {
-                    detail: {
-                        inventoryId: inventoryId,
-                        inventory: selected
-                    }
-                }
-            )
-        );
+        return;
     }
+
+    this.selectConstruct(selected);
+}
+
+selectConstruct(selected) {
+
+    // --------------------------------------------------------
+    // BASIC CONSTRUCT INFORMATION
+    // --------------------------------------------------------
+
+    this.selectedInventoryId =
+        selected.Id;
+
+    this.selectedInventoryName =
+        selected.Name || '';
+
+    this.selectedInventoryAlias =
+        selected.Inventory_Alias__c || '';
+
+
+    // --------------------------------------------------------
+    // CONSTRUCT FULL LENGTH
+    // --------------------------------------------------------
+
+    this.selectedConstructFullLength =
+        selected.Construct_Full_Length__c != null
+            ? selected.Construct_Full_Length__c
+            : null;
+
+
+    // --------------------------------------------------------
+    // ADDGENE CONSTRUCT
+    // --------------------------------------------------------
+
+    this.selectedAddgeneConstruct =
+        selected.Addgene_Construct__c
+            ? String(
+                selected.Addgene_Construct__c
+            ).trim()
+            : '';
+
+
+    // --------------------------------------------------------
+    // ITR LENGTH
+    // --------------------------------------------------------
+
+    this.selectedITRLength =
+        selected.ITR_ITR_Length_bp__c != null
+            ? selected.ITR_ITR_Length_bp__c
+            : null;
+
+
+    // --------------------------------------------------------
+    // TRANSFECTION FLUORESCENCE
+    // --------------------------------------------------------
+
+    this.selectedExpectedTransfectionFluorescence =
+        selected.Expected_Transfection_Fluorescence__c || '';
+
+
+    // ========================================================
+    // SEND VALUES TO FLOW
+    // ========================================================
+
+    this.dispatchEvent(
+        new FlowAttributeChangeEvent(
+            'selectedInventoryId',
+            this.selectedInventoryId
+        )
+    );
+
+    this.dispatchEvent(
+        new FlowAttributeChangeEvent(
+            'selectedInventoryName',
+            this.selectedInventoryName
+        )
+    );
+
+    this.dispatchEvent(
+        new FlowAttributeChangeEvent(
+            'selectedInventoryAlias',
+            this.selectedInventoryAlias
+        )
+    );
+
+    this.dispatchEvent(
+        new FlowAttributeChangeEvent(
+            'selectedConstructFullLength',
+            this.selectedConstructFullLength
+        )
+    );
+
+    this.dispatchEvent(
+        new FlowAttributeChangeEvent(
+            'selectedAddgeneConstruct',
+            this.selectedAddgeneConstruct
+        )
+    );
+
+    this.dispatchEvent(
+        new FlowAttributeChangeEvent(
+            'selectedITRLength',
+            this.selectedITRLength
+        )
+    );
+
+    this.dispatchEvent(
+        new FlowAttributeChangeEvent(
+            'selectedExpectedTransfectionFluorescence',
+            this.selectedExpectedTransfectionFluorescence
+        )
+    );
+
+
+    // --------------------------------------------------------
+    // REFRESH TABLE
+    // --------------------------------------------------------
+
+    this.updateFilteredInventory();
+
+
+    // --------------------------------------------------------
+    // CUSTOM EVENT
+    // --------------------------------------------------------
+
+    this.dispatchEvent(
+        new CustomEvent(
+            'inventorychange',
+            {
+                detail: {
+                    inventoryId: selected.Id,
+                    inventory: selected
+                }
+            }
+        )
+    );
+}
 
 
     // ============================================================
