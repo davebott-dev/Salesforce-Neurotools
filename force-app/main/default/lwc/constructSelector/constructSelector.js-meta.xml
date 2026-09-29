@@ -12,15 +12,20 @@
     <targetConfigs>
         <targetConfig targets="lightning__FlowScreen">
 
-            <!-- FLOW INPUT -->
+            <!-- FLOW INPUTS -->
             <property
                 name="virusType"
                 type="String"
                 label="Virus Type"
             />
 
-            <!-- EXISTING OUTPUTS -->
+            <property
+                name="previousConstructId"
+                type="String"
+                label="Previously Ordered Construct Id"
+            />
 
+            <!-- FLOW OUTPUTS-->
             <property
                 name="selectedInventoryId"
                 type="String"
@@ -41,8 +46,6 @@
                 label="Selected Inventory Alias"
                 role="outputOnly"
             />
-
-            <!-- NEW OUTPUTS -->
 
             <property
                 name="selectedConstructFullLength"
