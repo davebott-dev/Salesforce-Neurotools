@@ -31,6 +31,12 @@
     role="inputOnly"
     label="Requested Stock Tubes"
 />
+            <property
+                name="previousStockBatchId"
+                type="String"
+                label="Previous Stock Batch ID"
+                role="inputOnly"
+            />
 
             <!-- OUTPUTS -->
 

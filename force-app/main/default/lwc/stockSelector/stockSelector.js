@@ -21,21 +21,26 @@ export default class StockSelector extends LightningElement {
         return this._virusType;
     }
 
-    set virusType(value) {
+set virusType(value) {
 
-        this._virusType = value;
+    this._virusType = value;
 
-        this.selectedStock = null;
-        this.selectedBatch = null;
+    this.selectedStock = null;
+    this.selectedBatch = null;
 
-        this.searchTerm = '';
-        this.selectedSeroType = '';
-        this.selectedEnvelope = '';
-        this.selectedEndUse = '';
-        this.selectedPromoter = '';
+    this.searchTerm = '';
+    this.selectedSeroType = '';
+    this.selectedEnvelope = '';
+    this.selectedEndUse = '';
+    this.selectedPromoter = '';
 
-        this.updateFilteredStocks();
-    }
+    this.updateFilteredStocks();
+
+    this.selectPreviousStockBatch();
+}
+
+    @api previousStockBatchId;
+
 
 
     // =========================================================
@@ -136,6 +141,7 @@ export default class StockSelector extends LightningElement {
                 );
 
             this.updateFilteredStocks();
+            this.selectPreviousStockBatch();
 
         } else if (error) {
 
@@ -355,7 +361,83 @@ export default class StockSelector extends LightningElement {
 
         this.updateFilteredStocks();
     }
+// =========================================================
+// SELECT PREVIOUS STOCK BATCH
+// =========================================================
 
+selectPreviousStockBatch() {
+
+    // No previous batch means this is a new order
+    if (!this.previousStockBatchId) {
+        return;
+    }
+
+    // Data has not loaded yet
+    if (!this.stocks || this.stocks.length === 0) {
+        return;
+    }
+
+    for (const stock of this.stocks) {
+
+        const batch =
+            (stock.batches || []).find(
+                item =>
+                    item.Id === this.previousStockBatchId
+            );
+
+        if (batch) {
+
+            // Select the parent stock
+            this.selectedStock = stock;
+
+            // Select the previous batch
+            this.selectedBatch = batch;
+
+            // Send stock information to Flow
+            this.setFlowValue(
+                'selectedStockId',
+                stock.Id
+            );
+
+            this.setFlowValue(
+                'selectedStockName',
+                stock.Name
+            );
+
+            // Send batch information to Flow
+            this.setFlowValue(
+                'selectedStockBatchId',
+                batch.Id
+            );
+
+            this.setFlowValue(
+                'selectedStockBatchDate',
+                this.getBatchDate(batch)
+            );
+
+            this.setFlowValue(
+                'selectedStockBatchTiter',
+                batch.Titer__c
+            );
+
+            this.setFlowValue(
+                'selectedStockBatchEndVolume',
+                batch.End_Volume__c
+            );
+
+            this.setFlowValue(
+                'selectedStockBatchTubes',
+                batch.Tubes_Remaining_num_val__c
+            );
+
+            // Refresh the UI so the stock and batch
+            // appear selected
+            this.updateFilteredStocks();
+
+            return;
+        }
+    }
+}
 
     // =========================================================
     // SELECT STOCK
