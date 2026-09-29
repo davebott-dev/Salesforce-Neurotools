@@ -1,0 +1,487 @@
+<template>
+
+    <div class="quote-container">
+
+        <!-- =====================================================
+             HEADER
+        ====================================================== -->
+
+        <div class="header">
+
+            <div>
+                <h1 class="title">
+                    Request a Quote
+                </h1>
+
+                <p class="subtitle">
+                    Select the products and quantities you are interested in.
+                    Your estimated quote will appear on the right.
+                </p>
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             MAIN CONTENT
+        ====================================================== -->
+
+        <div class="quote-layout">
+
+
+            <!-- =================================================
+                 LEFT: PRODUCT SELECTION
+            ================================================== -->
+
+            <div class="products-panel">
+
+
+                <!-- =============================================
+                     AAV
+                ============================================== -->
+
+                <section class="product-section">
+
+                    <div class="section-header">
+
+                        <div>
+                            <h2>AAV</h2>
+
+                            <p>
+                                Select a preparation size and quantity.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="product-grid">
+
+                        <template
+                            for:each={aavProducts}
+                            for:item="product"
+                        >
+
+                            <button
+                                key={product.id}
+                                class={product.cardClass}
+                                data-id={product.id}
+                                onclick={handleProductSelect}
+                            >
+
+                                <div class="product-name">
+                                    {product.name}
+                                </div>
+
+                                <div class="product-description">
+                                    {product.description}
+                                </div>
+
+                                <div class="product-price">
+                                    {product.displayPrice}
+                                </div>
+
+                            </button>
+
+                        </template>
+
+                    </div>
+
+
+                    <!-- AAV Quantity -->
+
+                    <template if:true={showAAVQuantity}>
+
+                        <div class="quantity-section">
+
+                            <label>
+                                Quantity
+                            </label>
+
+                            <lightning-input
+                                type="number"
+                                min="1"
+                                value={aavQuantity}
+                                onchange={handleAAVQuantityChange}
+                            >
+                            </lightning-input>
+
+                        </div>
+
+                    </template>
+
+                </section>
+
+
+
+                <!-- =============================================
+                     HSV
+                ============================================== -->
+
+                <section class="product-section">
+
+                    <div class="section-header">
+
+                        <div>
+                            <h2>HSV</h2>
+
+                            <p>
+                                Select an HSV product.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="product-grid">
+
+                        <template
+                            for:each={hsvProducts}
+                            for:item="product"
+                        >
+
+                            <button
+                                key={product.id}
+                                class={product.cardClass}
+                                data-id={product.id}
+                                onclick={handleProductSelect}
+                            >
+
+                                <div class="product-name">
+                                    {product.name}
+                                </div>
+
+                                <div class="product-description">
+                                    {product.description}
+                                </div>
+
+                                <div class="product-price">
+                                    {product.displayPrice}
+                                </div>
+
+                            </button>
+
+                        </template>
+
+                    </div>
+
+                </section>
+
+
+
+                <!-- =============================================
+                     LENTI
+                ============================================== -->
+
+                <section class="product-section">
+
+                    <div class="section-header">
+
+                        <div>
+                            <h2>Lentivirus</h2>
+
+                            <p>
+                                Select a lentivirus product.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="product-grid">
+
+                        <template
+                            for:each={lentiProducts}
+                            for:item="product"
+                        >
+
+                            <button
+                                key={product.id}
+                                class={product.cardClass}
+                                data-id={product.id}
+                                onclick={handleProductSelect}
+                            >
+
+                                <div class="product-name">
+                                    {product.name}
+                                </div>
+
+                                <div class="product-description">
+                                    {product.description}
+                                </div>
+
+                                <div class="product-price">
+                                    {product.displayPrice}
+                                </div>
+
+                            </button>
+
+                        </template>
+
+                    </div>
+
+                </section>
+
+
+
+                <!-- =============================================
+                     RABIES
+                ============================================== -->
+
+                <section class="product-section">
+
+                    <div class="section-header">
+
+                        <div>
+                            <h2>Rabies</h2>
+
+                            <p>
+                                Select a rabies product.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="product-grid">
+
+                        <template
+                            for:each={rabiesProducts}
+                            for:item="product"
+                        >
+
+                            <button
+                                key={product.id}
+                                class={product.cardClass}
+                                data-id={product.id}
+                                onclick={handleProductSelect}
+                            >
+
+                                <div class="product-name">
+                                    {product.name}
+                                </div>
+
+                                <div class="product-description">
+                                    {product.description}
+                                </div>
+
+                                <div class="product-price">
+                                    {product.displayPrice}
+                                </div>
+
+                            </button>
+
+                        </template>
+
+                    </div>
+
+                </section>
+
+
+
+                <!-- =============================================
+                     ADD-ONS
+                ============================================== -->
+
+                <section class="product-section">
+
+                    <div class="section-header">
+
+                        <div>
+                            <h2>Additional Services</h2>
+
+                            <p>
+                                Add optional services to your quote.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="addon-list">
+
+                        <template
+                            for:each={addOnProducts}
+                            for:item="product"
+                        >
+
+                            <div
+                                key={product.id}
+                                class="addon-row"
+                            >
+
+                                <div class="addon-info">
+
+                                    <div class="product-name">
+                                        {product.name}
+                                    </div>
+
+                                    <div class="product-description">
+                                        {product.description}
+                                    </div>
+
+                                </div>
+
+
+                                <lightning-input
+                                    type="checkbox"
+                                    data-id={product.id}
+                                    checked={product.selected}
+                                    onchange={handleAddOnChange}
+                                >
+                                </lightning-input>
+
+                            </div>
+
+                        </template>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 RIGHT: QUOTE SUMMARY
+            ================================================== -->
+
+            <aside class="summary-panel">
+
+                <div class="summary-header">
+
+                    <h2>
+                        Quote Summary
+                    </h2>
+
+                    <template if:true={hasSelections}>
+
+                        <button
+                            class="clear-button"
+                            onclick={handleClear}
+                        >
+                            Clear
+                        </button>
+
+                    </template>
+
+                </div>
+
+
+                <!-- Empty State -->
+
+                <template if:false={hasSelections}>
+
+                    <div class="empty-state">
+
+                        <div class="empty-icon">
+                            +
+                        </div>
+
+                        <h3>
+                            No products selected
+                        </h3>
+
+                        <p>
+                            Select products from the left to
+                            build your quote.
+                        </p>
+
+                    </div>
+
+                </template>
+
+
+
+                <!-- Selected Products -->
+
+                <template if:true={hasSelections}>
+
+                    <div class="selected-products">
+
+                        <template
+                            for:each={selectedProducts}
+                            for:item="item"
+                        >
+
+                            <div
+                                key={item.id}
+                                class="summary-item"
+                            >
+
+                                <div class="summary-item-info">
+
+                                    <div class="summary-item-name">
+                                        {item.name}
+                                    </div>
+
+                                    <div class="summary-item-detail">
+                                        {item.detail}
+                                    </div>
+
+                                </div>
+
+
+                                <div class="summary-item-price">
+                                    {item.displayPrice}
+                                </div>
+
+
+                                <button
+                                    class="remove-button"
+                                    data-id={item.id}
+                                    onclick={handleRemove}
+                                    title="Remove"
+                                >
+                                    ×
+                                </button>
+
+                            </div>
+
+                        </template>
+
+                    </div>
+
+
+
+                    <!-- TOTAL -->
+
+                    <div class="summary-total">
+
+                        <span>
+                            Estimated Total
+                        </span>
+
+                        <strong>
+                            {displayTotal}
+                        </strong>
+
+                    </div>
+
+
+                    <p class="estimate-note">
+                        This is an estimated quote. Final pricing
+                        may vary based on your selections and
+                        applicable requirements.
+                    </p>
+
+
+                    <!-- VIEW / SAVE -->
+
+                    <button
+                        class="quote-button"
+                        onclick={handleViewQuote}
+                    >
+                        View / Save Quote
+                    </button>
+
+                </template>
+
+            </aside>
+
+        </div>
+
+    </div>
+
+</template>

@@ -1,0 +1,371 @@
+.quote-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 24px;
+    background: #f7f8fa;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.header {
+    margin-bottom: 24px;
+}
+
+.title {
+    font-size: 28px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.subtitle {
+    margin-top: 6px;
+    color: #5f6b76;
+    font-size: 14px;
+}
+
+
+
+/* =========================================================
+   LAYOUT
+========================================================= */
+
+.quote-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 380px;
+    gap: 24px;
+    align-items: start;
+}
+
+
+
+/* =========================================================
+   PRODUCTS
+========================================================= */
+
+.products-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+
+.product-section {
+    background: white;
+    border: 1px solid #d8dde6;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+
+.section-header {
+    margin-bottom: 16px;
+}
+
+
+.section-header h2 {
+    margin: 0;
+    font-size: 19px;
+    font-weight: 600;
+}
+
+
+.section-header p {
+    margin: 4px 0 0;
+    color: #6b7280;
+    font-size: 13px;
+}
+
+
+
+/* =========================================================
+   PRODUCT CARDS
+========================================================= */
+
+.product-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(190px, 1fr));
+    gap: 12px;
+}
+
+
+.product-card {
+    text-align: left;
+    background: white;
+    border: 1px solid #c9d1d9;
+    border-radius: 8px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all .15s ease;
+}
+
+
+.product-card:hover {
+    border-color: #0176d3;
+    box-shadow:
+        0 2px 6px rgba(0, 0, 0, .08);
+}
+
+
+.product-card.selected {
+    border: 2px solid #0176d3;
+    background: #f0f8ff;
+}
+
+
+.product-name {
+    font-weight: 600;
+    font-size: 15px;
+}
+
+
+.product-description {
+    margin-top: 5px;
+    font-size: 12px;
+    color: #6b7280;
+}
+
+
+.product-price {
+    margin-top: 12px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+
+
+/* =========================================================
+   QUANTITY
+========================================================= */
+
+.quantity-section {
+    max-width: 180px;
+    margin-top: 18px;
+}
+
+
+
+/* =========================================================
+   ADDONS
+========================================================= */
+
+.addon-list {
+    display: flex;
+    flex-direction: column;
+}
+
+
+.addon-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+
+.addon-row:last-child {
+    border-bottom: none;
+}
+
+
+
+/* =========================================================
+   SUMMARY
+========================================================= */
+
+.summary-panel {
+    position: sticky;
+    top: 20px;
+    background: white;
+    border: 1px solid #d8dde6;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+
+.summary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 14px;
+}
+
+
+.summary-header h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+
+.clear-button {
+    border: none;
+    background: none;
+    color: #0176d3;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.empty-state {
+    text-align: center;
+    padding: 50px 20px;
+    color: #6b7280;
+}
+
+
+.empty-icon {
+    width: 42px;
+    height: 42px;
+    margin: 0 auto 12px;
+    border-radius: 50%;
+    background: #eef2f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+
+.empty-state h3 {
+    margin: 0;
+    color: #374151;
+    font-size: 16px;
+}
+
+
+.empty-state p {
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+
+
+/* =========================================================
+   SELECTED ITEMS
+========================================================= */
+
+.selected-products {
+    margin-top: 8px;
+}
+
+
+.summary-item {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 10px;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+
+.summary-item-name {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+
+.summary-item-detail {
+    margin-top: 3px;
+    font-size: 12px;
+    color: #6b7280;
+}
+
+
+.summary-item-price {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+
+.remove-button {
+    border: none;
+    background: none;
+    color: #6b7280;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+
+.remove-button:hover {
+    color: #ba0517;
+}
+
+
+
+/* =========================================================
+   TOTAL
+========================================================= */
+
+.summary-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0 8px;
+    font-size: 15px;
+}
+
+
+.summary-total strong {
+    font-size: 19px;
+}
+
+
+.estimate-note {
+    font-size: 11px;
+    line-height: 1.5;
+    color: #6b7280;
+}
+
+
+
+/* =========================================================
+   BUTTON
+========================================================= */
+
+.quote-button {
+    width: 100%;
+    margin-top: 16px;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    background: #0176d3;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+
+.quote-button:hover {
+    background: #014486;
+}
+
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .quote-layout {
+        grid-template-columns: 1fr;
+    }
+
+
+    .summary-panel {
+        position: static;
+    }
+}
