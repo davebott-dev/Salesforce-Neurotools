@@ -9,6 +9,7 @@
         <div class="header">
 
             <div>
+
                 <h1 class="title">
                     Request a Quote
                 </h1>
@@ -17,6 +18,7 @@
                     Select the products and quantities you are interested in.
                     Your estimated quote will appear on the right.
                 </p>
+
             </div>
 
         </div>
@@ -45,11 +47,13 @@
                     <div class="section-header">
 
                         <div>
+
                             <h2>AAV</h2>
 
                             <p>
-                                Select a preparation size and quantity.
+                                Select one or more AAV products.
                             </p>
+
                         </div>
 
                     </div>
@@ -64,7 +68,7 @@
 
                             <button
                                 key={product.id}
-                                class={product.cardClass}
+                                class={product.selected}
                                 data-id={product.id}
                                 onclick={handleProductSelect}
                             >
@@ -86,29 +90,6 @@
                         </template>
 
                     </div>
-
-
-                    <!-- AAV Quantity -->
-
-                    <template if:true={showAAVQuantity}>
-
-                        <div class="quantity-section">
-
-                            <label>
-                                Quantity
-                            </label>
-
-                            <lightning-input
-                                type="number"
-                                min="1"
-                                value={aavQuantity}
-                                onchange={handleAAVQuantityChange}
-                            >
-                            </lightning-input>
-
-                        </div>
-
-                    </template>
 
                 </section>
 
@@ -123,11 +104,13 @@
                     <div class="section-header">
 
                         <div>
+
                             <h2>HSV</h2>
 
                             <p>
-                                Select an HSV product.
+                                Select one or more HSV products.
                             </p>
+
                         </div>
 
                     </div>
@@ -142,7 +125,7 @@
 
                             <button
                                 key={product.id}
-                                class={product.cardClass}
+                                class={product.selected}
                                 data-id={product.id}
                                 onclick={handleProductSelect}
                             >
@@ -170,7 +153,7 @@
 
 
                 <!-- =============================================
-                     LENTI
+                     LENTIVIRUS
                 ============================================== -->
 
                 <section class="product-section">
@@ -178,11 +161,13 @@
                     <div class="section-header">
 
                         <div>
+
                             <h2>Lentivirus</h2>
 
                             <p>
-                                Select a lentivirus product.
+                                Select one or more lentivirus products.
                             </p>
+
                         </div>
 
                     </div>
@@ -197,7 +182,7 @@
 
                             <button
                                 key={product.id}
-                                class={product.cardClass}
+                                class={product.selected}
                                 data-id={product.id}
                                 onclick={handleProductSelect}
                             >
@@ -233,11 +218,13 @@
                     <div class="section-header">
 
                         <div>
+
                             <h2>Rabies</h2>
 
                             <p>
-                                Select a rabies product.
+                                Select one or more rabies products.
                             </p>
+
                         </div>
 
                     </div>
@@ -252,7 +239,7 @@
 
                             <button
                                 key={product.id}
-                                class={product.cardClass}
+                                class={product.selected}
                                 data-id={product.id}
                                 onclick={handleProductSelect}
                             >
@@ -280,7 +267,7 @@
 
 
                 <!-- =============================================
-                     ADD-ONS
+                     ADDITIONAL SERVICES
                 ============================================== -->
 
                 <section class="product-section">
@@ -288,11 +275,13 @@
                     <div class="section-header">
 
                         <div>
+
                             <h2>Additional Services</h2>
 
                             <p>
                                 Add optional services to your quote.
                             </p>
+
                         </div>
 
                     </div>
@@ -369,7 +358,10 @@
                 </div>
 
 
-                <!-- Empty State -->
+
+                <!-- =============================================
+                     EMPTY STATE
+                ============================================== -->
 
                 <template if:false={hasSelections}>
 
@@ -394,7 +386,9 @@
 
 
 
-                <!-- Selected Products -->
+                <!-- =============================================
+                     SELECTED PRODUCTS
+                ============================================== -->
 
                 <template if:true={hasSelections}>
 
@@ -416,17 +410,36 @@
                                         {item.name}
                                     </div>
 
-                                    <div class="summary-item-detail">
-                                        {item.detail}
-                                    </div>
+                                </div>
+
+
+                                <!-- QUANTITY -->
+
+                                <div class="summary-quantity">
+
+                                    <lightning-input
+                                        type="number"
+                                        min="1"
+                                        value={item.quantity}
+                                        data-id={item.id}
+                                        variant="label-hidden"
+                                        onchange={handleQuantityChange}
+                                    >
+                                    </lightning-input>
 
                                 </div>
 
+
+                                <!-- PRICE -->
 
                                 <div class="summary-item-price">
+
                                     {item.displayPrice}
+
                                 </div>
 
+
+                                <!-- REMOVE -->
 
                                 <button
                                     class="remove-button"
@@ -445,7 +458,9 @@
 
 
 
-                    <!-- TOTAL -->
+                    <!-- =========================================
+                         TOTAL
+                    ========================================== -->
 
                     <div class="summary-total">
 
@@ -461,13 +476,17 @@
 
 
                     <p class="estimate-note">
+
                         This is an estimated quote. Final pricing
                         may vary based on your selections and
                         applicable requirements.
+
                     </p>
 
 
-                    <!-- VIEW / SAVE -->
+                    <!-- =========================================
+                         VIEW / SAVE
+                    ========================================== -->
 
                     <button
                         class="quote-button"
