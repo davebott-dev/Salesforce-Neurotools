@@ -1,5 +1,5 @@
 import { LightningElement } from 'lwc';
-import BulkOrderDownloadTemplate from '@salesforce/resourceUrl/Neurotools_Bulk_Order_Template';
+import BulkOrderDownloadTemplate from '@salesforce/resourceUrl/BulkOrderTemplate';
 
 export default class BulkOrderDownload extends LightningElement {
 
