@@ -1,145 +1,131 @@
 import { LightningElement, track } from 'lwc';
+import getProducts from '@salesforce/apex/QuoteBuilderController.getProducts';
 
 export default class QuoteBuilder extends LightningElement {
 
     // =========================================================
     // PRODUCT DATA
-    // Temporary mock data.
-    // Later this will come from Apex.
+    // Loaded from Apex
     // =========================================================
 
-    @track products = [
+    @track products = [];
 
-        // =====================================================
-        // AAV
-        // =====================================================
-
-        {
-            id: 'aav-standard',
-            name: 'AAV Standard',
-            category: 'AAV',
-            description: 'Standard AAV preparation',
-            price: 0,
-            displayPrice: 'Pricing available upon quote',
-            selected: false,
-            quantity: 1
-        },
-
-        {
-            id: 'aav-medium',
-            name: 'AAV Medium',
-            category: 'AAV',
-            description: 'Medium-scale AAV preparation',
-            price: 0,
-            displayPrice: 'Pricing available upon quote',
-            selected: false,
-            quantity: 1
-        },
-
-        {
-            id: 'aav-large',
-            name: 'AAV Large',
-            category: 'AAV',
-            description: 'Large-scale AAV preparation',
-            price: 0,
-            displayPrice: 'Pricing available upon quote',
-            selected: false,
-            quantity: 1
-        },
-
-
-        // =====================================================
-        // HSV
-        // =====================================================
-
-        {
-            id: 'hsv-standard',
-            name: 'HSV Standard',
-            category: 'HSV',
-            description: 'Standard HSV preparation',
-            price: 0,
-            displayPrice: 'Pricing available upon quote',
-            selected: false,
-            quantity: 1
-        },
-
-
-        // =====================================================
-        // LENTIVIRUS
-        // =====================================================
-
-        {
-            id: 'lenti-standard',
-            name: 'Lentivirus',
-            category: 'Lentivirus',
-            description: 'Standard lentivirus preparation',
-            price: 0,
-            displayPrice: 'Pricing available upon quote',
-            selected: false,
-            quantity: 1
-        },
-
-
-        // =====================================================
-        // RABIES
-        // =====================================================
-
-        {
-            id: 'rabies-standard',
-            name: 'Rabies Virus',
-            category: 'Rabies',
-            description: 'Standard rabies virus preparation',
-            price: 0,
-            displayPrice: 'Pricing available upon quote',
-            selected: false,
-            quantity: 1
-        },
-
-
-        // =====================================================
-        // ADDITIONAL SERVICES
-        // =====================================================
-
-        {
-            id: 'endotoxin',
-            name: 'Endotoxin Testing',
-            category: 'Additional Services',
-            description: 'Additional endotoxin testing',
-            price: 0,
-            displayPrice: 'Additional charge',
-            selected: false,
-            quantity: 1
-        },
-
-        {
-            id: 'enriched',
-            name: 'Enriched Full Prep',
-            category: 'Additional Services',
-            description: 'Additional purification',
-            price: 0,
-            displayPrice: 'Additional charge',
-            selected: false,
-            quantity: 1
-        },
-
-        {
-            id: 'three-cscl',
-            name: '3x CsCl Purification',
-            category: 'Additional Services',
-            description: 'Additional CsCl purification',
-            price: 0,
-            displayPrice: 'Additional charge',
-            selected: false,
-            quantity: 1
-        }
-    ];
+    @track selectedProducts = [];
 
 
     // =========================================================
     // STATE
     // =========================================================
 
-    @track selectedProducts = [];
+    isLoading = false;
+    errorMessage = '';
+
+
+    // =========================================================
+    // LIFECYCLE
+    // =========================================================
+
+    connectedCallback() {
+        this.loadProducts();
+    }
+
+
+    // =========================================================
+    // LOAD PRODUCTS
+    // =========================================================
+
+    loadProducts() {
+
+        this.isLoading = true;
+        this.errorMessage = '';
+
+        getProducts()
+            .then(result => {
+
+                this.products = result.map(product => {
+
+                    const displayCategory =
+                        this.getDisplayCategory(
+                            product.name,
+                            product.category
+                        );
+
+                    return {
+                        ...product,
+                        category: displayCategory,
+                        selected: false,
+                        quantity: 1,
+                        cssClass: 'product-card'
+                    };
+                });
+
+                this.rebuildSummary();
+            })
+            .catch(error => {
+
+                console.error(
+                    'Error loading Quote Builder products:',
+                    error
+                );
+
+                this.errorMessage =
+                    this.getErrorMessage(error);
+
+                this.products = [];
+                this.selectedProducts = [];
+            })
+            .finally(() => {
+
+                this.isLoading = false;
+            });
+    }
+
+
+    // =========================================================
+    // DISPLAY CATEGORY
+    // =========================================================
+
+    getDisplayCategory(name, apexCategory) {
+
+        const productName =
+            (name || '').toLowerCase();
+
+
+        // AAV
+        if (productName.includes('aav')) {
+            return 'AAV';
+        }
+
+
+        // HSV
+        if (productName.includes('hsv')) {
+            return 'HSV';
+        }
+
+
+        // Lentivirus
+        if (
+            productName.includes('lenti') ||
+            productName.includes('lentivirus')
+        ) {
+            return 'Lentivirus';
+        }
+
+
+        // Rabies
+        if (productName.includes('rabies')) {
+            return 'Rabies';
+        }
+
+
+        // Everything from the Add-on family
+        if (apexCategory === 'Add-on') {
+            return 'Additional Services';
+        }
+
+
+        return apexCategory || 'Other';
+    }
 
 
     // =========================================================
@@ -147,6 +133,7 @@ export default class QuoteBuilder extends LightningElement {
     // =========================================================
 
     get aavProducts() {
+
         return this.products.filter(
             product => product.category === 'AAV'
         );
@@ -154,6 +141,7 @@ export default class QuoteBuilder extends LightningElement {
 
 
     get hsvProducts() {
+
         return this.products.filter(
             product => product.category === 'HSV'
         );
@@ -161,6 +149,7 @@ export default class QuoteBuilder extends LightningElement {
 
 
     get lentiProducts() {
+
         return this.products.filter(
             product => product.category === 'Lentivirus'
         );
@@ -168,6 +157,7 @@ export default class QuoteBuilder extends LightningElement {
 
 
     get rabiesProducts() {
+
         return this.products.filter(
             product => product.category === 'Rabies'
         );
@@ -175,6 +165,7 @@ export default class QuoteBuilder extends LightningElement {
 
 
     get addOnProducts() {
+
         return this.products.filter(
             product => product.category === 'Additional Services'
         );
@@ -198,12 +189,22 @@ export default class QuoteBuilder extends LightningElement {
             }
 
 
+            const selected =
+                !product.selected;
+
+
             return {
                 ...product,
-                selected: !product.selected,
-                quantity: product.selected
-                    ? product.quantity
-                    : 1
+
+                selected,
+
+                quantity: selected
+                    ? (product.quantity || 1)
+                    : 1,
+
+                cssClass: selected
+                    ? 'product-card selected'
+                    : 'product-card'
             };
         });
 
@@ -220,6 +221,7 @@ export default class QuoteBuilder extends LightningElement {
 
         const productId =
             event.target.dataset.id;
+
 
         let quantity =
             Number(event.target.value);
@@ -267,7 +269,10 @@ export default class QuoteBuilder extends LightningElement {
 
             return {
                 ...product,
-                selected: event.target.checked,
+
+                selected:
+                    event.target.checked,
+
                 quantity: 1
             };
         });
@@ -286,29 +291,41 @@ export default class QuoteBuilder extends LightningElement {
         this.selectedProducts =
             this.products
                 .filter(product => product.selected)
-                .map(product => ({
+                .map(product => {
 
-                    id: product.id,
+                    const totalPrice =
+                        product.price
+                            ? product.price *
+                              product.quantity
+                            : 0;
 
-                    name: product.name,
 
-                    quantity: product.quantity,
+                    return {
 
-                    detail:
-                        `Quantity: ${product.quantity}`,
+                        id: product.id,
 
-                    price:
-                        product.price *
-                        product.quantity,
+                        name: product.name,
 
-                    displayPrice:
-                        product.price > 0
-                            ? this.formatCurrency(
-                                product.price *
-                                product.quantity
-                            )
-                            : product.displayPrice
-                }));
+                        quantity:
+                            product.quantity,
+
+                        detail:
+                            `Quantity: ${product.quantity}`,
+
+                        price:
+                            totalPrice,
+
+                        displayPrice:
+                            product.price != null &&
+                            product.price > 0
+
+                                ? this.formatCurrency(
+                                    totalPrice
+                                )
+
+                                : product.displayPrice
+                    };
+                });
     }
 
 
@@ -331,8 +348,12 @@ export default class QuoteBuilder extends LightningElement {
 
             return {
                 ...product,
+
                 selected: false,
-                quantity: 1
+
+                quantity: 1,
+
+                cssClass: 'product-card'
             };
         });
 
@@ -348,25 +369,19 @@ export default class QuoteBuilder extends LightningElement {
     handleClear() {
 
         this.products = this.products.map(product => ({
+
             ...product,
+
             selected: false,
-            quantity: 1
+
+            quantity: 1,
+
+            cssClass: 'product-card'
+
         }));
 
 
         this.selectedProducts = [];
-    }
-
-
-    // =========================================================
-    // PRODUCT CARD STYLING
-    // =========================================================
-
-    getProductClass(product) {
-
-        return product.selected
-            ? 'product-card selected'
-            : 'product-card';
     }
 
 
@@ -391,11 +406,24 @@ export default class QuoteBuilder extends LightningElement {
 
 
         if (total === 0) {
+
             return 'Available upon quote';
         }
 
 
         return this.formatCurrency(total);
+    }
+
+
+    get hasError() {
+
+        return !!this.errorMessage;
+    }
+
+
+    get hasProducts() {
+
+        return this.products.length > 0;
     }
 
 
@@ -411,6 +439,35 @@ export default class QuoteBuilder extends LightningElement {
                 this.selectedProducts
             )
         );
+    }
+
+
+    // =========================================================
+    // ERROR HANDLING
+    // =========================================================
+
+    getErrorMessage(error) {
+
+        if (
+            error &&
+            error.body &&
+            error.body.message
+        ) {
+
+            return error.body.message;
+        }
+
+
+        if (
+            error &&
+            error.message
+        ) {
+
+            return error.message;
+        }
+
+
+        return 'Unable to load products. Please try again.';
     }
 
 
