@@ -566,11 +566,18 @@
                         ========================================== -->
 
                         <button
-                            class="quote-button"
-                            onclick={handleViewQuote}
-                        >
-                            View / Save Quote
-                        </button>
+    class="quote-button"
+    onclick={handleViewQuote}
+    disabled={isSavingQuote}
+>
+    <template if:true={isSavingQuote}>
+        Creating Quote...
+    </template>
+
+    <template if:false={isSavingQuote}>
+        View / Save Quote
+    </template>
+</button>
 
                     </template>
 

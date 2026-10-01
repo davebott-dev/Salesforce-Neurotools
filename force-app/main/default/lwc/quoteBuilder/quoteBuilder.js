@@ -1,7 +1,10 @@
 import { LightningElement, track } from 'lwc';
-import getProducts from '@salesforce/apex/QuoteBuilderController.getProducts';
+import { NavigationMixin } from 'lightning/navigation';
 
-export default class QuoteBuilder extends LightningElement {
+import getProducts from '@salesforce/apex/QuoteBuilderController.getProducts';
+import createQuote from '@salesforce/apex/QuoteBuilderController.createQuote';
+
+export default class QuoteBuilder extends NavigationMixin(LightningElement) {
 
     // =========================================================
     // PRODUCT DATA
@@ -18,6 +21,7 @@ export default class QuoteBuilder extends LightningElement {
     // =========================================================
 
     isLoading = false;
+    isSavingQuote = false;
     errorMessage = '';
 
 
@@ -273,7 +277,12 @@ export default class QuoteBuilder extends LightningElement {
                 selected:
                     event.target.checked,
 
-                quantity: 1
+                quantity: 1,
+
+                cssClass:
+                    event.target.checked
+                        ? 'product-card selected'
+                        : 'product-card'
             };
         });
 
@@ -302,7 +311,12 @@ export default class QuoteBuilder extends LightningElement {
 
                     return {
 
+                        // Used by the LWC
                         id: product.id,
+
+                        // IMPORTANT:
+                        // Apex createQuote() expects productId
+                        productId: product.id,
 
                         name: product.name,
 
@@ -428,17 +442,132 @@ export default class QuoteBuilder extends LightningElement {
 
 
     // =========================================================
-    // VIEW / SAVE QUOTE
+    // SAVE QUOTE
     // =========================================================
 
     handleViewQuote() {
 
-        console.log(
-            'Quote selections:',
+        // Prevent duplicate submissions
+        if (this.isSavingQuote) {
+            return;
+        }
+
+
+        // Make sure something is selected
+        if (!this.hasSelections) {
+
+            this.errorMessage =
+                'Please select at least one product before creating a quote.';
+
+            return;
+        }
+
+
+        this.isSavingQuote = true;
+        this.errorMessage = '';
+
+
+        // =====================================================
+        // Convert LWC selections into the structure expected
+        // by QuoteBuilderController.createQuote()
+        //
+        // Apex expects:
+        //
+        // [
+        //     {
+        //         "productId": "...",
+        //         "quantity": 1
+        //     }
+        // ]
+        // =====================================================
+
+        const selectedProductsForApex =
+            this.selectedProducts.map(product => {
+
+                return {
+                    productId: product.productId,
+                    quantity: product.quantity
+                };
+            });
+
+
+        const selectedProductsJson =
             JSON.stringify(
-                this.selectedProducts
-            )
+                selectedProductsForApex
+            );
+
+
+        console.log(
+            'Creating Quote with products:',
+            selectedProductsJson
         );
+
+
+        // =====================================================
+        // CREATE QUOTE
+        // =====================================================
+
+        createQuote({
+            selectedProductsJson:
+                selectedProductsJson
+        })
+
+            .then(quoteId => {
+
+                console.log(
+                    'Quote created:',
+                    quoteId
+                );
+
+
+                if (!quoteId) {
+
+                    throw new Error(
+                        'The quote was created, but no Quote Id was returned.'
+                    );
+                }
+
+
+                // =================================================
+                // NAVIGATE TO NEW QUOTE
+                // =================================================
+
+                this[NavigationMixin.Navigate]({
+
+                    type: 'standard__recordPage',
+
+                    attributes: {
+
+                        recordId: quoteId,
+
+                        objectApiName: 'Quote__c',
+
+                        actionName: 'view'
+
+                    }
+
+                });
+
+            })
+
+            .catch(error => {
+
+                console.error(
+                    'Error creating Quote:',
+                    error
+                );
+
+
+                this.errorMessage =
+                    this.getErrorMessage(error);
+
+            })
+
+            .finally(() => {
+
+                this.isSavingQuote = false;
+
+            });
     }
 
 
@@ -467,7 +596,7 @@ export default class QuoteBuilder extends LightningElement {
         }
 
 
-        return 'Unable to load products. Please try again.';
+        return 'Unable to create the quote. Please try again.';
     }
 
 
