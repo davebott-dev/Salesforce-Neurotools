@@ -6,25 +6,34 @@
              HEADER
              ===================================================== -->
 
-        <div class="page-header">
-
-            <div class="header-icon">
-                <lightning-icon
-                    icon-name={iconName}
-                    alternative-text=""
-                    size="medium">
-                </lightning-icon>
-            </div>
+        <div class="header">
 
             <div class="header-content">
 
-                <h1>{pageTitle}</h1>
+                <div class="header-icon">
+                    <lightning-icon
+                        icon-name={headerIcon}
+                        size="medium"
+                        alternative-text={pageTitle}>
+                    </lightning-icon>
+                </div>
 
-                <p>{pageDescription}</p>
+                <div class="header-text">
+
+                    <h1 class="slds-text-heading_large">
+                        {pageTitle}
+                    </h1>
+
+                    <p class="header-description">
+                        {pageDescription}
+                    </p>
+
+                </div>
 
             </div>
 
-            <div class="header-action">
+
+            <div class="header-actions">
 
                 <lightning-button
                     variant="brand"
@@ -42,153 +51,34 @@
              SUMMARY
              ===================================================== -->
 
-        <div class="summary-bar">
+        <template if:false={isLoading}>
 
-            <div class="summary-item">
+            <div class="summary-bar">
 
-                <span class="summary-label">
-                    Total
-                </span>
+                <div class="summary-item">
 
-                <span class="summary-value">
-                    {billingMethods.length}
-                </span>
+                    <span class="summary-label">
+                        Total
+                    </span>
 
-            </div>
+                    <span class="summary-value">
+                        {totalCount}
+                    </span>
 
-            <div class="summary-divider"></div>
-
-            <div class="summary-item">
-
-                <span class="summary-label">
-                    Active
-                </span>
-
-                <span class="summary-value">
-                    {activeCount}
-                </span>
-
-            </div>
-
-        </div>
+                </div>
 
 
-        <!-- =====================================================
-             BILLING METHOD LIST
-             ===================================================== -->
+                <div class="summary-item">
 
-        <template if:true={hasBillingMethods}>
+                    <span class="summary-label">
+                        Active
+                    </span>
 
-            <div class="billing-list">
+                    <span class="summary-value">
+                        {activeCount}
+                    </span>
 
-                <template
-                    for:each={billingMethods}
-                    for:item="method"
-                >
-
-                    <article
-                        key={method.id}
-                        class="billing-card"
-                    >
-
-                        <!-- CARD HEADER -->
-
-                        <div class="card-header">
-
-                            <div class="card-title-area">
-
-                                <div class="method-icon">
-
-                                    <lightning-icon
-                                        icon-name={iconName}
-                                        alternative-text=""
-                                        size="small">
-                                    </lightning-icon>
-
-                                </div>
-
-                                <div>
-
-                                    <h2>
-                                        {method.name}
-                                    </h2>
-
-                                    <span class="method-type">
-                                        {method.type}
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-
-                            <div class={method.statusClass}>
-                                {method.status}
-                            </div>
-
-                        </div>
-
-
-                        <!-- CARD BODY -->
-
-                        <div class="card-body">
-
-                            <template
-                                for:each={method.fields}
-                                for:item="field"
-                            >
-
-                                <div
-                                    key={field.label}
-                                    class="detail-item"
-                                >
-
-                                    <span class="detail-label">
-                                        {field.label}
-                                    </span>
-
-                                    <span class="detail-value">
-                                        {field.value}
-                                    </span>
-
-                                </div>
-
-                            </template>
-
-                        </div>
-
-
-                        <!-- CARD FOOTER -->
-
-                        <div class="card-footer">
-
-                            <span class="last-used">
-                                {method.footerText}
-                            </span>
-
-                            <div class="card-actions">
-
-                                <lightning-button
-                                    variant="base"
-                                    label="View"
-                                    data-id={method.id}
-                                    onclick={handleView}>
-                                </lightning-button>
-
-                                <lightning-button
-                                    variant="base"
-                                    label="Edit"
-                                    data-id={method.id}
-                                    onclick={handleEdit}>
-                                </lightning-button>
-
-                            </div>
-
-                        </div>
-
-                    </article>
-
-                </template>
+                </div>
 
             </div>
 
@@ -196,40 +86,213 @@
 
 
         <!-- =====================================================
-             EMPTY STATE
+             LOADING
              ===================================================== -->
 
-        <template if:false={hasBillingMethods}>
+        <template if:true={isLoading}>
 
-            <div class="empty-state">
+            <div class="loading-container">
 
-                <div class="empty-icon">
+                <lightning-spinner
+                    alternative-text="Loading billing methods"
+                    size="medium">
+                </lightning-spinner>
 
-                    <lightning-icon
-                        icon-name={iconName}
-                        alternative-text=""
-                        size="large">
-                    </lightning-icon>
+                <p>
+                    Loading {pageTitle}...
+                </p>
+
+            </div>
+
+        </template>
+
+
+        <!-- =====================================================
+             ERROR
+             ===================================================== -->
+
+        <template if:true={hasError}>
+
+            <div
+                class="error-container"
+                role="alert">
+
+                <lightning-icon
+                    icon-name="utility:error"
+                    size="small"
+                    alternative-text="Error">
+                </lightning-icon>
+
+                <div class="error-content">
+
+                    <h2>
+                        Unable to load {pageTitle}
+                    </h2>
+
+                    <p>
+                        {errorMessage}
+                    </p>
+
+                    <lightning-button
+                        variant="neutral"
+                        label="Try Again"
+                        onclick={handleRetry}>
+                    </lightning-button>
 
                 </div>
 
-                <h2>
-                    No {billingMethodPlural} yet
-                </h2>
-
-                <p>
-                    You haven't added any {billingMethodPlural}
-                    to your account.
-                </p>
-
-                <lightning-button
-                    variant="brand"
-                    label={addButtonLabel}
-                    icon-name="utility:add"
-                    onclick={handleAdd}>
-                </lightning-button>
-
             </div>
+
+        </template>
+
+
+        <!-- =====================================================
+             BILLING METHOD CARDS
+             ===================================================== -->
+
+        <template if:false={isLoading}>
+
+            <template if:true={hasBillingMethods}>
+
+                <div class="card-grid">
+
+                    <template
+                        for:each={billingMethods}
+                        for:item="method">
+
+                        <article
+                            key={method.id}
+                            class="billing-card">
+
+                            <!-- CARD HEADER -->
+
+                            <div class="card-header">
+
+                                <div class="card-title-container">
+
+                                    <h2 class="card-title">
+                                        {method.name}
+                                    </h2>
+
+                                    <p class="card-type">
+                                        {method.type}
+                                    </p>
+
+                                </div>
+
+
+                                <span class={method.statusClass}>
+                                    {method.status}
+                                </span>
+
+                            </div>
+
+
+                            <!-- CARD BODY -->
+
+                            <div class="card-body">
+
+                                <template
+                                    for:each={method.fields}
+                                    for:item="field">
+
+                                    <div
+                                        key={field.label}
+                                        class="field-row">
+
+                                        <span class="field-label">
+                                            {field.label}
+                                        </span>
+
+                                        <span class="field-value">
+                                            {field.value}
+                                        </span>
+
+                                    </div>
+
+                                </template>
+
+                            </div>
+
+
+                            <!-- CARD FOOTER -->
+
+                            <div class="card-footer">
+
+                                <span class="footer-text">
+                                    {method.footerText}
+                                </span>
+
+
+                                <div class="card-actions">
+
+                                    <lightning-button
+                                        variant="base"
+                                        label="View"
+                                        data-id={method.id}
+                                        onclick={handleView}>
+                                    </lightning-button>
+
+                                    <lightning-button
+                                        variant="base"
+                                        label="Edit"
+                                        data-id={method.id}
+                                        onclick={handleEdit}>
+                                    </lightning-button>
+
+                                </div>
+
+                            </div>
+
+                        </article>
+
+                    </template>
+
+                </div>
+
+            </template>
+
+
+            <!-- =================================================
+                 EMPTY STATE
+                 ================================================= -->
+
+            <template if:false={hasBillingMethods}>
+
+                <template if:false={hasError}>
+
+                    <div class="empty-state">
+
+                        <div class="empty-icon">
+
+                            <lightning-icon
+                                icon-name={headerIcon}
+                                size="large"
+                                alternative-text="">
+                            </lightning-icon>
+
+                        </div>
+
+                        <h2>
+                            {emptyStateTitle}
+                        </h2>
+
+                        <p>
+                            {emptyStateMessage}
+                        </p>
+
+                        <lightning-button
+                            variant="brand"
+                            label={addButtonLabel}
+                            icon-name="utility:add"
+                            onclick={handleAdd}>
+                        </lightning-button>
+
+                    </div>
+
+                </template>
+
+            </template>
 
         </template>
 
@@ -244,8 +307,8 @@
                 role="dialog"
                 tabindex="-1"
                 aria-modal="true"
-                class="slds-modal slds-fade-in-open"
-            >
+                aria-labelledby="modal-heading"
+                class="slds-modal slds-fade-in-open">
 
                 <div class="slds-modal__container">
 
@@ -256,17 +319,26 @@
                         <button
                             class="slds-button slds-button_icon slds-modal__close"
                             title="Close"
-                            onclick={handleCloseModal}
-                        >
+                            onclick={handleCloseModal}>
+
                             <lightning-icon
                                 icon-name="utility:close"
-                                alternative-text="Close"
-                                size="small">
+                                size="small"
+                                alternative-text="Close">
                             </lightning-icon>
+
+                            <span class="slds-assistive-text">
+                                Close
+                            </span>
+
                         </button>
 
-                        <h2 class="slds-text-heading_medium">
+                        <h2
+                            id="modal-heading"
+                            class="slds-text-heading_medium">
+
                             {modalTitle}
+
                         </h2>
 
                     </header>
@@ -276,30 +348,38 @@
 
                     <div class="slds-modal__content slds-p-around_medium">
 
-                        <div class="modal-placeholder">
+                        <template if:true={selectedBillingMethod}>
 
-                            <lightning-icon
-                                icon-name={iconName}
-                                alternative-text=""
-                                size="medium">
-                            </lightning-icon>
+                            <template
+                                for:each={selectedBillingMethod.fields}
+                                for:item="field">
 
-                            <h3>
-                                {modalTitle}
-                            </h3>
+                                <div
+                                    key={field.label}
+                                    class="modal-field">
+
+                                    <span class="field-label">
+                                        {field.label}
+                                    </span>
+
+                                    <span class="field-value">
+                                        {field.value}
+                                    </span>
+
+                                </div>
+
+                            </template>
+
+                        </template>
+
+                        <template if:false={selectedBillingMethod}>
 
                             <p>
-                                The {billingMethodSingular}
-                                form will go here.
+                                The {pageTitleLowerCase} creation form
+                                will be added here.
                             </p>
 
-                            <p class="modal-note">
-                                We'll connect this form to
-                                Salesforce after the layout
-                                is finalized.
-                            </p>
-
-                        </div>
+                        </template>
 
                     </div>
 
@@ -309,14 +389,9 @@
                     <footer class="slds-modal__footer">
 
                         <lightning-button
-                            label="Cancel"
+                            variant="neutral"
+                            label="Close"
                             onclick={handleCloseModal}>
-                        </lightning-button>
-
-                        <lightning-button
-                            variant="brand"
-                            label="Save"
-                            onclick={handleSave}>
                         </lightning-button>
 
                     </footer>
@@ -325,7 +400,9 @@
 
             </section>
 
-            <div class="slds-backdrop slds-backdrop_open"></div>
+            <div
+                class="slds-backdrop slds-backdrop_open">
+            </div>
 
         </template>
 

@@ -1,272 +1,165 @@
-import { LightningElement, api } from 'lwc';
+import { LightningElement, api, track } from 'lwc';
+import getBillingMethods from '@salesforce/apex/BillingMethodListController.getBillingMethods';
 
 export default class BillingMethodList extends LightningElement {
 
-    // =========================================================
+    // ============================================================
     // EXPERIENCE BUILDER INPUT
-    // =========================================================
+    // ============================================================
 
     @api billingType = 'PO';
 
 
-    // =========================================================
-    // UI STATE
-    // =========================================================
+    // ============================================================
+    // STATE
+    // ============================================================
+
+    @track billingMethods = [];
+
+    isLoading = false;
+    errorMessage = null;
 
     showModal = false;
-
-    modalMode = 'add';
-
-
-    // =========================================================
-    // MOCK DATA
-    //
-    // This will eventually come from Apex.
-    // =========================================================
-
-    poMethods = [
-
-        {
-            id: 'po1',
-            name: 'PO-2026-001',
-            type: 'Purchase Order',
-            status: 'Active',
-            statusClass: 'status active',
-            footerText: 'Added recently',
-
-            fields: [
-                {
-                    label: 'PO Number',
-                    value: 'PO-2026-001'
-                },
-                {
-                    label: 'Organization',
-                    value: 'Example Research Lab'
-                },
-                {
-                    label: 'Amount',
-                    value: '$5,000.00'
-                },
-                {
-                    label: 'Expiration',
-                    value: 'December 31, 2026'
-                }
-            ]
-        },
-
-        {
-            id: 'po2',
-            name: 'PO-2026-002',
-            type: 'Purchase Order',
-            status: 'Active',
-            statusClass: 'status active',
-            footerText: 'Added recently',
-
-            fields: [
-                {
-                    label: 'PO Number',
-                    value: 'PO-2026-002'
-                },
-                {
-                    label: 'Organization',
-                    value: 'Example Research Lab'
-                },
-                {
-                    label: 'Amount',
-                    value: '$10,000.00'
-                },
-                {
-                    label: 'Expiration',
-                    value: 'June 30, 2027'
-                }
-            ]
-        }
-
-    ];
+    selectedBillingMethod = null;
 
 
-    creditCardMethods = [
+    // ============================================================
+    // LIFECYCLE
+    // ============================================================
 
-        {
-            id: 'cc1',
-            name: 'Visa ending in 4242',
-            type: 'Credit Card',
-            status: 'Active',
-            statusClass: 'status active',
-            footerText: 'Added recently',
-
-            fields: [
-                {
-                    label: 'Card Type',
-                    value: 'Visa'
-                },
-                {
-                    label: 'Last Four',
-                    value: '•••• 4242'
-                },
-                {
-                    label: 'Name on Card',
-                    value: 'Example User'
-                },
-                {
-                    label: 'Expiration',
-                    value: '12/2028'
-                }
-            ]
-        },
-
-        {
-            id: 'cc2',
-            name: 'Mastercard ending in 8888',
-            type: 'Credit Card',
-            status: 'Active',
-            statusClass: 'status active',
-            footerText: 'Added previously',
-
-            fields: [
-                {
-                    label: 'Card Type',
-                    value: 'Mastercard'
-                },
-                {
-                    label: 'Last Four',
-                    value: '•••• 8888'
-                },
-                {
-                    label: 'Name on Card',
-                    value: 'Example User'
-                },
-                {
-                    label: 'Expiration',
-                    value: '08/2027'
-                }
-            ]
-        }
-
-    ];
+    connectedCallback() {
+        this.loadBillingMethods();
+    }
 
 
-    cfsMethods = [
+    // ============================================================
+    // LOAD BILLING METHODS
+    // ============================================================
 
-        {
-            id: 'cfs1',
-            name: 'CFS-001',
-            type: 'Chartfield',
-            status: 'Active',
-            statusClass: 'status active',
-            footerText: 'Added recently',
+    async loadBillingMethods() {
 
-            fields: [
-                {
-                    label: 'Chartfield',
-                    value: '123456'
-                },
-                {
-                    label: 'Fund',
-                    value: '12345'
-                },
-                {
-                    label: 'Department',
-                    value: 'NeuroTools'
-                },
-                {
-                    label: 'Description',
-                    value: 'Research supplies'
-                }
-            ]
-        },
+        this.isLoading = true;
+        this.errorMessage = null;
 
-        {
-            id: 'cfs2',
-            name: 'CFS-002',
-            type: 'Chartfield',
-            status: 'Active',
-            statusClass: 'status active',
-            footerText: 'Added previously',
+        try {
 
-            fields: [
-                {
-                    label: 'Chartfield',
-                    value: '789012'
-                },
-                {
-                    label: 'Fund',
-                    value: '67890'
-                },
-                {
-                    label: 'Department',
-                    value: 'Research'
-                },
-                {
-                    label: 'Description',
-                    value: 'Laboratory expenses'
-                }
-            ]
-        }
+            const result = await getBillingMethods({
+                billingType: this.billingType
+            });
 
-    ];
+            this.billingMethods = (result || []).map(method => {
+                return {
+                    ...method,
+                    fields: method.fields || []
+                };
+            });
 
+        } catch (error) {
 
-    // =========================================================
-    // GET CURRENT BILLING TYPE
-    // =========================================================
+            console.error(
+                'Error loading billing methods:',
+                error
+            );
 
-    get billingMethods() {
+            this.billingMethods = [];
 
-        switch (this.normalizedBillingType) {
+            this.errorMessage =
+                this.getErrorMessage(error);
 
-            case 'CC':
-                return this.creditCardMethods;
+        } finally {
 
-            case 'CFS':
-                return this.cfsMethods;
-
-            case 'PO':
-            default:
-                return this.poMethods;
+            this.isLoading = false;
         }
     }
 
 
-    // =========================================================
-    // NORMALIZE BILLING TYPE
-    // =========================================================
+    // ============================================================
+    // REFRESH
+    // ============================================================
 
-    get normalizedBillingType() {
-
-        const value =
-            (this.billingType || '')
-                .toString()
-                .trim()
-                .toUpperCase();
-
-        if (
-            value === 'CC' ||
-            value === 'CREDIT CARD' ||
-            value === 'CREDITCARD'
-        ) {
-            return 'CC';
-        }
-
-        if (
-            value === 'CFS' ||
-            value === 'CHARTFIELD' ||
-            value === 'CHARTFIELDS'
-        ) {
-            return 'CFS';
-        }
-
-        return 'PO';
+    @api
+    refresh() {
+        return this.loadBillingMethods();
     }
 
 
-    // =========================================================
-    // PAGE TITLE
-    // =========================================================
+    // ============================================================
+    // ADD BILLING METHOD
+    // ============================================================
+
+    handleAdd() {
+
+        this.selectedBillingMethod = null;
+        this.showModal = true;
+    }
+
+
+    // ============================================================
+    // VIEW
+    // ============================================================
+
+    handleView(event) {
+
+        const recordId =
+            event.currentTarget.dataset.id;
+
+        this.selectedBillingMethod =
+            this.billingMethods.find(
+                method => method.id === recordId
+            );
+
+        this.showModal = true;
+    }
+
+
+    // ============================================================
+    // EDIT
+    // ============================================================
+
+    handleEdit(event) {
+
+        const recordId =
+            event.currentTarget.dataset.id;
+
+        this.selectedBillingMethod =
+            this.billingMethods.find(
+                method => method.id === recordId
+            );
+
+        this.showModal = true;
+    }
+
+
+    // ============================================================
+    // CLOSE MODAL
+    // ============================================================
+
+    handleCloseModal() {
+
+        this.showModal = false;
+        this.selectedBillingMethod = null;
+    }
+
+
+    // ============================================================
+    // RETRY
+    // ============================================================
+
+    handleRetry() {
+        this.loadBillingMethods();
+    }
+
+
+    // ============================================================
+    // DISPLAY HELPERS
+    // ============================================================
 
     get pageTitle() {
 
-        switch (this.normalizedBillingType) {
+        switch (this.billingType) {
+
+            case 'PO':
+                return 'Purchase Orders';
 
             case 'CC':
                 return 'Credit Cards';
@@ -274,41 +167,37 @@ export default class BillingMethodList extends LightningElement {
             case 'CFS':
                 return 'Chartfields';
 
-            case 'PO':
             default:
-                return 'Purchase Orders';
+                return 'Billing Methods';
         }
     }
 
-
-    // =========================================================
-    // PAGE DESCRIPTION
-    // =========================================================
 
     get pageDescription() {
 
-        switch (this.normalizedBillingType) {
-
-            case 'CC':
-                return 'Manage the credit cards available for billing your NeuroTools orders.';
-
-            case 'CFS':
-                return 'Manage the chartfields available for billing your NeuroTools orders.';
+        switch (this.billingType) {
 
             case 'PO':
+                return 'Manage purchase orders available for your organization.';
+
+            case 'CC':
+                return 'Manage credit cards available for your organization.';
+
+            case 'CFS':
+                return 'Manage chartfield strings available for your organization.';
+
             default:
-                return 'Manage the purchase orders available for billing your NeuroTools orders.';
+                return 'Manage your billing methods.';
         }
     }
 
 
-    // =========================================================
-    // BUTTON LABEL
-    // =========================================================
-
     get addButtonLabel() {
 
-        switch (this.normalizedBillingType) {
+        switch (this.billingType) {
+
+            case 'PO':
+                return 'Add Purchase Order';
 
             case 'CC':
                 return 'Add Credit Card';
@@ -316,182 +205,134 @@ export default class BillingMethodList extends LightningElement {
             case 'CFS':
                 return 'Add Chartfield';
 
-            case 'PO':
             default:
-                return 'Add Purchase Order';
+                return 'Add Billing Method';
         }
     }
 
 
-    // =========================================================
-    // SINGULAR / PLURAL
-    // =========================================================
+    get headerIcon() {
 
-    get billingMethodSingular() {
-
-        switch (this.normalizedBillingType) {
-
-            case 'CC':
-                return 'credit card';
-
-            case 'CFS':
-                return 'chartfield';
+        switch (this.billingType) {
 
             case 'PO':
-            default:
-                return 'purchase order';
-        }
-    }
-
-
-    get billingMethodPlural() {
-
-        switch (this.normalizedBillingType) {
-
-            case 'CC':
-                return 'credit cards';
-
-            case 'CFS':
-                return 'chartfields';
-
-            case 'PO':
-            default:
-                return 'purchase orders';
-        }
-    }
-
-
-    // =========================================================
-    // ICON
-    // =========================================================
-
-    get iconName() {
-
-        switch (this.normalizedBillingType) {
-
-            case 'CC':
                 return 'utility:money';
 
-            case 'CFS':
-                return 'utility:table';
+            case 'CC':
+                return 'utility:card_details';
 
-            case 'PO':
+            case 'CFS':
+                return 'utility:product_transfer';
+
             default:
-                return 'utility:contract';
+                return 'utility:billing';
         }
     }
 
 
-    // =========================================================
-    // SUMMARY
-    // =========================================================
+    get emptyStateTitle() {
+
+        switch (this.billingType) {
+
+            case 'PO':
+                return 'No Purchase Orders';
+
+            case 'CC':
+                return 'No Credit Cards';
+
+            case 'CFS':
+                return 'No Chartfields';
+
+            default:
+                return 'No Billing Methods';
+        }
+    }
+
+
+    get emptyStateMessage() {
+
+        switch (this.billingType) {
+
+            case 'PO':
+                return 'You do not currently have any purchase orders associated with your organization.';
+
+            case 'CC':
+                return 'You do not currently have any credit cards associated with your organization.';
+
+            case 'CFS':
+                return 'You do not currently have any chartfield strings associated with your organization.';
+
+            default:
+                return 'You do not currently have any billing methods.';
+        }
+    }
+
+
+    get totalCount() {
+        return this.billingMethods.length;
+    }
+
 
     get activeCount() {
 
         return this.billingMethods.filter(
-            method =>
-                method.status === 'Active'
+            method => method.statusClass === 'status active'
         ).length;
     }
 
 
     get hasBillingMethods() {
-
         return this.billingMethods.length > 0;
     }
 
 
-    // =========================================================
-    // ADD
-    // =========================================================
-
-    handleAdd() {
-
-        this.modalMode = 'add';
-
-        this.showModal = true;
+    get hasError() {
+        return !!this.errorMessage;
     }
 
-
-    // =========================================================
-    // VIEW
-    // =========================================================
-
-    handleView(event) {
-
-        const id =
-            event.currentTarget.dataset.id;
-
-        console.log(
-            'View billing method:',
-            id
-        );
-
-        this.modalMode = 'view';
-
-        this.showModal = true;
-    }
-
-
-    // =========================================================
-    // EDIT
-    // =========================================================
-
-    handleEdit(event) {
-
-        const id =
-            event.currentTarget.dataset.id;
-
-        console.log(
-            'Edit billing method:',
-            id
-        );
-
-        this.modalMode = 'edit';
-
-        this.showModal = true;
-    }
-
-
-    // =========================================================
-    // CLOSE MODAL
-    // =========================================================
-
-    handleCloseModal() {
-
-        this.showModal = false;
-    }
-
-
-    // =========================================================
-    // SAVE
-    // =========================================================
-
-    handleSave() {
-
-        console.log(
-            'Save billing method'
-        );
-
-        this.showModal = false;
-    }
-
-
-    // =========================================================
-    // MODAL TITLE
-    // =========================================================
 
     get modalTitle() {
 
-        if (this.modalMode === 'edit') {
-            return `Edit ${this.billingMethodSingular}`;
+        if (this.selectedBillingMethod) {
+            return `View ${this.selectedBillingMethod.type}`;
         }
 
-        if (this.modalMode === 'view') {
-            return `View ${this.billingMethodSingular}`;
-        }
-
-        return `Add ${this.billingMethodSingular}`;
+        return this.addButtonLabel;
     }
 
+    get pageTitleLowerCase() {
+    return this.pageTitle.toLowerCase();
+}
+
+    // ============================================================
+    // ERROR HANDLING
+    // ============================================================
+
+    getErrorMessage(error) {
+
+        if (!error) {
+            return 'An unexpected error occurred.';
+        }
+
+        if (error.body) {
+
+            if (typeof error.body.message === 'string') {
+                return error.body.message;
+            }
+
+            if (Array.isArray(error.body)) {
+
+                return error.body
+                    .map(item => item.message)
+                    .filter(Boolean)
+                    .join(', ');
+            }
+        }
+
+        if (typeof error.message === 'string') {
+            return error.message;
+        }
+
+        return 'Unable to load billing methods.';
+    }
 }
