@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <LightningComponentBundle
-    xmlns="http://soap.sforce.com/2006/04/metadata"
->
+    xmlns="http://soap.sforce.com/2006/04/metadata">
+
     <apiVersion>66.0</apiVersion>
 
     <isExposed>true</isExposed>
@@ -16,5 +16,17 @@
         <target>lightningCommunity__Page</target>
         <target>lightningCommunity__Default</target>
     </targets>
+
+    <targetConfigs>
+        <targetConfig targets="lightningCommunity__Default">
+            <property
+                name="billingType"
+                type="String"
+                label="Billing Type"
+                description="Select which billing method this component should display."
+                default="PO"
+            />
+        </targetConfig>
+    </targetConfigs>
 
 </LightningComponentBundle>
