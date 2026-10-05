@@ -1,5 +1,8 @@
-import { LightningElement, api, track } from 'lwc';
+import { LightningElement, api, track, wire } from 'lwc';
+import { refreshApex } from '@salesforce/apex';
+
 import getBillingMethods from '@salesforce/apex/BillingMethodListController.getBillingMethods';
+import getCurrentUserContactId from '@salesforce/apex/BillingMethodListController.getCurrentUserContactId';
 
 export default class BillingMethodList extends LightningElement {
 
@@ -22,13 +25,16 @@ export default class BillingMethodList extends LightningElement {
     showModal = false;
     selectedBillingMethod = null;
 
+    flowApiName = null;
+    flowContactId = null;
+    wiredBillingMethodsResult;
 
     // ============================================================
     // LIFECYCLE
     // ============================================================
 
     connectedCallback() {
-        this.loadBillingMethods();
+        this.loadContactId();
     }
 
 
@@ -36,62 +42,116 @@ export default class BillingMethodList extends LightningElement {
     // LOAD BILLING METHODS
     // ============================================================
 
-    async loadBillingMethods() {
+@wire(getBillingMethods, { billingType: '$billingType' })
+wiredBillingMethods(result) {
 
-        this.isLoading = true;
+    this.wiredBillingMethodsResult = result;
+
+    const { data, error } = result;
+
+    if (data) {
+
+        this.billingMethods = (data || []).map(method => {
+            return {
+                ...method,
+                fields: method.fields || []
+            };
+        });
+
         this.errorMessage = null;
+        this.isLoading = false;
 
-        try {
+    } else if (error) {
 
-            const result = await getBillingMethods({
-                billingType: this.billingType
-            });
+        console.error(
+            'Error loading billing methods:',
+            error
+        );
 
-            this.billingMethods = (result || []).map(method => {
-                return {
-                    ...method,
-                    fields: method.fields || []
-                };
-            });
-
-        } catch (error) {
-
-            console.error(
-                'Error loading billing methods:',
-                error
-            );
-
-            this.billingMethods = [];
-
-            this.errorMessage =
-                this.getErrorMessage(error);
-
-        } finally {
-
-            this.isLoading = false;
-        }
+        this.billingMethods = [];
+        this.errorMessage = this.getErrorMessage(error);
+        this.isLoading = false;
     }
+}
 
+async loadContactId() {
+    try {
+        this.flowContactId = await getCurrentUserContactId();
 
+        console.log(
+            'BillingMethodList flowContactId:',
+            this.flowContactId
+        );
+
+    } catch (error) {
+        console.error(
+            'Error loading current user ContactId:',
+            error
+        );
+
+        this.flowContactId = null;
+    }
+}
     // ============================================================
     // REFRESH
     // ============================================================
 
-    @api
-    refresh() {
-        return this.loadBillingMethods();
+  @api
+refresh() {
+    if (this.wiredBillingMethodsResult) {
+        return refreshApex(this.wiredBillingMethodsResult);
     }
+
+    return Promise.resolve();
+}
 
 
     // ============================================================
     // ADD BILLING METHOD
     // ============================================================
 
-    handleAdd() {
+handleAdd() {
 
-        this.selectedBillingMethod = null;
-        this.showModal = true;
+    if (!this.flowContactId) {
+        console.error(
+            'Cannot open billing creation Flow: Contact ID is missing.'
+        );
+
+        this.errorMessage =
+            'Unable to determine the current portal user. Please refresh the page and try again.';
+
+        return;
     }
+
+    this.selectedBillingMethod = null;
+
+    switch (this.billingType) {
+
+        case 'PO':
+            this.flowApiName = 'LWC_Purchase_Order_Modal';
+            break;
+
+        case 'CC':
+            this.flowApiName = 'LWC_Credit_Card_Modal';
+            break;
+
+        case 'CFS':
+            this.flowApiName = 'LWC_Chartfield_String_Modal';
+            break;
+
+        default:
+            this.flowApiName = null;
+
+            console.error(
+                'Unsupported billing type:',
+                this.billingType
+            );
+
+            return;
+    }
+
+    this.showModal = true;
+}
 
 
     // ============================================================
@@ -138,7 +198,65 @@ export default class BillingMethodList extends LightningElement {
 
         this.showModal = false;
         this.selectedBillingMethod = null;
+        this.flowApiName = null;
     }
+
+
+    // ============================================================
+    // FLOW FINISHED
+    // ============================================================
+
+  async handleFlowStatusChange(event) {
+
+    const status = event.detail.status;
+
+    console.log(
+        'Billing creation Flow status:',
+        status
+    );
+
+    if (status === 'ERROR') {
+
+        console.error(
+            'Billing creation Flow error:',
+            event.detail
+        );
+
+        return;
+    }
+
+    if (status === 'CANCELED') {
+        this.handleCloseModal();
+        return;
+    }
+
+    if (status !== 'FINISHED') {
+        return;
+    }
+
+    // Close the Flow modal
+    this.handleCloseModal();
+
+    // Refresh the wired Apex data
+    try {
+
+        await refreshApex(
+            this.wiredBillingMethodsResult
+        );
+
+        console.log(
+            'Billing methods refreshed successfully.'
+        );
+
+    } catch (error) {
+
+        console.error(
+            'Error refreshing billing methods:',
+            error
+        );
+
+    }
+}
 
 
     // ============================================================
@@ -300,10 +418,25 @@ export default class BillingMethodList extends LightningElement {
         return this.addButtonLabel;
     }
 
-    get pageTitleLowerCase() {
-    return this.pageTitle.toLowerCase();
-}
 
+    get pageTitleLowerCase() {
+        return this.pageTitle.toLowerCase();
+    }
+
+get flowInputVariables() {
+
+    if (!this.flowContactId) {
+        return [];
+    }
+
+    return [
+        {
+            name: 'contactId',
+            type: 'String',
+            value: this.flowContactId
+        }
+    ];
+}
     // ============================================================
     // ERROR HANDLING
     // ============================================================
