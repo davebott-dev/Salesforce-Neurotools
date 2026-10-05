@@ -344,59 +344,65 @@
                     </header>
 
 
-<!-- =====================================================
-     MODAL BODY
-     ===================================================== -->
+                    <!-- =================================================
+                         MODAL BODY
+                         ================================================= -->
 
-<div class="slds-modal__content slds-p-around_medium">
+                    <div class="slds-modal__content slds-p-around_medium">
 
-    <!-- VIEW / EDIT EXISTING BILLING METHOD -->
+                        <!-- ================================
+                             VIEW MODE
+                             ================================ -->
 
-    <template if:true={selectedBillingMethod}>
+                        <template if:true={isViewMode}>
 
-        <template
-            for:each={selectedBillingMethod.fields}
-            for:item="field">
+                            <template
+                                for:each={selectedBillingMethod.fields}
+                                for:item="field">
 
-            <div
-                key={field.label}
-                class="modal-field">
+                                <div
+                                    key={field.label}
+                                    class="modal-field">
 
-                <span class="field-label">
-                    {field.label}
-                </span>
+                                    <span class="field-label">
+                                        {field.label}
+                                    </span>
 
-                <span class="field-value">
-                    {field.value}
-                </span>
+                                    <span class="field-value">
+                                        {field.value}
+                                    </span>
 
-            </div>
+                                </div>
 
-        </template>
+                            </template>
 
-    </template>
-
-
-    <!-- ADD NEW BILLING METHOD -->
-
-    <template if:false={selectedBillingMethod}>
-
-        <template if:true={flowApiName}>
-
-           <lightning-flow
-    flow-api-name={flowApiName}
-    flow-input-variables={flowInputVariables}
-    onstatuschange={handleFlowStatusChange}>
-</lightning-flow>
-
-        </template>
-
-    </template>
-
-</div>
+                        </template>
 
 
-                    <!-- MODAL FOOTER -->
+                        <!-- ================================
+                             ADD / EDIT FLOW
+                             ================================ -->
+
+                        <template if:true={isFlowMode}>
+
+                            <template if:true={flowApiName}>
+
+                                <lightning-flow
+                                    flow-api-name={flowApiName}
+                                    flow-input-variables={flowInputVariables}
+                                    onstatuschange={handleFlowStatusChange}>
+                                </lightning-flow>
+
+                            </template>
+
+                        </template>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         MODAL FOOTER
+                         ================================================= -->
 
                     <footer class="slds-modal__footer">
 
