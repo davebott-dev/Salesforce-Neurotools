@@ -1,0 +1,459 @@
+<template>
+
+    <lightning-card>
+
+        <!-- =====================================================
+             HEADER
+             ===================================================== -->
+
+        <div class="header">
+
+            <div>
+                <h1 class="title">
+                    Publications
+                </h1>
+
+                <p class="subtitle">
+                    Publications associated with your organization
+                </p>
+            </div>
+
+
+            <lightning-button
+                label="Add Publication"
+                variant="brand"
+                icon-name="utility:add"
+                onclick={handleAddPublication}>
+            </lightning-button>
+
+        </div>
+
+
+        <!-- =====================================================
+             SEARCH
+             ===================================================== -->
+
+        <div class="search-container">
+
+            <lightning-input
+                type="search"
+                label="Search Publications"
+                variant="label-hidden"
+                placeholder="Search by title, journal, citation, DOI, or year..."
+                value={searchTerm}
+                onchange={handleSearch}>
+            </lightning-input>
+
+        </div>
+
+
+        <!-- =====================================================
+             ERROR
+             ===================================================== -->
+
+        <template if:true={errorMessage}>
+
+            <div class="error-message">
+
+                <lightning-icon
+                    icon-name="utility:error"
+                    size="small">
+                </lightning-icon>
+
+                <span>
+                    {errorMessage}
+                </span>
+
+            </div>
+
+        </template>
+
+
+        <!-- =====================================================
+             LOADING
+             ===================================================== -->
+
+        <template if:true={isLoading}>
+
+            <div class="loading">
+
+                <lightning-spinner
+                    alternative-text="Loading publications"
+                    size="medium">
+                </lightning-spinner>
+
+            </div>
+
+        </template>
+
+
+        <!-- =====================================================
+             NO PUBLICATIONS
+             ===================================================== -->
+
+        <template if:true={noPublications}>
+
+            <div class="empty-state">
+
+                <lightning-icon
+                    icon-name="utility:knowledge_base"
+                    size="medium">
+                </lightning-icon>
+
+                <h2>
+                    No Publications
+                </h2>
+
+                <p>
+                    Your organization does not have any approved
+                    publications yet.
+                </p>
+
+                <lightning-button
+                    label="Add Publication"
+                    variant="brand"
+                    onclick={handleAddPublication}>
+                </lightning-button>
+
+            </div>
+
+        </template>
+
+
+        <!-- =====================================================
+             NO SEARCH RESULTS
+             ===================================================== -->
+
+        <template if:true={noSearchResults}>
+
+            <div class="empty-state">
+
+                <lightning-icon
+                    icon-name="utility:search"
+                    size="medium">
+                </lightning-icon>
+
+                <h2>
+                    No Results
+                </h2>
+
+                <p>
+                    No publications matched your search.
+                </p>
+
+            </div>
+
+        </template>
+
+
+        <!-- =====================================================
+             PUBLICATION LIST
+             ===================================================== -->
+
+        <template if:true={hasPublications}>
+
+            <div class="publication-list">
+
+                <template
+                    for:each={filteredPublications}
+                    for:item="publication"
+                >
+
+                    <article
+                        key={publication.id}
+                        class="publication-card"
+                    >
+
+                        <div class="publication-content">
+
+                            <h2 class="publication-title">
+
+                                {publication.title}
+
+                            </h2>
+
+
+                            <div class="publication-meta">
+
+                                <template
+                                    if:true={publication.journal}
+                                >
+
+                                    <span>
+                                        {publication.journal}
+                                    </span>
+
+                                </template>
+
+
+                                <template
+                                    if:true={publication.publicationYear}
+                                >
+
+                                    <span>
+                                        •
+                                        {publication.publicationYear}
+                                    </span>
+
+                                </template>
+
+                            </div>
+
+
+                            <template
+                                if:true={publication.citation}
+                            >
+
+                                <p class="citation">
+
+                                    {publication.citation}
+
+                                </p>
+
+                            </template>
+
+
+                            <div class="publication-actions">
+
+                                <lightning-button
+                                    label="View Details"
+                                    variant="base"
+                                    data-id={publication.id}
+                                    onclick={handleViewPublication}>
+                                </lightning-button>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                </template>
+
+            </div>
+
+        </template>
+
+    </lightning-card>
+
+
+    <!-- =========================================================
+         PUBLICATION DETAILS MODAL
+         ========================================================= -->
+
+    <template if:true={isDetailsOpen}>
+
+        <section
+            role="dialog"
+            tabindex="-1"
+            aria-modal="true"
+            aria-labelledby="publication-modal-heading"
+            class="modal-backdrop"
+        >
+
+            <div class="modal">
+
+                <div class="modal-header">
+
+                    <h2
+                        id="publication-modal-heading"
+                        class="modal-title"
+                    >
+                        {selectedPublication.title}
+                    </h2>
+
+                    <button
+                        class="close-button"
+                        title="Close"
+                        onclick={handleCloseDetails}
+                    >
+                        ×
+                    </button>
+
+                </div>
+
+
+                <div class="modal-body">
+
+                    <template
+                        if:true={selectedPublication.journal}
+                    >
+
+                        <div class="detail-row">
+
+                            <strong>
+                                Journal
+                            </strong>
+
+                            <span>
+                                {selectedPublication.journal}
+                            </span>
+
+                        </div>
+
+                    </template>
+
+
+                    <template
+                        if:true={selectedPublication.publicationYear}
+                    >
+
+                        <div class="detail-row">
+
+                            <strong>
+                                Year
+                            </strong>
+
+                            <span>
+                                {selectedPublication.publicationYear}
+                            </span>
+
+                        </div>
+
+                    </template>
+
+
+                    <template
+                        if:true={selectedPublication.doi}
+                    >
+
+                        <div class="detail-row">
+
+                            <strong>
+                                DOI
+                            </strong>
+
+                            <span>
+                                {selectedPublication.doi}
+                            </span>
+
+                        </div>
+
+                    </template>
+
+
+                    <template
+                        if:true={selectedPublication.citation}
+                    >
+
+                        <div class="detail-section">
+
+                            <h3>
+                                Citation
+                            </h3>
+
+                            <p>
+                                {selectedPublication.citation}
+                            </p>
+
+                        </div>
+
+                    </template>
+
+
+                    <template
+                        if:true={selectedPublication.abstractText}
+                    >
+
+                        <div class="detail-section">
+
+                            <h3>
+                                Abstract
+                            </h3>
+
+                            <p>
+                                {selectedPublication.abstractText}
+                            </p>
+
+                        </div>
+
+                    </template>
+
+
+                    <template
+                        if:true={selectedPublication.publicationUrl}
+                    >
+
+                        <div class="detail-section">
+
+                            <lightning-formatted-url
+                                value={selectedPublication.publicationUrl}
+                                label="View Publication"
+                                target="_blank">
+                            </lightning-formatted-url>
+
+                        </div>
+
+                    </template>
+
+                </div>
+
+
+                <div class="modal-footer">
+
+                    <lightning-button
+                        label="Close"
+                        onclick={handleCloseDetails}>
+                    </lightning-button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </template>
+
+
+    <!-- =========================================================
+         ADD PUBLICATION
+         ========================================================= -->
+
+    <template if:true={isFormOpen}>
+
+        <section
+            role="dialog"
+            tabindex="-1"
+            aria-modal="true"
+            aria-labelledby="add-publication-heading"
+            class="modal-backdrop"
+        >
+
+            <div class="modal form-modal">
+
+                <div class="modal-header">
+
+                    <h2
+                        id="add-publication-heading"
+                        class="modal-title"
+                    >
+                        Add Publication
+                    </h2>
+
+                    <button
+                        class="close-button"
+                        title="Close"
+                        onclick={handleCloseForm}
+                    >
+                        ×
+                    </button>
+
+                </div>
+
+
+                <div class="modal-body">
+
+                    <c-neurotools-publication-form
+                        oncancel={handleCloseForm}
+                        onpublicationcreated={handlePublicationCreated}>
+                    </c-neurotools-publication-form>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </template>
+
+</template>
