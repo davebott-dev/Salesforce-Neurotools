@@ -1,0 +1,283 @@
+<template>
+
+    <div class="form-container">
+
+        <!-- =====================================================
+             FORM HEADER
+             ===================================================== -->
+
+        <div class="form-introduction">
+
+            <p>
+                Submit a publication associated with your organization.
+                Your submission will be reviewed by the NeuroTools team
+                before it appears in the publication library.
+            </p>
+
+        </div>
+
+
+        <!-- =====================================================
+             ERROR
+             ===================================================== -->
+
+        <template if:true={errorMessage}>
+
+            <div
+                class="message error-message"
+                role="alert"
+            >
+
+                <lightning-icon
+                    icon-name="utility:error"
+                    size="small"
+                    alternative-text="Error">
+                </lightning-icon>
+
+                <span>
+                    {errorMessage}
+                </span>
+
+            </div>
+
+        </template>
+
+
+        <!-- =====================================================
+             SUCCESS
+             ===================================================== -->
+
+        <template if:true={successMessage}>
+
+            <div
+                class="message success-message"
+                role="status"
+            >
+
+                <lightning-icon
+                    icon-name="utility:success"
+                    size="small"
+                    alternative-text="Success">
+                </lightning-icon>
+
+                <span>
+                    {successMessage}
+                </span>
+
+            </div>
+
+        </template>
+
+
+        <!-- =====================================================
+             FORM
+             ===================================================== -->
+
+        <div class="form-grid">
+
+            <!-- -------------------------------------------------
+                 TITLE
+                 ------------------------------------------------- -->
+
+            <div class="full-width">
+
+                <lightning-input
+                    type="text"
+                    label="Publication Title"
+                    data-field="title"
+                    value={title}
+                    onchange={handleInputChange}
+                    required
+                    maxlength="80">
+                </lightning-input>
+
+            </div>
+
+
+            <!-- -------------------------------------------------
+                 JOURNAL
+                 ------------------------------------------------- -->
+
+            <div>
+
+                <lightning-input
+                    type="text"
+                    label="Journal"
+                    data-field="journal"
+                    value={journal}
+                    onchange={handleInputChange}
+                    maxlength="255">
+                </lightning-input>
+
+            </div>
+
+
+            <!-- -------------------------------------------------
+                 PUBLICATION YEAR
+                 ------------------------------------------------- -->
+
+            <div>
+
+                <lightning-input
+                    type="text"
+                    label="Publication Year"
+                    data-field="publicationYear"
+                    value={publicationYear}
+                    onchange={handleInputChange}
+                    placeholder="e.g. 2026"
+                    maxlength="255">
+                </lightning-input>
+
+            </div>
+
+
+            <!-- -------------------------------------------------
+                 DOI
+                 ------------------------------------------------- -->
+
+            <div>
+
+                <lightning-input
+                    type="text"
+                    label="DOI"
+                    data-field="doi"
+                    value={doi}
+                    onchange={handleInputChange}
+                    placeholder="e.g. 10.1000/example"
+                    maxlength="255">
+                </lightning-input>
+
+            </div>
+
+
+            <!-- -------------------------------------------------
+                 URL
+                 ------------------------------------------------- -->
+
+            <div>
+
+                <lightning-input
+                    type="url"
+                    label="Publication URL"
+                    data-field="publicationUrl"
+                    value={publicationUrl}
+                    onchange={handleInputChange}
+                    placeholder="https://..."
+                    maxlength="255">
+                </lightning-input>
+
+            </div>
+
+
+            <!-- -------------------------------------------------
+                 CITATION
+                 ------------------------------------------------- -->
+
+            <div class="full-width">
+
+                <lightning-textarea
+                    label="Citation"
+                    data-field="citation"
+                    value={citation}
+                    onchange={handleInputChange}
+                    maxlength="32768"
+                    message-when-too-long="Citation is too long.">
+                </lightning-textarea>
+
+            </div>
+
+
+            <!-- -------------------------------------------------
+                 ABSTRACT
+                 ------------------------------------------------- -->
+
+            <div class="full-width">
+
+                <lightning-textarea
+                    label="Abstract"
+                    data-field="abstractText"
+                    value={abstractText}
+                    onchange={handleInputChange}
+                    maxlength="32768"
+                    message-when-too-long="Abstract is too long.">
+                </lightning-textarea>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             REVIEW INFORMATION
+             ===================================================== -->
+
+        <div class="review-notice">
+
+            <lightning-icon
+                icon-name="utility:info"
+                size="small"
+                alternative-text="Information">
+            </lightning-icon>
+
+            <div>
+
+                <strong>
+                    Submission Review
+                </strong>
+
+                <p>
+                    Your publication will be submitted as
+                    <strong>Pending Review</strong>.
+                    The NeuroTools team will review it before
+                    it becomes visible in the publication library.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             ACTIONS
+             ===================================================== -->
+
+        <div class="form-actions">
+
+            <lightning-button
+                label="Cancel"
+                variant="neutral"
+                onclick={handleCancel}
+                disabled={isSubmitting}>
+            </lightning-button>
+
+
+            <lightning-button
+                label="Submit Publication"
+                variant="brand"
+                onclick={handleSubmit}
+                disabled={isSubmitting}>
+            </lightning-button>
+
+        </div>
+
+
+        <!-- =====================================================
+             LOADING
+             ===================================================== -->
+
+        <template if:true={isSubmitting}>
+
+            <div class="loading-overlay">
+
+                <lightning-spinner
+                    alternative-text="Submitting publication"
+                    size="medium">
+                </lightning-spinner>
+
+            </div>
+
+        </template>
+
+    </div>
+
+</template>
