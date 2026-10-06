@@ -3,6 +3,8 @@ import { LightningElement, wire } from 'lwc';
 import getPublications from '@salesforce/apex/PublicationController.getPublications';
 import getPublication from '@salesforce/apex/PublicationController.getPublication';
 
+import { refreshApex } from '@salesforce/apex';
+
 export default class NeurotoolsPublications extends LightningElement {
 
     /*
@@ -27,15 +29,26 @@ export default class NeurotoolsPublications extends LightningElement {
 
     errorMessage = '';
 
+    /*
+     * Store the wired result so it can be refreshed later.
+     */
+    wiredPublicationsResult;
+
 
     /*
      * ============================================================
      * GET PUBLICATIONS
      * ============================================================
+     *
+     * Returns ALL Active publications from ALL organizations.
      */
 
     @wire(getPublications)
-    wiredPublications({ data, error }) {
+    wiredPublications(result) {
+
+        this.wiredPublicationsResult = result;
+
+        const { data, error } = result;
 
         this.isLoading = false;
 
@@ -78,6 +91,15 @@ export default class NeurotoolsPublications extends LightningElement {
      * ============================================================
      * FILTER PUBLICATIONS
      * ============================================================
+     *
+     * Searches:
+     *
+     * - Title
+     * - Organization
+     * - Journal
+     * - Citation
+     * - DOI
+     * - Publication Year
      */
 
     applyFilter() {
@@ -105,6 +127,11 @@ export default class NeurotoolsPublications extends LightningElement {
                 return (
                     this.contains(
                         publication.title,
+                        search
+                    ) ||
+
+                    this.contains(
+                        publication.organizationName,
                         search
                     ) ||
 
@@ -223,16 +250,35 @@ export default class NeurotoolsPublications extends LightningElement {
      * Child form dispatches:
      *
      * publicationcreated
+     *
+     * The new publication will normally be Pending Review,
+     * so it will not immediately appear in the Active library.
      */
 
-    handlePublicationCreated() {
+    async handlePublicationCreated() {
 
         this.isFormOpen = false;
 
+        this.errorMessage = '';
+
         /*
-         * Refreshing the wired method is something we'll add
-         * when the final UI is connected to refreshApex.
+         * Refresh the publication library.
          */
+        if (this.wiredPublicationsResult) {
+
+            try {
+
+                await refreshApex(
+                    this.wiredPublicationsResult
+                );
+
+            } catch (error) {
+
+                this.errorMessage =
+                    this.getErrorMessage(error);
+            }
+        }
+
 
         this.dispatchEvent(
             new CustomEvent('publicationcreated')
@@ -266,6 +312,13 @@ export default class NeurotoolsPublications extends LightningElement {
             error.body.message
         ) {
             return error.body.message;
+        }
+
+        if (
+            error &&
+            error.message
+        ) {
+            return error.message;
         }
 
         return 'An unexpected error occurred.';
