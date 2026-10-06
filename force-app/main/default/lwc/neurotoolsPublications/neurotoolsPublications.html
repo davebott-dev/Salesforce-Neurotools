@@ -13,9 +13,9 @@
                     Publications
                 </h1>
 
-                <p class="subtitle">
-                    Publications associated with your organization
-                </p>
+               <p class="subtitle">
+    Approved publications from NeuroTools organizations
+</p>
             </div>
 
 
@@ -166,14 +166,23 @@
 
                         <div class="publication-content">
 
-                            <h2 class="publication-title">
+                         <h2 class="publication-title">
 
-                                {publication.title}
+    {publication.title}
 
-                            </h2>
+</h2>
 
 
-                            <div class="publication-meta">
+<template if:true={publication.organizationName}>
+
+    <p class="publication-organization">
+        {publication.organizationName}
+    </p>
+
+</template>
+
+
+<div class="publication-meta">
 
                                 <template
                                     if:true={publication.journal}
