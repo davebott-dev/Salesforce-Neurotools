@@ -1,4 +1,4 @@
-import { lightningElement } from 'lwc';
+import { LightningElement } from 'lwc';
 
-export default class NeurotoolsHome extends lightningElement {
+export default class NeurotoolsHome extends LightningElement {
 }
