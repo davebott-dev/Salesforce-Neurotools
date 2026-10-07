@@ -1,0 +1,451 @@
+.home-container {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+
+/* ============================================================
+   WELCOME
+   ============================================================ */
+
+.welcome-section {
+    padding: 8px 0 28px;
+}
+
+.welcome-section h1 {
+    margin: 0 0 8px;
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.welcome-section p {
+    margin: 0;
+    color: #5c5c5c;
+    font-size: 1rem;
+}
+
+
+/* ============================================================
+   GENERAL SECTIONS
+   ============================================================ */
+
+.section {
+    margin-bottom: 28px;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 14px;
+}
+
+.section-header h2 {
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 600;
+}
+
+.section-header p {
+    margin: 4px 0 0;
+    color: #6b6b6b;
+    font-size: 0.9rem;
+}
+
+
+/* ============================================================
+   QUICK ACTIONS
+   ============================================================ */
+
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.action-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 20px;
+    background: #ffffff;
+    border: 1px solid #dddbda;
+    border-radius: 8px;
+    cursor: pointer;
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.action-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.action-icon {
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #f3f6f9;
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.action-content h3 {
+    margin: 0 0 4px;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.action-content p {
+    margin: 0;
+    color: #6b6b6b;
+    font-size: 0.82rem;
+}
+
+
+/* ============================================================
+   PLACEHOLDER
+   ============================================================ */
+
+.placeholder-card {
+    min-height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: #ffffff;
+    border: 1px solid #dddbda;
+    border-radius: 8px;
+    color: #6b6b6b;
+}
+
+
+/* ============================================================
+   TWO COLUMN SECTION
+   ============================================================ */
+
+.two-column-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 28px;
+}
+
+.section-card {
+    padding: 22px;
+    background: #ffffff;
+    border: 1px solid #dddbda;
+    border-radius: 8px;
+}
+
+
+/* ============================================================
+   ORDER SUMMARY
+   ============================================================ */
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.summary-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 14px 8px;
+    background: #f8f9fa;
+    border-radius: 6px;
+}
+
+.summary-number {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.summary-label {
+    margin-top: 4px;
+    color: #6b6b6b;
+    font-size: 0.75rem;
+    text-align: center;
+}
+
+
+/* ============================================================
+   QUICK ORDER
+   ============================================================ */
+
+.quick-order-list {
+    margin-top: 18px;
+}
+
+.quick-order-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.quick-order-item:last-child {
+    border-bottom: none;
+}
+
+.quick-order-item strong {
+    display: block;
+    margin-bottom: 3px;
+    font-size: 0.95rem;
+}
+
+.quick-order-item span {
+    display: block;
+    color: #6b6b6b;
+    font-size: 0.8rem;
+}
+
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+
+.text-button {
+    padding: 0;
+    border: none;
+    background: none;
+    color: #0176d3;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.text-button:hover {
+    text-decoration: underline;
+}
+
+.small-button {
+    padding: 7px 14px;
+    border: 1px solid #0176d3;
+    border-radius: 4px;
+    background: #ffffff;
+    color: #0176d3;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.small-button:hover {
+    background: #f3f9ff;
+}
+
+
+/* ============================================================
+   RESOURCES
+   ============================================================ */
+
+.resources-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.resource-card {
+    padding: 20px;
+    background: #ffffff;
+    border: 1px solid #dddbda;
+    border-radius: 8px;
+    cursor: pointer;
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.resource-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.resource-card h3 {
+    margin: 0 0 6px;
+    font-size: 1rem;
+}
+
+.resource-card p {
+    margin: 0;
+    color: #6b6b6b;
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+
+/* ============================================================
+   NEED HELP
+   ============================================================ */
+
+.help-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-top: 12px;
+    padding: 28px;
+    background: #f5f7f9;
+    border-radius: 8px;
+}
+
+.help-content h2 {
+    margin: 0 0 6px;
+    font-size: 1.35rem;
+}
+
+.help-content p {
+    margin: 0;
+    color: #5c5c5c;
+}
+
+.help-actions {
+    display: flex;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.help-button,
+.help-secondary-button {
+    padding: 10px 18px;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.help-button {
+    border: 1px solid #0176d3;
+    background: #0176d3;
+    color: #ffffff;
+}
+
+.help-secondary-button {
+    border: 1px solid #0176d3;
+    background: #ffffff;
+    color: #0176d3;
+}
+
+
+/* ============================================================
+   ANNOUNCEMENT PLACEHOLDER
+   ============================================================ */
+
+.announcement-placeholder {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 1000;
+
+    width: 54px;
+    height: 54px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+    background: #0176d3;
+    color: #ffffff;
+
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+
+    cursor: pointer;
+}
+
+.announcement-icon {
+    font-size: 1.3rem;
+}
+
+.announcement-count {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+
+    min-width: 20px;
+    height: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 5px;
+
+    border-radius: 10px;
+    background: #ba0517;
+    color: #ffffff;
+
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 900px) {
+
+    .quick-actions {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .two-column-section {
+        grid-template-columns: 1fr;
+    }
+
+    .resources-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .home-container {
+        padding: 16px;
+    }
+
+    .quick-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .resources-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .help-section {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .help-actions {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .help-button,
+    .help-secondary-button {
+        width: 100%;
+    }
+
+    .announcement-placeholder {
+        right: 16px;
+        bottom: 16px;
+    }
+}
