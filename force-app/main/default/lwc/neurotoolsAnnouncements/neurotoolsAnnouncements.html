@@ -1,0 +1,54 @@
+
+<template>
+    <div class="announcement-widget">
+        <template lwc:if={isExpanded}>
+            <section class="announcement-panel" aria-label="NeuroTools announcements">
+                <header class="panel-header">
+                    <div class="header-copy">
+                        <span class="header-icon">🔔</span>
+                        <div>
+                            <h2>Announcements</h2>
+                            <p>Updates from NeuroTools</p>
+                        </div>
+                    </div>
+
+                    <button
+                        class="icon-button"
+                        onclick={minimize}
+                        aria-label="Minimize announcements"
+                        title="Minimize">
+                        −
+                    </button>
+                </header>
+
+                <div class="announcement-list">
+                    <template for:each={announcements} for:item="item">
+                        <article class="announcement-item" key={item.id}>
+                            <div class="announcement-item-top">
+                                <span class={item.badgeClass}>{item.type}</span>
+                                <span class="announcement-date">{item.date}</span>
+                            </div>
+                            <h3>{item.title}</h3>
+                            <p>{item.message}</p>
+                        </article>
+                    </template>
+                </div>
+
+                <footer class="panel-footer">
+                    <span>You're viewing the latest portal notices.</span>
+                </footer>
+            </section>
+        </template>
+
+        <button
+            class="announcement-launcher"
+            onclick={toggleExpanded}
+            aria-label={launcherLabel}
+            title="View announcements">
+            <span class="bell-symbol">🔔</span>
+            <template lwc:if={unreadCount}>
+                <span class="announcement-count">{unreadCount}</span>
+            </template>
+        </button>
+    </div>
+</template>
