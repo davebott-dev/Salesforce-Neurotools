@@ -261,57 +261,148 @@
                 </template>
             </div>
 
-            <!-- Research Order Bundles -->
-            <div class="section-card">
-                <div class="section-header">
-                    <div>
-                        <h2>Research Order Bundles</h2>
-                        <p>
-                            Simplify ordering with coordinated product
-                            selections.
-                        </p>
-                    </div>
-                </div>
 
-                <div class="bundle-list">
-                    <div class="bundle-card">
-                        <div class="bundle-icon aav-bundle-icon">
-                            AAV
-                        </div>
-                        <div class="bundle-content">
-                            <strong>AAV Research Bundle</strong>
-                            <span>
-                                A curated selection of AAV products
-                                and options.
-                            </span>
-                            <span class="bundle-status">
-                                Bundle options coming soon
-                            </span>
-                        </div>
-                    </div>
+<!-- Research Order Bundles -->
+<div class="section-card bundle-section">
+    <div class="section-header">
+        <div>
+            <h2>Research Order Bundles</h2>
+            <p>
+                Explore curated ordering options for your research.
+            </p>
+        </div>
+    </div>
 
-                    <div class="bundle-card">
-                        <div class="bundle-icon rabies-bundle-icon">
-                            RAB
-                        </div>
-                        <div class="bundle-content">
-                            <strong>Rabies Helper Bundle</strong>
-                            <span>
-                                Related products for a coordinated
-                                research workflow.
-                            </span>
-                            <span class="bundle-status">
-                                Bundle options coming soon
-                            </span>
-                        </div>
-                    </div>
-                </div>
+    <div class="bundle-catalog">
 
-                <p class="bundle-footnote">
-                    More bundles will be added as available options
-                    are finalized.
-                </p>
+        <!-- AAV Bundle -->
+        <article class="bundle-product-card">
+            <div class="bundle-image-container">
+                <img
+                    src={aavBundleImage}
+                    alt="Scientific research imagery for the AAV bundle"
+                    class="bundle-image"
+                />
+                <span class="bundle-category">AAV</span>
             </div>
+
+            <div class="bundle-product-content">
+                <h3>AAV Research Bundle</h3>
+                <p>
+                    Explore AAV products and available options
+                    for your research needs.
+                </p>
+
+                <button
+                    class="bundle-explore-button"
+                    data-bundle="aav"
+                    onclick={handleExploreBundle}>
+                    Explore Bundle
+                    <span aria-hidden="true">→</span>
+                </button>
+            </div>
+        </article>
+
+        <!-- Rabies Bundle -->
+        <article class="bundle-product-card">
+            <div class="bundle-image-container">
+                <img
+                    src={rabiesBundleImage}
+                    alt="Scientific research imagery for the Rabies Helper bundle"
+                    class="bundle-image"
+                />
+                <span class="bundle-category">RABIES</span>
+            </div>
+
+            <div class="bundle-product-content">
+                <h3>Rabies Helper Bundle</h3>
+                <p>
+                    Discover related products and coordinated
+                    ordering options.
+                </p>
+
+                <button
+                    class="bundle-explore-button"
+                    data-bundle="rabies"
+                    onclick={handleExploreBundle}>
+                    Explore Bundle
+                    <span aria-hidden="true">→</span>
+                </button>
+            </div>
+        </article>
+
+    </div>
+
+    <p class="bundle-footnote">
+        Bundle contents and ordering details will be provided
+        as offerings are finalized.
+    </p>
+</div>
+
+<!-- Bundle Details Modal -->
+<template lwc:if={bundleModalOpen}>
+    <div class="bundle-modal-overlay">
+        <button
+            class="bundle-modal-backdrop"
+            type="button"
+            aria-label="Close bundle details"
+            onclick={closeBundleModal}>
+        </button>
+
+        <section
+            class="bundle-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="bundle-modal-title">
+
+            <button
+                type="button"
+                class="bundle-modal-close"
+                aria-label="Close"
+                onclick={closeBundleModal}>
+                ×
+            </button>
+
+            <div class="bundle-modal-image-container">
+                <img
+                    src={selectedBundleImage}
+                    alt=""
+                    class="bundle-modal-image"
+                />
+            </div>
+
+            <div class="bundle-modal-body">
+                <p class="eyebrow">RESEARCH ORDER BUNDLE</p>
+
+                <h2 id="bundle-modal-title">
+                    {selectedBundleTitle}
+                </h2>
+
+                <p class="bundle-modal-description">
+                    {selectedBundleDescription}
+                </p>
+
+                <div class="bundle-details-placeholder">
+                    <h3>Bundle Details</h3>
+                    <p>
+                        Product inclusions, associated orders,
+                        available options, and ordering requirements
+                        will be added here as the bundle is finalized.
+                    </p>
+                </div>
+
+                <div class="bundle-modal-actions">
+                    <button
+                        type="button"
+                        class="help-secondary-button"
+                        onclick={closeBundleModal}>
+                        Close
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+</template>
         </section>
 
         <!-- Resources -->

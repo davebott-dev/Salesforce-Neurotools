@@ -1115,6 +1115,256 @@
     }
 }
 
+/* Bundle catalog */
+
+.bundle-catalog {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.bundle-product-card {
+    min-width: 0;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #e1e8f0;
+    border-radius: 13px;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.bundle-product-card:hover {
+    box-shadow: 0 8px 22px rgb(27 55 86 / 9%);
+    transform: translateY(-2px);
+}
+
+.bundle-image-container {
+    position: relative;
+    height: 155px;
+    overflow: hidden;
+    background: #eaf1fa;
+}
+
+.bundle-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.bundle-category {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    padding: 5px 9px;
+    color: #fff;
+    background: rgb(25 54 83 / 85%);
+    border-radius: 5px;
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+}
+
+.bundle-product-content {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+    padding: 18px;
+}
+
+.bundle-product-content h3 {
+    margin: 0;
+    color: #203957;
+    font-size: 0.98rem;
+    font-weight: 750;
+    line-height: 1.4;
+}
+
+.bundle-product-content p {
+    flex: 1;
+    margin: 0;
+    color: #718096;
+    font-size: 0.81rem;
+    line-height: 1.6;
+}
+
+.bundle-explore-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    margin-top: 5px;
+    padding: 11px 13px;
+    color: #245c91;
+    background: #f0f6ff;
+    border: 1px solid #dce9f8;
+    border-radius: 8px;
+    font-size: 0.81rem;
+    font-weight: 750;
+    cursor: pointer;
+}
+
+.bundle-explore-button:hover {
+    background: #e3efff;
+    border-color: #bdd4f0;
+}
+
+.bundle-footnote {
+    margin: 16px 0 0;
+    color: #7a8798;
+    font-size: 0.75rem;
+    line-height: 1.6;
+}
+
+/* Bundle details modal */
+
+.bundle-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgb(15 29 46 / 50%);
+    backdrop-filter: blur(3px);
+}
+
+.bundle-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    background: transparent;
+    border: 0;
+}
+
+.bundle-modal {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 620px;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+    background: #fff;
+    border: 1px solid #e1e8f0;
+    border-radius: 16px;
+    box-shadow: 0 24px 70px rgb(15 29 46 / 25%);
+}
+
+.bundle-modal-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 2;
+    width: 36px;
+    height: 36px;
+    color: #203957;
+    background: #fff;
+    border: 1px solid #e1e8f0;
+    border-radius: 9px;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.bundle-modal-image-container {
+    height: 210px;
+    overflow: hidden;
+    background: #eaf1fa;
+}
+
+.bundle-modal-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.bundle-modal-body {
+    padding: 26px;
+}
+
+.bundle-modal-body h2 {
+    margin: 0;
+    color: #203957;
+    font-size: 1.5rem;
+    font-weight: 800;
+}
+
+.bundle-modal-description {
+    margin: 12px 0 22px;
+    color: #687b91;
+    font-size: 0.88rem;
+    line-height: 1.7;
+}
+
+.bundle-details-placeholder {
+    padding: 18px;
+    background: #f7f9fc;
+    border: 1px solid #e4eaf2;
+    border-radius: 10px;
+}
+
+.bundle-details-placeholder h3 {
+    margin: 0 0 8px;
+    color: #203957;
+    font-size: 0.95rem;
+}
+
+.bundle-details-placeholder p {
+    margin: 0;
+    color: #718096;
+    font-size: 0.82rem;
+    line-height: 1.7;
+}
+
+.bundle-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 22px;
+}
+
+@media (max-width: 700px) {
+    .bundle-catalog {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .bundle-image-container {
+        height: 175px;
+    }
+
+    .bundle-modal-overlay {
+        padding: 12px;
+    }
+
+    .bundle-modal {
+        max-height: calc(100vh - 24px);
+    }
+
+    .bundle-modal-image-container {
+        height: 165px;
+    }
+
+    .bundle-modal-body {
+        padding: 20px;
+    }
+
+    .bundle-modal-body h2 {
+        font-size: 1.25rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .bundle-product-card {
+        transition: none;
+    }
+
+    .bundle-product-card:hover {
+        transform: none;
+    }
+}
 
 /* =========================================================
    16. MOBILE RESPONSIVENESS

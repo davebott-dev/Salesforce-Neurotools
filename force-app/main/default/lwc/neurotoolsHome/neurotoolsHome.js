@@ -1,6 +1,9 @@
 import { LightningElement, wire } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
+import AAV_Bundle from '@salesforce/resourceUrl/aav_bundle';
+import Rabies_Bundle from '@salesforce/resourceUrl/rabies_bundle';
+
 
 import USER_ID from '@salesforce/user/Id';
 import CONTACT_ID from '@salesforce/schema/User.ContactId';
@@ -43,6 +46,9 @@ export default class NeurotoolsHome extends LightningElement {
     // Billing modal
     billingModalOpen = false;
     billingOptions = [];
+
+    bundleModalOpen = false;
+selectedBundle = null;
 
     // ----------------------------------------
     // Retrieve the logged-in user's Contact ID
@@ -344,4 +350,36 @@ export default class NeurotoolsHome extends LightningElement {
 
         this.navigateTo(this.routes.createOrder);
     }
+
+
+// Bundle modal state
+bundleModalOpen = false;
+selectedBundle = null;
+
+// Bundle images
+get aavBundleImage() {
+    return AAV_Bundle;
+}
+
+get rabiesBundleImage() {
+    return Rabies_Bundle;
+}
+
+get selectedBundleImage() {
+    if (!this.selectedBundle) {
+        return '';
+    }
+
+    return this.selectedBundle.id === 'aav'
+        ? this.aavBundleImage
+        : this.rabiesBundleImage;
+}
+
+get selectedBundleTitle() {
+    return this.selectedBundle?.title || '';
+}
+
+get selectedBundleDescription() {
+    return this.selectedBundle?.description || '';
+}
 }
