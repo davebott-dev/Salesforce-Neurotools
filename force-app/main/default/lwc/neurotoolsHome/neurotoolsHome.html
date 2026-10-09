@@ -1,148 +1,150 @@
+
 <template>
     <div class="home-container">
-
-        <!-- =========================================================
-             WELCOME
-             ========================================================= -->
+        <!-- Welcome -->
         <section class="welcome-section">
-            <h1>Welcome to NeuroTools</h1>
-            <p>
-                Manage your orders, request quotes, access resources,
-                and get help from the NeuroTools team.
-            </p>
+            <div>
+                <p class="eyebrow">NEUROTOOLS CLIENT PORTAL</p>
+                <h1>Welcome to NeuroTools</h1>
+                <p class="welcome-description">
+                    Manage your orders, request quotes, access resources,
+                    and connect with the NeuroTools team.
+                </p>
+            </div>
+            <button class="primary-button" onclick={handleCreateOrder}>
+                <span class="button-symbol">+</span>
+                Create an Order
+            </button>
         </section>
 
-
-        <!-- =========================================================
-             QUICK ACTIONS
-             ========================================================= -->
+        <!-- Quick actions -->
         <section class="section">
             <div class="section-header">
-                <h2>Quick Actions</h2>
+                <div>
+                    <h2>Quick Actions</h2>
+                    <p>Get where you need to go.</p>
+                </div>
             </div>
 
             <div class="quick-actions">
-                <div class="action-card">
-                    <div class="action-icon">+</div>
-                    <div class="action-content">
-                        <h3>Create an Order</h3>
-                        <p>Start a new virus order.</p>
-                    </div>
-                </div>
+                <button class="action-card" onclick={handleCreateOrder}>
+                    <span class="action-icon order-icon">+</span>
+                    <span class="action-content">
+                        <strong>Create an Order</strong>
+                        <span>Start a new virus order.</span>
+                    </span>
+                    <span class="action-arrow">→</span>
+                </button>
 
-                <div class="action-card">
-                    <div class="action-icon">$</div>
-                    <div class="action-content">
-                        <h3>Get a Quote</h3>
-                        <p>Request pricing for your project.</p>
-                    </div>
-                </div>
+                <button class="action-card" onclick={handleGetQuote}>
+                    <span class="action-icon quote-icon">$</span>
+                    <span class="action-content">
+                        <strong>Get a Quote</strong>
+                        <span>Request project pricing.</span>
+                    </span>
+                    <span class="action-arrow">→</span>
+                </button>
 
-                <div class="action-card">
-                    <div class="action-icon">?</div>
-                    <div class="action-content">
-                        <h3>Ask for Help</h3>
-                        <p>Contact the NeuroTools team.</p>
-                    </div>
-                </div>
+                <button class="action-card" onclick={handleGetHelp}>
+                    <span class="action-icon help-icon">?</span>
+                    <span class="action-content">
+                        <strong>Ask for Help</strong>
+                        <span>Contact the NeuroTools team.</span>
+                    </span>
+                    <span class="action-arrow">→</span>
+                </button>
 
-                <div class="action-card">
-                    <div class="action-icon">▣</div>
-                    <div class="action-content">
-                        <h3>Billing</h3>
-                        <p>Manage your billing methods.</p>
-                    </div>
+                <button class="action-card" onclick={handleBilling}>
+                    <span class="action-icon billing-icon">$</span>
+                    <span class="action-content">
+                        <strong>Billing</strong>
+                        <span>Manage payment information.</span>
+                    </span>
+                    <span class="action-arrow">→</span>
+                </button>
+            </div>
+
+            <!-- Subtle credit-card promotion -->
+            <div class="payment-note">
+                <span class="payment-note-icon">✓</span>
+                <div>
+                    <strong>Make checkout more convenient with a credit card</strong>
+                    <p>
+                        Save time on future orders by keeping your payment
+                        information up to date in Billing. Purchase orders
+                        are still accepted.
+                    </p>
                 </div>
             </div>
         </section>
 
-
-        <!-- =========================================================
-             RECENT ORDERS
-             ========================================================= -->
+        <!-- Recent orders -->
         <section class="section">
             <div class="section-header">
                 <div>
                     <h2>Recent Orders</h2>
-                    <p>Your most recent NeuroTools orders.</p>
+                    <p>Review your NeuroTools orders and their progress.</p>
                 </div>
-
-                <button class="text-button">
-                    View All Orders →
+                <button class="text-button" onclick={handleViewAllOrders}>
+                    View All Orders <span>→</span>
                 </button>
             </div>
 
-            <div class="placeholder-card">
-                <p>
-                    Your existing Client Virus Orders component
-                    will go here.
-                </p>
+            <div class="orders-container">
+                <c-client-virus-orders></c-client-virus-orders>
             </div>
         </section>
 
-
-        <!-- =========================================================
-             SUMMARY + QUICK ORDER
-             ========================================================= -->
+        <!-- Summary and quick order -->
         <section class="two-column-section">
-
             <div class="section-card">
                 <div class="section-header">
                     <div>
                         <h2>Order Summary</h2>
-                        <p>Overview of your current orders.</p>
+                        <p>An overview of your orders.</p>
                     </div>
                 </div>
 
                 <div class="summary-grid">
-
-                    <div class="summary-item">
+                    <button class="summary-item" onclick={handleViewAllOrders}>
                         <span class="summary-number">—</span>
                         <span class="summary-label">Active</span>
-                    </div>
-
-                    <div class="summary-item">
+                    </button>
+                    <button class="summary-item" onclick={handleViewAllOrders}>
                         <span class="summary-number">—</span>
                         <span class="summary-label">In Production</span>
-                    </div>
-
-                    <div class="summary-item">
+                    </button>
+                    <button class="summary-item" onclick={handleViewAllOrders}>
                         <span class="summary-number">—</span>
                         <span class="summary-label">Ready to Ship</span>
-                    </div>
-
-                    <div class="summary-item">
+                    </button>
+                    <button class="summary-item" onclick={handleViewAllOrders}>
                         <span class="summary-number">—</span>
                         <span class="summary-label">Completed</span>
-                    </div>
-
+                    </button>
                 </div>
 
-                <button class="text-button">
-                    View Orders →
+                <button class="text-button" onclick={handleViewAllOrders}>
+                    View Orders <span>→</span>
                 </button>
             </div>
-
 
             <div class="section-card">
                 <div class="section-header">
                     <div>
                         <h2>Quick Order</h2>
-                        <p>Quickly start a frequently ordered product.</p>
+                        <p>Start with a frequently ordered product.</p>
                     </div>
                 </div>
 
                 <div class="quick-order-list">
-
                     <div class="quick-order-item">
                         <div>
                             <strong>AAV Standard</strong>
                             <span>Standard AAV preparation</span>
                         </div>
-
-                        <button class="small-button">
-                            Order
-                        </button>
+                        <button class="small-button" data-product="AAV Standard"
+                            onclick={handleQuickOrder}>Order</button>
                     </div>
 
                     <div class="quick-order-item">
@@ -150,10 +152,8 @@
                             <strong>AAV Medium</strong>
                             <span>Medium-scale AAV preparation</span>
                         </div>
-
-                        <button class="small-button">
-                            Order
-                        </button>
+                        <button class="small-button" data-product="AAV Medium"
+                            onclick={handleQuickOrder}>Order</button>
                     </div>
 
                     <div class="quick-order-item">
@@ -161,21 +161,19 @@
                             <strong>Lentivirus</strong>
                             <span>Lentiviral preparation</span>
                         </div>
-
-                        <button class="small-button">
-                            Order
-                        </button>
+                        <button class="small-button" data-product="Lentivirus"
+                            onclick={handleQuickOrder}>Order</button>
                     </div>
-
                 </div>
-            </div>
 
+                <p class="quick-order-footnote">
+                    Selecting a product opens the order page. You can review
+                    product details before submitting.
+                </p>
+            </div>
         </section>
 
-
-        <!-- =========================================================
-             RESOURCES
-             ========================================================= -->
+        <!-- Resources -->
         <section class="section">
             <div class="section-header">
                 <div>
@@ -185,75 +183,65 @@
             </div>
 
             <div class="resources-grid">
+                <button class="resource-card" onclick={handleCreateOrder}>
+                    <span class="resource-icon">↗</span>
+                    <strong>Ordering Guide</strong>
+                    <span>Get started with a new order.</span>
+                </button>
 
-                <div class="resource-card">
-                    <h3>Ordering Guide</h3>
-                    <p>Learn how to submit and manage orders.</p>
-                </div>
+                <button class="resource-card" onclick={handleBulkOrderTemplate}>
+                    <span class="resource-icon">⇩</span>
+                    <strong>Bulk Order Template</strong>
+                    <span>Download the spreadsheet for multiple orders.</span>
+                </button>
 
-                <div class="resource-card">
-                    <h3>Bulk Order Template</h3>
-                    <p>Download the template for submitting multiple orders.</p>
-                </div>
+                <button class="resource-card" onclick={handleGetHelp}>
+                    <span class="resource-icon">□</span>
+                    <strong>Shipping Information</strong>
+                    <span>Ask about shipping options and requirements.</span>
+                </button>
 
-                <div class="resource-card">
-                    <h3>Shipping Information</h3>
-                    <p>Learn about shipping options and requirements.</p>
-                </div>
+                <button class="resource-card" onclick={handleFAQs}>
+                    <span class="resource-icon">?</span>
+                    <strong>FAQs</strong>
+                    <span>Find answers to common questions.</span>
+                </button>
 
-                <div class="resource-card">
-                    <h3>FAQs</h3>
-                    <p>Find answers to common questions.</p>
-                </div>
+                <button class="resource-card" onclick={handleCreateOrder}>
+                    <span class="resource-icon">◎</span>
+                    <strong>Product Information</strong>
+                    <span>Explore available products and services.</span>
+                </button>
 
-                <div class="resource-card">
-                    <h3>Product Information</h3>
-                    <p>Learn more about NeuroTools products and services.</p>
-                </div>
-
-                <div class="resource-card">
-                    <h3>Publications</h3>
-                    <p>Explore publications associated with NeuroTools.</p>
-                </div>
-
+                <button class="resource-card" onclick={handlePublications}>
+                    <span class="resource-icon">▤</span>
+                    <strong>Publications</strong>
+                    <span>Explore publications associated with NeuroTools.</span>
+                </button>
             </div>
         </section>
 
-
-        <!-- =========================================================
-             NEED HELP
-             ========================================================= -->
+        <!-- Help -->
         <section class="help-section">
-
             <div class="help-content">
-                <h2>Need Help?</h2>
-
+                <p class="eyebrow">WE'RE HERE TO HELP</p>
+                <h2>Need a hand?</h2>
                 <p>
                     Have a question about ordering, billing, production,
-                    or shipping? Our team is here to help.
+                    or shipping? Contact the NeuroTools team.
                 </p>
             </div>
-
             <div class="help-actions">
-                <button class="help-button">
+                <button class="help-button" onclick={handleGetHelp}>
                     Contact NeuroTools
                 </button>
-
-                <button class="help-secondary-button">
+                <button class="help-secondary-button" onclick={handleFAQs}>
                     View FAQs
                 </button>
             </div>
-
         </section>
 
-
-        <!-- =========================================================
-             ANNOUNCEMENT PLACEHOLDER
-             ========================================================= -->
-        <div class="announcement-placeholder">
-            <span class="announcement-icon">🔔</span>
-            <span class="announcement-count">2</span>
-        </div>
-
+        <!-- Separate persistent announcements widget -->
+        <c-neurotools-announcements></c-neurotools-announcements>
     </div>
 </template>
