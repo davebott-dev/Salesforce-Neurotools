@@ -1,170 +1,231 @@
+```css
+/* ========================================
+   Research Order Bundles
+   ======================================== */
 
-:host {
-    display: block;
-    color: #1f2937;
-}
-
-.home-container {
-    width: 100%;
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 24px;
-    box-sizing: border-box;
-}
-
-.welcome-section {
+.bundle-list {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-    padding: 28px 30px;
-    margin-bottom: 30px;
-    background: linear-gradient(120deg, #f1f7ff, #ffffff);
-    border: 1px solid #e0eaf6;
-    border-radius: 16px;
+    flex-direction: column;
 }
 
-.eyebrow {
-    margin: 0 0 8px;
-    color: #3268a8;
-    font-size: 0.72rem;
-    font-weight: 800;
-    letter-spacing: 0.1em;
-}
-
-.welcome-section h1 {
-    margin: 0 0 10px;
-    color: #17365d;
-    font-size: 2rem;
-    line-height: 1.2;
-    font-weight: 750;
-}
-
-.welcome-description {
-    max-width: 680px;
-    margin: 0;
-    color: #586779;
-    line-height: 1.6;
-}
-
-.primary-button,
-.help-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    min-height: 44px;
-    padding: 11px 18px;
-    border: 1px solid #175ba7;
-    border-radius: 8px;
-    background: #175ba7;
-    color: #ffffff;
-    font-weight: 700;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: background 0.2s ease, transform 0.2s ease;
-}
-
-.primary-button:hover,
-.help-button:hover {
-    background: #10477f;
-    transform: translateY(-1px);
-}
-
-.button-symbol {
-    font-size: 1.2rem;
-    line-height: 1;
-}
-
-.section {
-    margin-bottom: 34px;
-}
-
-.section-header {
+.bundle-card {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    margin-bottom: 16px;
+    align-items: flex-start;
+    gap: 13px;
+    padding: 16px 0;
+    border-bottom: 1px solid #edf0f4;
 }
 
-.section-header h2,
-.section-card h2 {
-    margin: 0 0 5px;
-    color: #1d3557;
-    font-size: 1.2rem;
-    font-weight: 750;
+.bundle-card:last-child {
+    border-bottom: none;
 }
 
-.section-header p,
-.section-card .section-header p {
-    margin: 0;
-    color: #718096;
-    font-size: 0.88rem;
-}
-
-.quick-actions {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 14px;
-}
-
-.action-card {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    width: 100%;
-    min-width: 0;
-    padding: 18px 14px;
-    text-align: left;
-    color: inherit;
-    background: #ffffff;
-    border: 1px solid #e1e8f0;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease,
-        transform 0.2s ease;
-}
-
-.action-card:hover {
-    border-color: #a8c6e9;
-    box-shadow: 0 5px 16px rgb(25 63 105 / 8%);
-    transform: translateY(-2px);
-}
-
-.action-icon {
+.bundle-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    flex: 0 0 42px;
-    width: 42px;
-    height: 42px;
-    border-radius: 12px;
-    font-size: 1.25rem;
+    flex: 0 0 46px;
+    width: 46px;
+    height: 46px;
+    border-radius: 11px;
+    font-size: 0.75rem;
     font-weight: 800;
 }
 
-.order-icon {
+.aav-bundle-icon {
     color: #1b5ca8;
     background: #e8f1ff;
 }
 
-.quote-icon {
-    color: #167457;
-    background: #e5f7ef;
-}
-
-.help-icon {
+.rabies-bundle-icon {
     color: #8157a5;
     background: #f2eaff;
 }
 
-.billing-icon {
-    color: #a36513;
-    background: #fff3d9;
+.bundle-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
 }
 
-.action-content {
+.bundle-content strong {
+    color: #263e5c;
+    font-size: 0.9rem;
+}
+
+.bundle-content > span {
+    color: #788598;
+    font-size: 0.8rem;
+    line-height: 1.5;
+}
+
+.bundle-content .bundle-status {
+    color: #617184;
+    font-size: 0.75rem;
+    font-style: italic;
+}
+
+.bundle-footnote {
+    margin: 10px 0 0;
+    color: #8792a2;
+    font-size: 0.75rem;
+    line-height: 1.5;
+}
+
+
+/* ========================================
+   Billing Modal
+   ======================================== */
+
+.billing-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.billing-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    background: rgb(15 29 46 / 55%);
+    border: none;
+    cursor: default;
+}
+
+.billing-modal {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 520px;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+    background: #ffffff;
+    border: 1px solid #e1e8f0;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgb(15 29 46 / 25%);
+    animation: billing-modal-enter 0.18s ease-out;
+}
+
+@keyframes billing-modal-enter {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.billing-modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 25px 25px 21px;
+    border-bottom: 1px solid #edf0f4;
+}
+
+.billing-modal-header h2 {
+    margin: 0 0 8px;
+    color: #1d3557;
+    font-size: 1.3rem;
+    font-weight: 750;
+}
+
+.billing-modal-header > div > p:last-child {
+    margin: 0;
+    color: #718096;
+    font-size: 0.88rem;
+    line-height: 1.5;
+}
+
+.billing-modal-header .eyebrow {
+    margin-bottom: 7px;
+}
+
+.billing-close-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 36px;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    color: #64748b;
+    background: #f4f7fa;
+    border: 1px solid #e1e8f0;
+    border-radius: 8px;
+    font-size: 1.6rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.billing-close-button:hover {
+    color: #1d3557;
+    background: #eaf1f8;
+}
+
+.billing-modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+    padding: 22px 25px;
+}
+
+.billing-option {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    min-width: 0;
+    padding: 16px;
+    text-align: left;
+    color: inherit;
+    background: #ffffff;
+    border: 1px solid #dfe7f0;
+    border-radius: 11px;
+    cursor: pointer;
+    transition:
+        border-color 0.18s ease,
+        background 0.18s ease,
+        transform 0.18s ease;
+}
+
+.billing-option:hover {
+    background: #f5f9ff;
+    border-color: #8fb7e5;
+    transform: translateY(-1px);
+}
+
+.billing-option:focus-visible,
+.billing-close-button:focus-visible,
+.billing-modal-backdrop:focus-visible {
+    outline: 3px solid #7eb4f2;
+    outline-offset: 3px;
+}
+
+.billing-option-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    background: #edf4fd;
+    border-radius: 10px;
+}
+
+.billing-option-text {
     display: flex;
     flex: 1;
     flex-direction: column;
@@ -172,373 +233,734 @@
     min-width: 0;
 }
 
-.action-content strong {
+.billing-option-text strong {
     color: #203b5d;
-    font-size: 0.91rem;
-    line-height: 1.3;
+    font-size: 0.95rem;
+    line-height: 1.4;
 }
 
-.action-content span {
-    color: #748195;
-    font-size: 0.79rem;
-    line-height: 1.45;
+.billing-option-text > span {
+    color: #718096;
+    font-size: 0.8rem;
+    line-height: 1.5;
 }
 
-.action-arrow {
-    color: #7a94b3;
-    font-size: 1.15rem;
+.billing-option-arrow {
+    flex: 0 0 auto;
+    color: #6484a9;
+    font-size: 1.25rem;
 }
 
-.payment-note {
+.billing-modal-footer {
     display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    margin-top: 15px;
-    padding: 14px 16px;
-    background: #f6f9fd;
-    border: 1px solid #e0eaf6;
-    border-radius: 10px;
+    justify-content: flex-end;
+    padding: 15px 25px 22px;
+    border-top: 1px solid #edf0f4;
 }
+```css
+/* ========================================
+   Research Order Bundles
+   ======================================== */
 
-.payment-note-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: 0 0 25px;
-    width: 25px;
-    height: 25px;
-    color: #175ba7;
-    background: #e2efff;
-    border-radius: 50%;
-    font-weight: 800;
-}
-
-.payment-note strong {
-    display: block;
-    margin-bottom: 4px;
-    color: #24496f;
-    font-size: 0.88rem;
-}
-
-.payment-note p {
-    margin: 0;
-    color: #617184;
-    font-size: 0.82rem;
-    line-height: 1.55;
-}
-
-.orders-container {
-    min-width: 0;
-    padding: 16px;
-    overflow: hidden;
-    background: #ffffff;
-    border: 1px solid #e1e8f0;
-    border-radius: 12px;
-}
-
-.two-column-section {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 20px;
-    margin-bottom: 34px;
-}
-
-.section-card {
-    min-width: 0;
-    padding: 22px;
-    background: #ffffff;
-    border: 1px solid #e1e8f0;
-    border-radius: 12px;
-}
-
-.summary-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
-    margin: 20px 0 14px;
-}
-
-.summary-item {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-    min-width: 0;
-    padding: 15px;
-    text-align: left;
-    background: #f8fafc;
-    border: 1px solid #e8edf3;
-    border-radius: 9px;
-    cursor: pointer;
-    transition: background 0.2s ease, border-color 0.2s ease;
-}
-
-.summary-item:hover {
-    background: #f0f6ff;
-    border-color: #b9d2f0;
-}
-
-.summary-number {
-    color: #1c528d;
-    font-size: 1.55rem;
-    font-weight: 800;
-}
-
-.summary-label {
-    color: #68788d;
-    font-size: 0.81rem;
-}
-
-.text-button {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    padding: 6px 0;
-    color: #175ba7;
-    background: transparent;
-    border: none;
-    font-size: 0.87rem;
-    font-weight: 750;
-    cursor: pointer;
-}
-
-.text-button:hover {
-    color: #0c3e73;
-    text-decoration: underline;
-}
-
-.quick-order-list {
+.bundle-list {
     display: flex;
     flex-direction: column;
 }
 
-.quick-order-item {
+.bundle-card {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 14px 0;
+    align-items: flex-start;
+    gap: 13px;
+    padding: 16px 0;
     border-bottom: 1px solid #edf0f4;
 }
 
-.quick-order-item:last-child {
+.bundle-card:last-child {
     border-bottom: none;
 }
 
-.quick-order-item > div {
+.bundle-icon {
     display: flex;
-    flex-direction: column;
-    gap: 5px;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 46px;
+    width: 46px;
+    height: 46px;
+    border-radius: 11px;
+    font-size: 0.75rem;
+    font-weight: 800;
 }
 
-.quick-order-item strong {
+.aav-bundle-icon {
+    color: #1b5ca8;
+    background: #e8f1ff;
+}
+
+.rabies-bundle-icon {
+    color: #8157a5;
+    background: #f2eaff;
+}
+
+.bundle-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+
+.bundle-content strong {
     color: #263e5c;
     font-size: 0.9rem;
 }
 
-.quick-order-item span {
+.bundle-content > span {
     color: #788598;
     font-size: 0.8rem;
+    line-height: 1.5;
 }
 
-.small-button {
-    flex: 0 0 auto;
-    padding: 7px 13px;
-    color: #175ba7;
-    background: #ffffff;
-    border: 1px solid #b7cce4;
-    border-radius: 7px;
-    font-size: 0.8rem;
-    font-weight: 750;
-    cursor: pointer;
+.bundle-content .bundle-status {
+    color: #617184;
+    font-size: 0.75rem;
+    font-style: italic;
 }
 
-.small-button:hover {
-    background: #edf5ff;
-    border-color: #175ba7;
-}
-
-.quick-order-footnote {
+.bundle-footnote {
     margin: 10px 0 0;
     color: #8792a2;
     font-size: 0.75rem;
     line-height: 1.5;
 }
 
-.resources-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 14px;
-}
 
-.resource-card {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 9px;
-    min-width: 0;
-    padding: 20px;
-    text-align: left;
-    color: inherit;
-    background: #ffffff;
-    border: 1px solid #e1e8f0;
-    border-radius: 11px;
-    cursor: pointer;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease,
-        transform 0.2s ease;
-}
+/* ========================================
+   Billing Modal
+   ======================================== */
 
-.resource-card:hover {
-    border-color: #a8c6e9;
-    box-shadow: 0 4px 14px rgb(25 63 105 / 7%);
-    transform: translateY(-2px);
-}
-
-.resource-icon {
+.billing-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 34px;
-    height: 34px;
-    color: #175ba7;
-    background: #edf4fd;
-    border-radius: 9px;
-    font-size: 1.1rem;
-    font-weight: 800;
+    padding: 20px;
 }
 
-.resource-card strong {
-    color: #263e5c;
-    font-size: 0.91rem;
+.billing-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    background: rgb(15 29 46 / 55%);
+    border: none;
+    cursor: default;
 }
 
-.resource-card > span:last-child {
-    color: #778598;
-    font-size: 0.81rem;
+.billing-modal {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 520px;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+    background: #ffffff;
+    border: 1px solid #e1e8f0;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgb(15 29 46 / 25%);
+    animation: billing-modal-enter 0.18s ease-out;
+}
+
+@keyframes billing-modal-enter {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.billing-modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 25px 25px 21px;
+    border-bottom: 1px solid #edf0f4;
+}
+
+.billing-modal-header h2 {
+    margin: 0 0 8px;
+    color: #1d3557;
+    font-size: 1.3rem;
+    font-weight: 750;
+}
+
+.billing-modal-header > div > p:last-child {
+    margin: 0;
+    color: #718096;
+    font-size: 0.88rem;
     line-height: 1.5;
 }
 
-.help-section {
+.billing-modal-header .eyebrow {
+    margin-bottom: 7px;
+}
+
+.billing-close-button {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-    padding: 28px;
-    background: #f5f8fc;
-    border: 1px solid #e1e9f3;
-    border-radius: 14px;
-}
-
-.help-content {
-    max-width: 680px;
-}
-
-.help-content h2 {
-    margin: 0 0 8px;
-    color: #1d3557;
-    font-size: 1.35rem;
-}
-
-.help-content > p:last-child {
-    margin: 0;
-    color: #69798d;
-    line-height: 1.6;
-}
-
-.help-actions {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-.help-secondary-button {
-    min-height: 44px;
-    padding: 10px 16px;
-    color: #175ba7;
-    background: #ffffff;
-    border: 1px solid #b7cce4;
+    justify-content: center;
+    flex: 0 0 36px;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    color: #64748b;
+    background: #f4f7fa;
+    border: 1px solid #e1e8f0;
     border-radius: 8px;
-    font-weight: 700;
+    font-size: 1.6rem;
+    line-height: 1;
     cursor: pointer;
 }
 
-.help-secondary-button:hover {
-    background: #edf5ff;
+.billing-close-button:hover {
+    color: #1d3557;
+    background: #eaf1f8;
 }
 
-button:focus-visible {
+.billing-modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+    padding: 22px 25px;
+}
+
+.billing-option {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    min-width: 0;
+    padding: 16px;
+    text-align: left;
+    color: inherit;
+    background: #ffffff;
+    border: 1px solid #dfe7f0;
+    border-radius: 11px;
+    cursor: pointer;
+    transition:
+        border-color 0.18s ease,
+        background 0.18s ease,
+        transform 0.18s ease;
+}
+
+.billing-option:hover {
+    background: #f5f9ff;
+    border-color: #8fb7e5;
+    transform: translateY(-1px);
+}
+
+.billing-option:focus-visible,
+.billing-close-button:focus-visible,
+.billing-modal-backdrop:focus-visible {
     outline: 3px solid #7eb4f2;
     outline-offset: 3px;
 }
 
-@media (max-width: 1100px) {
-    .quick-actions {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .resources-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+.billing-option-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    background: #edf4fd;
+    border-radius: 10px;
 }
 
-@media (max-width: 760px) {
-    .home-container {
-        padding: 16px;
-    }
-
-    .welcome-section {
-        align-items: flex-start;
-        flex-direction: column;
-        padding: 22px;
-    }
-
-    .welcome-section h1 {
-        font-size: 1.65rem;
-    }
-
-    .two-column-section {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    .help-section {
-        align-items: flex-start;
-        flex-direction: column;
-        padding: 22px;
-    }
-
-    .section-header {
-        align-items: flex-start;
-    }
+.billing-option-text {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
 }
+
+.billing-option-text strong {
+    color: #203b5d;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.billing-option-text > span {
+    color: #718096;
+    font-size: 0.8rem;
+    line-height: 1.5;
+}
+
+.billing-option-arrow {
+    flex: 0 0 auto;
+    color: #6484a9;
+    font-size: 1.25rem;
+}
+
+.billing-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 15px 25px 22px;
+    border-top: 1px solid #edf0f4;
+}
+
+
+/* ========================================
+   Responsive Billing Modal
+   ======================================== */
 
 @media (max-width: 520px) {
-    .quick-actions,
-    .resources-grid {
-        grid-template-columns: minmax(0, 1fr);
+    .billing-modal-overlay {
+        align-items: center;
+        padding: 14px;
     }
 
-    .section-card {
-        padding: 17px;
+    .billing-modal {
+        max-height: calc(100vh - 28px);
+        border-radius: 12px;
     }
 
-    .section-header {
-        flex-direction: column;
+    .billing-modal-header {
+        padding: 20px 18px 17px;
     }
 
-    .orders-container {
-        padding: 8px;
+    .billing-modal-header h2 {
+        font-size: 1.15rem;
     }
 
-    .payment-note {
-        padding: 12px;
+    .billing-modal-content {
+        gap: 9px;
+        padding: 17px 18px;
     }
 
-    .help-actions {
-        width: 100%;
+    .billing-option {
+        gap: 11px;
+        padding: 13px;
     }
 
-    .help-actions button {
-        width: 100%;
+    .billing-option-icon {
+        flex-basis: 38px;
+        width: 38px;
+        height: 38px;
+    }
+
+    .billing-option-text > span {
+        font-size: 0.76rem;
+    }
+
+    .billing-modal-footer {
+        padding: 13px 18px 18px;
+    }
+
+    .bundle-card {
+        gap: 10px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .billing-modal {
+        animation: none;
+    }
+
+    .billing-option {
+        transition: none;
+    }
+}
+
+
+/* ========================================
+   Responsive Billing Modal
+   ======================================== */
+
+@media (max-width: 520px) {
+    .billing-modal-overlay {
+        align-items: center;
+        padding: 14px;
+    }
+
+    .billing-modal {
+        max-height: calc(100vh - 28px);
+        border-radius: 12px;
+    }
+
+    .billing-modal-header {
+        padding: 20px 18px 17px;
+    }
+
+    .billing-modal-header h2 {
+        font-size: 1.15rem;
+    }
+
+    .billing-modal-content {
+        gap: 9px;
+        padding: 17px 18px;
+    }
+
+    .billing-option {
+        gap: 11px;
+        padding: 13px;
+    }
+
+    .billing-option-icon {
+        flex-basis: 38px;
+        width: 38px;
+        height: 38px;
+    }
+
+    .billing-option-text > span {
+        font-size: 0.76rem;
+    }
+
+    .billing-modal-footer {
+        padding: 13px 18px 18px;
+    }
+
+    .bundle-card {
+        gap: 10px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .billing-modal {
+        animation: none;
+    }
+
+    .billing-option {
+        transition: none;
+    }
+}
+
+/* ========================================
+   Research Order Bundles
+   ======================================== */
+
+.bundle-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.bundle-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 13px;
+    padding: 16px 0;
+    border-bottom: 1px solid #edf0f4;
+}
+
+.bundle-card:last-child {
+    border-bottom: none;
+}
+
+.bundle-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 46px;
+    width: 46px;
+    height: 46px;
+    border-radius: 11px;
+    font-size: 0.75rem;
+    font-weight: 800;
+}
+
+.aav-bundle-icon {
+    color: #1b5ca8;
+    background: #e8f1ff;
+}
+
+.rabies-bundle-icon {
+    color: #8157a5;
+    background: #f2eaff;
+}
+
+.bundle-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+
+.bundle-content strong {
+    color: #263e5c;
+    font-size: 0.9rem;
+}
+
+.bundle-content > span {
+    color: #788598;
+    font-size: 0.8rem;
+    line-height: 1.5;
+}
+
+.bundle-content .bundle-status {
+    color: #617184;
+    font-size: 0.75rem;
+    font-style: italic;
+}
+
+.bundle-footnote {
+    margin: 10px 0 0;
+    color: #8792a2;
+    font-size: 0.75rem;
+    line-height: 1.5;
+}
+
+
+/* ========================================
+   Billing Modal
+   ======================================== */
+
+.billing-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.billing-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    background: rgb(15 29 46 / 55%);
+    border: none;
+    cursor: default;
+}
+
+.billing-modal {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 520px;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+    background: #ffffff;
+    border: 1px solid #e1e8f0;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgb(15 29 46 / 25%);
+    animation: billing-modal-enter 0.18s ease-out;
+}
+
+@keyframes billing-modal-enter {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.billing-modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 25px 25px 21px;
+    border-bottom: 1px solid #edf0f4;
+}
+
+.billing-modal-header h2 {
+    margin: 0 0 8px;
+    color: #1d3557;
+    font-size: 1.3rem;
+    font-weight: 750;
+}
+
+.billing-modal-header > div > p:last-child {
+    margin: 0;
+    color: #718096;
+    font-size: 0.88rem;
+    line-height: 1.5;
+}
+
+.billing-modal-header .eyebrow {
+    margin-bottom: 7px;
+}
+
+.billing-close-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 36px;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    color: #64748b;
+    background: #f4f7fa;
+    border: 1px solid #e1e8f0;
+    border-radius: 8px;
+    font-size: 1.6rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.billing-close-button:hover {
+    color: #1d3557;
+    background: #eaf1f8;
+}
+
+.billing-modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+    padding: 22px 25px;
+}
+
+.billing-option {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    min-width: 0;
+    padding: 16px;
+    text-align: left;
+    color: inherit;
+    background: #ffffff;
+    border: 1px solid #dfe7f0;
+    border-radius: 11px;
+    cursor: pointer;
+    transition:
+        border-color 0.18s ease,
+        background 0.18s ease,
+        transform 0.18s ease;
+}
+
+.billing-option:hover {
+    background: #f5f9ff;
+    border-color: #8fb7e5;
+    transform: translateY(-1px);
+}
+
+.billing-option:focus-visible,
+.billing-close-button:focus-visible,
+.billing-modal-backdrop:focus-visible {
+    outline: 3px solid #7eb4f2;
+    outline-offset: 3px;
+}
+
+.billing-option-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    background: #edf4fd;
+    border-radius: 10px;
+}
+
+.billing-option-text {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+}
+
+.billing-option-text strong {
+    color: #203b5d;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.billing-option-text > span {
+    color: #718096;
+    font-size: 0.8rem;
+    line-height: 1.5;
+}
+
+.billing-option-arrow {
+    flex: 0 0 auto;
+    color: #6484a9;
+    font-size: 1.25rem;
+}
+
+.billing-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 15px 25px 22px;
+    border-top: 1px solid #edf0f4;
+}
+
+
+/* ========================================
+   Responsive Billing Modal
+   ======================================== */
+
+@media (max-width: 520px) {
+    .billing-modal-overlay {
+        align-items: center;
+        padding: 14px;
+    }
+
+    .billing-modal {
+        max-height: calc(100vh - 28px);
+        border-radius: 12px;
+    }
+
+    .billing-modal-header {
+        padding: 20px 18px 17px;
+    }
+
+    .billing-modal-header h2 {
+        font-size: 1.15rem;
+    }
+
+    .billing-modal-content {
+        gap: 9px;
+        padding: 17px 18px;
+    }
+
+    .billing-option {
+        gap: 11px;
+        padding: 13px;
+    }
+
+    .billing-option-icon {
+        flex-basis: 38px;
+        width: 38px;
+        height: 38px;
+    }
+
+    .billing-option-text > span {
+        font-size: 0.76rem;
+    }
+
+    .billing-modal-footer {
+        padding: 13px 18px 18px;
+    }
+
+    .bundle-card {
+        gap: 10px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .billing-modal {
+        animation: none;
+    }
+
+    .billing-option {
+        transition: none;
     }
 }

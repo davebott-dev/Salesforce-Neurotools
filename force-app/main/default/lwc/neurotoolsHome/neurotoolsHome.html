@@ -1,4 +1,3 @@
-
 <template>
     <div class="home-container">
         <!-- Welcome -->
@@ -11,13 +10,14 @@
                     and connect with the NeuroTools team.
                 </p>
             </div>
+
             <button class="primary-button" onclick={handleCreateOrder}>
                 <span class="button-symbol">+</span>
                 Create an Order
             </button>
         </section>
 
-        <!-- Quick actions -->
+        <!-- Quick Actions -->
         <section class="section">
             <div class="section-header">
                 <div>
@@ -57,46 +57,136 @@
                 <button class="action-card" onclick={handleBilling}>
                     <span class="action-icon billing-icon">$</span>
                     <span class="action-content">
-                        <strong>Billing</strong>
-                        <span>Manage payment information.</span>
+                        <strong>Billing &amp; Payments</strong>
+                        <span>Manage your billing methods.</span>
                     </span>
                     <span class="action-arrow">→</span>
                 </button>
             </div>
 
-            <!-- Subtle credit-card promotion -->
+            <!-- Credit Card Promotion -->
             <div class="payment-note">
                 <span class="payment-note-icon">✓</span>
                 <div>
-                    <strong>Make checkout more convenient with a credit card</strong>
+                    <strong>
+                        Make checkout more convenient with a credit card
+                    </strong>
                     <p>
-                        Save time on future orders by keeping your payment
-                        information up to date in Billing. Purchase orders
-                        are still accepted.
+                        Keep your payment information up to date in Billing.
+                        Purchase orders and Chartfield payments remain
+                        available where applicable.
                     </p>
                 </div>
             </div>
         </section>
 
-        <!-- Recent orders -->
+        <!-- Recent Orders -->
         <section class="section">
             <div class="section-header">
                 <div>
                     <h2>Recent Orders</h2>
-                    <p>Review your NeuroTools orders and their progress.</p>
+                    <p>Your five most recently created orders.</p>
                 </div>
-                <button class="text-button" onclick={handleViewAllOrders}>
+
+                <button
+                    class="text-button"
+                    onclick={handleViewAllOrders}>
                     View All Orders <span>→</span>
                 </button>
             </div>
 
             <div class="orders-container">
-                <c-client-virus-orders></c-client-virus-orders>
+                <template lwc:if={isLoadingDashboard}>
+                    <div class="dashboard-message">
+                        <lightning-spinner
+                            alternative-text="Loading recent orders"
+                            size="small">
+                        </lightning-spinner>
+                        <span>Loading your recent orders...</span>
+                    </div>
+                </template>
+
+                <template lwc:elseif={dashboardError}>
+                    <div class="dashboard-message error-message">
+                        {dashboardError}
+                    </div>
+                </template>
+
+                <template lwc:elseif={hasRecentOrders}>
+                    <div class="recent-orders-list">
+                        <template
+                            for:each={recentOrders}
+                            for:item="order">
+
+                            <div
+                                class="recent-order-row"
+                                key={order.Id}>
+
+                                <div class="recent-order-main">
+                                    <a
+                                        class="recent-order-number"
+                                        href={order.recordLink}>
+                                        {order.displayOrderNumber}
+                                    </a>
+
+                                    <div class="recent-order-details">
+                                        <span>{order.VirusType}</span>
+
+                                        <template lwc:if={order.Construct}>
+                                            <span class="detail-separator">
+                                                ·
+                                            </span>
+                                            <span>{order.Construct}</span>
+                                        </template>
+                                    </div>
+
+                                    <div class="recent-order-date">
+                                        Created
+                                        <lightning-formatted-date-time
+                                            value={order.CreatedDate}
+                                            year="numeric"
+                                            month="short"
+                                            day="2-digit">
+                                        </lightning-formatted-date-time>
+                                    </div>
+                                </div>
+
+                                <span class={order.stageClass}>
+                                    {order.Stage}
+                                </span>
+                            </div>
+                        </template>
+                    </div>
+
+                    <div class="recent-orders-footer">
+                        <button
+                            class="text-button"
+                            onclick={handleViewAllOrders}>
+                            View All Orders <span>→</span>
+                        </button>
+                    </div>
+                </template>
+
+                <template lwc:else>
+                    <div class="dashboard-message empty-message">
+                        <strong>No orders to display yet.</strong>
+                        <span>
+                            Your lab's recent orders will appear here.
+                        </span>
+                        <button
+                            class="text-button"
+                            onclick={handleCreateOrder}>
+                            Create an Order <span>→</span>
+                        </button>
+                    </div>
+                </template>
             </div>
         </section>
 
-        <!-- Summary and quick order -->
+        <!-- Order Summary and Research Bundles -->
         <section class="two-column-section">
+
+            <!-- Order Summary -->
             <div class="section-card">
                 <div class="section-header">
                     <div>
@@ -106,69 +196,120 @@
                 </div>
 
                 <div class="summary-grid">
-                    <button class="summary-item" onclick={handleViewAllOrders}>
-                        <span class="summary-number">—</span>
+                    <button
+                        class="summary-item"
+                        onclick={handleViewAllOrders}>
+                        <span class="summary-number">
+                            <template lwc:if={isLoadingDashboard}>
+                                —
+                            </template>
+                            <template lwc:else>
+                                {orderSummary.active}
+                            </template>
+                        </span>
                         <span class="summary-label">Active</span>
                     </button>
-                    <button class="summary-item" onclick={handleViewAllOrders}>
-                        <span class="summary-number">—</span>
+
+                    <button
+                        class="summary-item"
+                        onclick={handleViewAllOrders}>
+                        <span class="summary-number">
+                            <template lwc:if={isLoadingDashboard}>
+                                —
+                            </template>
+                            <template lwc:else>
+                                {orderSummary.inProduction}
+                            </template>
+                        </span>
                         <span class="summary-label">In Production</span>
                     </button>
-                    <button class="summary-item" onclick={handleViewAllOrders}>
-                        <span class="summary-number">—</span>
+
+                    <button
+                        class="summary-item"
+                        onclick={handleViewAllOrders}>
+                        <span class="summary-number">
+                            <template lwc:if={isLoadingDashboard}>
+                                —
+                            </template>
+                            <template lwc:else>
+                                {orderSummary.readyToShip}
+                            </template>
+                        </span>
                         <span class="summary-label">Ready to Ship</span>
                     </button>
-                    <button class="summary-item" onclick={handleViewAllOrders}>
-                        <span class="summary-number">—</span>
+
+                    <button
+                        class="summary-item"
+                        onclick={handleViewAllOrders}>
+                        <span class="summary-number">
+                            <template lwc:if={isLoadingDashboard}>
+                                —
+                            </template>
+                            <template lwc:else>
+                                {orderSummary.completed}
+                            </template>
+                        </span>
                         <span class="summary-label">Completed</span>
                     </button>
                 </div>
 
-                <button class="text-button" onclick={handleViewAllOrders}>
-                    View Orders <span>→</span>
-                </button>
+                <template lwc:if={dashboardError}>
+                    <p class="summary-error">
+                        Order counts are temporarily unavailable.
+                        Please refresh the page.
+                    </p>
+                </template>
             </div>
 
+            <!-- Research Order Bundles -->
             <div class="section-card">
                 <div class="section-header">
                     <div>
-                        <h2>Quick Order</h2>
-                        <p>Start with a frequently ordered product.</p>
+                        <h2>Research Order Bundles</h2>
+                        <p>
+                            Simplify ordering with coordinated product
+                            selections.
+                        </p>
                     </div>
                 </div>
 
-                <div class="quick-order-list">
-                    <div class="quick-order-item">
-                        <div>
-                            <strong>AAV Standard</strong>
-                            <span>Standard AAV preparation</span>
+                <div class="bundle-list">
+                    <div class="bundle-card">
+                        <div class="bundle-icon aav-bundle-icon">
+                            AAV
                         </div>
-                        <button class="small-button" data-product="AAV Standard"
-                            onclick={handleQuickOrder}>Order</button>
+                        <div class="bundle-content">
+                            <strong>AAV Research Bundle</strong>
+                            <span>
+                                A curated selection of AAV products
+                                and options.
+                            </span>
+                            <span class="bundle-status">
+                                Bundle options coming soon
+                            </span>
+                        </div>
                     </div>
 
-                    <div class="quick-order-item">
-                        <div>
-                            <strong>AAV Medium</strong>
-                            <span>Medium-scale AAV preparation</span>
+                    <div class="bundle-card">
+                        <div class="bundle-icon rabies-bundle-icon">
+                            RAB
                         </div>
-                        <button class="small-button" data-product="AAV Medium"
-                            onclick={handleQuickOrder}>Order</button>
-                    </div>
-
-                    <div class="quick-order-item">
-                        <div>
-                            <strong>Lentivirus</strong>
-                            <span>Lentiviral preparation</span>
+                        <div class="bundle-content">
+                            <strong>Rabies Helper Bundle</strong>
+                            <span>
+                                Related products for a coordinated
+                                research workflow.
+                            </span>
+                            <span class="bundle-status">
+                                Bundle options coming soon
+                            </span>
                         </div>
-                        <button class="small-button" data-product="Lentivirus"
-                            onclick={handleQuickOrder}>Order</button>
                     </div>
                 </div>
 
-                <p class="quick-order-footnote">
-                    Selecting a product opens the order page. You can review
-                    product details before submitting.
+                <p class="bundle-footnote">
+                    More bundles will be added as available options
+                    are finalized.
                 </p>
             </div>
         </section>
@@ -183,40 +324,60 @@
             </div>
 
             <div class="resources-grid">
-                <button class="resource-card" onclick={handleCreateOrder}>
+                <button
+                    class="resource-card"
+                    onclick={handleCreateOrder}>
                     <span class="resource-icon">↗</span>
                     <strong>Ordering Guide</strong>
                     <span>Get started with a new order.</span>
                 </button>
 
-                <button class="resource-card" onclick={handleBulkOrderTemplate}>
+                <button
+                    class="resource-card"
+                    onclick={handleBulkOrderTemplate}>
                     <span class="resource-icon">⇩</span>
                     <strong>Bulk Order Template</strong>
-                    <span>Download the spreadsheet for multiple orders.</span>
+                    <span>
+                        Download the spreadsheet for multiple orders.
+                    </span>
                 </button>
 
-                <button class="resource-card" onclick={handleGetHelp}>
+                <button
+                    class="resource-card"
+                    onclick={handleGetHelp}>
                     <span class="resource-icon">□</span>
                     <strong>Shipping Information</strong>
-                    <span>Ask about shipping options and requirements.</span>
+                    <span>
+                        Ask about shipping options and requirements.
+                    </span>
                 </button>
 
-                <button class="resource-card" onclick={handleFAQs}>
+                <button
+                    class="resource-card"
+                    onclick={handleFAQs}>
                     <span class="resource-icon">?</span>
                     <strong>FAQs</strong>
                     <span>Find answers to common questions.</span>
                 </button>
 
-                <button class="resource-card" onclick={handleCreateOrder}>
+                <button
+                    class="resource-card"
+                    onclick={handleCreateOrder}>
                     <span class="resource-icon">◎</span>
                     <strong>Product Information</strong>
-                    <span>Explore available products and services.</span>
+                    <span>
+                        Explore available products and services.
+                    </span>
                 </button>
 
-                <button class="resource-card" onclick={handlePublications}>
+                <button
+                    class="resource-card"
+                    onclick={handlePublications}>
                     <span class="resource-icon">▤</span>
                     <strong>Publications</strong>
-                    <span>Explore publications associated with NeuroTools.</span>
+                    <span>
+                        Explore publications associated with NeuroTools.
+                    </span>
                 </button>
             </div>
         </section>
@@ -231,17 +392,105 @@
                     or shipping? Contact the NeuroTools team.
                 </p>
             </div>
+
             <div class="help-actions">
-                <button class="help-button" onclick={handleGetHelp}>
+                <button
+                    class="help-button"
+                    onclick={handleGetHelp}>
                     Contact NeuroTools
                 </button>
-                <button class="help-secondary-button" onclick={handleFAQs}>
+                <button
+                    class="help-secondary-button"
+                    onclick={handleFAQs}>
                     View FAQs
                 </button>
             </div>
         </section>
 
-        <!-- Separate persistent announcements widget -->
+        <!-- Billing Modal -->
+        <template lwc:if={billingModalOpen}>
+            <div class="billing-modal-overlay">
+
+                <!-- Clicking outside the dialog closes it -->
+                <button
+                    type="button"
+                    class="billing-modal-backdrop"
+                    onclick={closeBillingModal}
+                    aria-label="Close billing dialog">
+                </button>
+
+                <section
+                    class="billing-modal"
+                    role="dialog"
+                    tabindex="-1"
+                    aria-modal="true"
+                    aria-labelledby="billing-modal-heading">
+
+                    <header class="billing-modal-header">
+                        <div>
+                            <p class="eyebrow">ACCOUNT MANAGEMENT</p>
+                            <h2 id="billing-modal-heading">
+                                Choose a Billing Method
+                            </h2>
+                            <p>
+                                Select the billing method you want to manage.
+                            </p>
+                        </div>
+
+                        <button
+                            type="button"
+                            class="billing-close-button"
+                            onclick={closeBillingModal}
+                            aria-label="Close billing dialog">
+                            ×
+                        </button>
+                    </header>
+
+                    <div class="billing-modal-content">
+                        <template
+                            for:each={billingOptions}
+                            for:item="option">
+
+                            <button
+                                key={option.id}
+                                type="button"
+                                class="billing-option"
+                                data-id={option.id}
+                                onclick={handleBillingOption}>
+
+                                <span class="billing-option-icon">
+                                    <lightning-icon
+                                        icon-name={option.icon}
+                                        size="medium"
+                                        alternative-text="">
+                                    </lightning-icon>
+                                </span>
+
+                                <span class="billing-option-text">
+                                    <strong>{option.label}</strong>
+                                    <span>{option.description}</span>
+                                </span>
+
+                                <span class="billing-option-arrow">
+                                    →
+                                </span>
+                            </button>
+                        </template>
+                    </div>
+
+                    <footer class="billing-modal-footer">
+                        <button
+                            type="button"
+                            class="help-secondary-button"
+                            onclick={closeBillingModal}>
+                            Cancel
+                        </button>
+                    </footer>
+                </section>
+            </div>
+        </template>
+
+        <!-- Separate Persistent Announcements Widget -->
         <c-neurotools-announcements></c-neurotools-announcements>
     </div>
 </template>
