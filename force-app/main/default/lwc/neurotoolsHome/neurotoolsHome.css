@@ -796,10 +796,10 @@
     line-height: 1.3;
 }
 
-.help-section .help-content > p:last-child {
+.help-section .help-content > p:not(.eyebrow) {
     max-width: 650px;
     margin: 9px 0 0;
-    color: #d9e6f3;
+    color: #e2eaf4;
     font-size: 0.86rem;
     line-height: 1.7;
 }
@@ -1325,6 +1325,26 @@
     justify-content: flex-end;
     margin-top: 22px;
 }
+
+.shipping-address {
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.shipping-address h3 {
+    margin: 0 0 0.5rem;
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.shipping-address p {
+    margin: 0;
+    color: #e2eaf4;
+    line-height: 1.7;
+}
+
 
 @media (max-width: 700px) {
     .bundle-catalog {

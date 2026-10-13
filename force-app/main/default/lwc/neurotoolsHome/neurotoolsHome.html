@@ -157,14 +157,6 @@
                             </div>
                         </template>
                     </div>
-
-                    <div class="recent-orders-footer">
-                        <button
-                            class="text-button"
-                            onclick={handleViewAllOrders}>
-                            View All Orders <span>→</span>
-                        </button>
-                    </div>
                 </template>
 
                 <template lwc:else>
@@ -417,7 +409,7 @@
             <div class="resources-grid">
                 <button
                     class="resource-card"
-                    onclick={handleCreateOrder}>
+                    onclick={handleOrderingGuide}>
                     <span class="resource-icon">↗</span>
                     <strong>Ordering Guide</strong>
                     <span>Get started with a new order.</span>
@@ -435,7 +427,7 @@
 
                 <button
                     class="resource-card"
-                    onclick={handleGetHelp}>
+                    onclick={handleShippingInfo}>
                     <span class="resource-icon">□</span>
                     <strong>Shipping Information</strong>
                     <span>
@@ -453,7 +445,7 @@
 
                 <button
                     class="resource-card"
-                    onclick={handleCreateOrder}>
+                    onclick={handleProducts}>
                     <span class="resource-icon">◎</span>
                     <strong>Product Information</strong>
                     <span>
@@ -474,29 +466,44 @@
         </section>
 
         <!-- Help -->
-        <section class="help-section">
-            <div class="help-content">
-                <p class="eyebrow">WE'RE HERE TO HELP</p>
-                <h2>Need a hand?</h2>
-                <p>
-                    Have a question about ordering, billing, production,
-                    or shipping? Contact the NeuroTools team.
-                </p>
-            </div>
+       
+<section class="help-section">
+    <div class="help-content">
+        <p class="eyebrow">WE'RE HERE TO HELP</p>
+        <h2>Need a hand?</h2>
+        <p>
+            Have a question about ordering, billing, production,
+            or shipping? Contact the NeuroTools team.
+        </p>
 
-            <div class="help-actions">
-                <button
-                    class="help-button"
-                    onclick={handleGetHelp}>
-                    Contact NeuroTools
-                </button>
-                <button
-                    class="help-secondary-button"
-                    onclick={handleFAQs}>
-                    View FAQs
-                </button>
-            </div>
-        </section>
+        <div class="shipping-address">
+            <h3>Shipping Address</h3>
+            <p>
+                <!-- Replace with the verified NeuroTools shipping address -->
+                Ritola Lab<br>
+                Mary Ellen Jones Building<br>
+                116 Manning Drive<br>
+                5102 UNC Neuroscience Center Campus Box 7250<br>
+                Chapel Hill, NC 27599<br>
+            </p>
+        </div>
+    </div>
+
+    <div class="help-actions">
+        <button
+            class="help-button"
+            onclick={handleContactEmail}>
+            Contact NeuroTools
+        </button>
+
+        <button
+            class="help-secondary-button"
+            onclick={handleFAQs}>
+            View FAQs
+        </button>
+    </div>
+</section>
+
 
         <!-- Billing Modal -->
         <template lwc:if={billingModalOpen}>

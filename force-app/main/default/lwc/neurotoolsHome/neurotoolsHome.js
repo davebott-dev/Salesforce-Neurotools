@@ -3,6 +3,7 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import AAV_Bundle from '@salesforce/resourceUrl/aav_bundle';
 import Rabies_Bundle from '@salesforce/resourceUrl/rabies_bundle';
+import BulkOrderDownloadTemplate from '@salesforce/resourceUrl/BulkOrderTemplate';
 
 
 import USER_ID from '@salesforce/user/Id';
@@ -16,15 +17,23 @@ import getClientOrderSummary
     from '@salesforce/apex/ClientOrderController.getClientOrderSummary';
 
 export default class NeurotoolsHome extends LightningElement {
-    routes = {
-        createOrder: '/s/createorder',
-        quoteRequest: '/s/quoterequest',
-        createCase: '/s/createcase',
-        allOrders: '/s/orders',
-        creditCard: '/partners/s/credit-card/Credit_Card__c/Default',
-        chartfield: '/partners/s/chartfield-strings',
-        purchaseOrder: '/partners/s/purchaseorders'
-    };
+   
+routes = {
+    createOrder: '/s/createorder',
+    quoteRequest: '/s/quoterequest',
+    createCase: '/s/createcase',
+    allOrders: '/s/orders',
+    creditCard: '/partners/s/credit-card/Credit_Card__c/Default',
+    chartfield: '/partners/s/chartfield-strings',
+    purchaseOrder: '/partners/s/purchaseorders',
+
+    orderingGuide: 'https://neurotools.unc.edu/about-us/placing-paying-for-your-order',
+    shippingInfo: 'https://neurotools.unc.edu/sending-samples',
+    faqs: 'https://neurotools.unc.edu/faqs',
+    products: 'https://neurotools.unc.edu/services/virus-pricing',
+    publications: '/s/publications'
+};
+
 
     // Current user and contact
     contactId;
@@ -226,6 +235,15 @@ selectedBundle = null;
         );
     }
 
+    
+handleBulkOrderTemplate() {
+    const downloadLink = document.createElement('a');
+    downloadLink.href = BulkOrderTemplate;
+    downloadLink.download = 'Bulk_Order_Template.xlsx';
+    downloadLink.click();
+}
+
+
     handleCreateOrder() {
         this.navigateTo(this.routes.createOrder);
     }
@@ -323,23 +341,31 @@ selectedBundle = null;
         this.openBillingModal();
     }
 
-    handleFAQs() {
-        this.showInfo(
-            'The FAQ page destination has not been configured yet.'
-        );
-    }
+    
+handleOrderingGuide() {
+    this.navigateTo(this.routes.orderingGuide);
+}
 
-    handleBulkOrderTemplate() {
-        this.showInfo(
-            'Add the uploaded Bulk Order Template static resource URL to enable this download.'
-        );
-    }
+handleShippingInfo() {
+    this.navigateTo(this.routes.shippingInfo);
+}
 
-    handlePublications() {
-        this.showInfo(
-            'Add the Publications page destination when it is available.'
-        );
-    }
+handleFAQs() {
+    this.navigateTo(this.routes.faqs);
+}
+
+handleProducts() {
+    this.navigateTo(this.routes.products);
+}
+
+handlePublications() {
+    this.navigateTo(this.routes.publications);
+}
+
+handleContactEmail() {
+    window.location.href = 'mailto:neurotools@unc.edu';
+}
+
 
     handleQuickOrder(event) {
         const productName = event.currentTarget.dataset.product;
