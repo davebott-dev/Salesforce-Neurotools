@@ -1,52 +1,502 @@
-/* Main board container */
-.board {
+:host {
+    display: block;
+    color: #23384d;
+    font-family: inherit;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.scheduler-page {
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 24px;
+    background: #f5f8fc;
+}
+
+.scheduler-header {
     display: flex;
-    gap: 1rem; /* space between rotor columns */
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 24px;
+    padding: 26px 28px;
+    background: linear-gradient(120deg, #ffffff, #edf5ff);
+    border: 1px solid #dce7f3;
+    border-radius: 16px;
 }
 
-/* Each rotor column panel */
-.rotor-column {
-    flex: 1;
-    background-color: #f9f9f9;
-    border-radius: 0.5rem;
-    padding: 0.5rem;
+.scheduler-header > div:first-child {
+    min-width: 0;
 }
 
-/* Dropzone inside each rotor */
-.dropzone {
-    min-height: 300px;
-    border: 2px dashed #ccc;
-    border-radius: 0.5rem;
-    padding: 0.5rem;
+.eyebrow {
+    margin: 0 0 8px;
+    color: #4778a9;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.13em;
 }
 
-/* Individual slots */
-.slot {
-    margin: 0.25rem 0;
+.scheduler-header h1 {
+    margin: 0;
+    color: #193653;
+    font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    line-height: 1.25;
 }
 
-/* Draggable production detail cards */
-.card {
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
-    cursor: grab;
-    text-align: center;
-    font-size: 0.85rem;
+.scheduler-description {
+    max-width: 720px;
+    margin: 10px 0 0;
+    color: #65778b;
+    font-size: 0.92rem;
+    line-height: 1.65;
 }
 
-/* Empty slot styling */
-.empty-slot {
-    text-align: center;
+.header-actions {
+    display: flex;
+    flex: 0 0 auto;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.scheduler-layout {
+    display: grid;
+    grid-template-columns: minmax(280px, 0.9fr) minmax(360px, 1.1fr);
+    align-items: start;
+    gap: 20px;
+}
+
+.planning-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 0;
+}
+
+.panel {
+    min-width: 0;
+    padding: 22px;
+    background: #ffffff;
+    border: 1px solid #e0e8f1;
+    border-radius: 15px;
+    box-shadow: 0 3px 12px rgb(29 56 84 / 4%);
+}
+
+.panel-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.panel-heading h2 {
+    margin: 0;
+    color: #203b57;
+    font-size: 1.08rem;
+    font-weight: 750;
+    line-height: 1.4;
+}
+
+.panel-heading p {
+    margin: 5px 0 0;
+    color: #75869a;
+    font-size: 0.82rem;
+    line-height: 1.5;
+}
+
+.count-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    min-width: 30px;
+    height: 30px;
+    padding: 0 9px;
+    color: #245b94;
+    background: #eaf3ff;
+    border: 1px solid #d8e9ff;
+    border-radius: 999px;
     font-size: 0.8rem;
-    color: #888;
-    border: 1px dashed #ddd;
-    padding: 0.25rem;
-    border-radius: 0.25rem;
+    font-weight: 750;
 }
 
-/* Optional: highlight slot on dragover */
-.dropzone.dragover {
-    border-color: #0070d2;
-    background-color: #f0f8ff;
+.lot-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 700px;
+    margin-top: 16px;
+    padding-right: 3px;
+    overflow-y: auto;
+}
+
+.lot-card {
+    padding: 15px;
+    background: #ffffff;
+    border: 1px solid #e1e9f2;
+    border-radius: 11px;
+    transition:
+        border-color 0.15s ease,
+        background-color 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.lot-card-selected {
+    background: #f0f7ff;
+    border-color: #3f80c2;
+    box-shadow: 0 0 0 2px rgb(63 128 194 / 10%);
+}
+
+.lot-card-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.lot-card-heading strong {
+    color: #203c58;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+.selected-pill {
+    flex: 0 0 auto;
+    padding: 4px 8px;
+    color: #205e98;
+    background: #dceeff;
+    border-radius: 999px;
+    font-size: 0.68rem;
+    font-weight: 750;
+}
+
+.lot-order,
+.lot-construct,
+.lot-researcher {
+    margin: 7px 0 0;
+    color: #64778b;
+    font-size: 0.79rem;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.lot-construct {
+    color: #344e68;
+    font-weight: 600;
+}
+
+.lot-metadata {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px 14px;
+    margin-top: 11px;
+    color: #728297;
+    font-size: 0.73rem;
+}
+
+.select-lot-button {
+    display: block;
+    margin-top: 13px;
+}
+
+.session-form,
+.assignment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.session-form lightning-button,
+.assignment-form lightning-button {
+    align-self: flex-start;
+    margin-top: 3px;
+}
+
+.selected-lot-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+    padding: 13px 15px;
+    color: #215b8f;
+    background: #edf6ff;
+    border: 1px solid #d5e9fb;
+    border-radius: 10px;
+}
+
+.selected-lot-banner > div {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+}
+
+.selected-lot-banner span {
+    color: #6884a0;
+    font-size: 0.72rem;
+}
+
+.selected-lot-banner strong {
+    color: #204e79;
+    font-size: 0.88rem;
+    overflow-wrap: anywhere;
+}
+
+.helper-message {
+    margin: 13px 0 0;
+    color: #7a8999;
+    font-size: 0.77rem;
+    line-height: 1.55;
+}
+
+.schedule-panel {
+    margin-top: 20px;
+}
+
+.schedule-heading {
+    margin-bottom: 20px;
+}
+
+.schedule-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.session-card {
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid #dfe7f0;
+    border-radius: 13px;
+}
+
+.session-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 16px 18px;
+    background: #f5f8fc;
+    border-bottom: 1px solid #e0e8f1;
+}
+
+.session-card-header h3 {
+    margin: 0;
+    color: #203d59;
+    font-size: 0.98rem;
+    font-weight: 750;
+}
+
+.session-card-header p {
+    margin: 5px 0 0;
+    color: #74869a;
+    font-size: 0.8rem;
+}
+
+.rotor-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.rotor-column {
+    min-width: 0;
+    padding: 17px;
+}
+
+.rotor-column + .rotor-column {
+    border-left: 1px solid #e4eaf1;
+}
+
+.rotor-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 15px;
+    padding-bottom: 13px;
+    border-bottom: 1px solid #e6edf4;
+}
+
+.rotor-heading h4 {
+    margin: 0;
+    color: #25435f;
+    font-size: 0.9rem;
+    font-weight: 800;
+}
+
+.rotor-heading span {
+    display: block;
+    margin-top: 4px;
+    color: #8190a0;
+    font-size: 0.7rem;
+}
+
+.rotor-heading lightning-combobox {
+    width: 145px;
+    flex: 0 1 145px;
+}
+
+.assigned-lots {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.assigned-lot {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 12px;
+    background: #f1f8ff;
+    border: 1px solid #dceafa;
+    border-radius: 9px;
+}
+
+.assigned-lot > div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.assigned-lot strong {
+    color: #204a73;
+    font-size: 0.81rem;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+.assigned-lot span {
+    color: #6c8095;
+    font-size: 0.71rem;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+}
+
+.empty-rotor,
+.empty-state,
+.empty-schedule {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 28px 16px;
+    color: #98a6b5;
+    text-align: center;
+}
+
+.empty-rotor p,
+.empty-state p,
+.empty-schedule p {
+    margin: 0;
+    color: #8291a2;
+    font-size: 0.8rem;
+    line-height: 1.55;
+}
+
+.empty-schedule {
+    min-height: 210px;
+    border: 1px dashed #d9e3ed;
+    border-radius: 11px;
+}
+
+.empty-schedule h3 {
+    margin: 0;
+    color: #435d77;
+    font-size: 0.98rem;
+}
+
+.down-state {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 16px 12px;
+    color: #a33c3c;
+    background: #fff3f2;
+    border: 1px solid #f5d8d5;
+    border-radius: 9px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.loading-area {
+    position: relative;
+    min-height: 220px;
+}
+
+.error-message {
+    margin-bottom: 20px;
+    padding: 14px 16px;
+    color: #9f3030;
+    background: #fff2f1;
+    border: 1px solid #f1cfcb;
+    border-radius: 10px;
+    font-size: 0.86rem;
+    line-height: 1.5;
+}
+
+@media (max-width: 1050px) {
+    .scheduler-layout {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .lot-list {
+        max-height: 420px;
+    }
+}
+
+@media (max-width: 700px) {
+    .scheduler-page {
+        padding: 13px;
+    }
+
+    .scheduler-header {
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    .header-actions {
+        justify-content: flex-start;
+        width: 100%;
+    }
+
+    .panel {
+        padding: 16px;
+    }
+
+    .rotor-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .rotor-column + .rotor-column {
+        border-top: 1px solid #e4eaf1;
+        border-left: 0;
+    }
+
+    .rotor-heading lightning-combobox {
+        width: 135px;
+        flex-basis: 135px;
+    }
+}
+
+@media (max-width: 400px) {
+    .rotor-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .rotor-heading lightning-combobox {
+        width: 100%;
+        flex-basis: auto;
+    }
 }

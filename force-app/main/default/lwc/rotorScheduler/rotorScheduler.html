@@ -1,60 +1,467 @@
 <template>
-    <lightning-card title="Rotor Scheduler">
+    <div class="scheduler-page">
+        <header class="scheduler-header">
+            <div>
+                <p class="eyebrow">AAV PRODUCTION PLANNING</p>
+                <h1>Ultracentrifuge Rotor Scheduler</h1>
+                <p class="scheduler-description">
+                    Organize production lots across processing sessions.
+                    Select a lot, choose a date and session, and assign it
+                    to an ultracentrifuge.
+                </p>
+            </div>
 
-<!-- Legend -->
-<template if:true={legendArray}>
-    <div class="legend slds-m-bottom_medium slds-grid slds-wrap">
-        <template for:each={legendArray} for:item="entry">
-            <div key={entry.name} class="slds-box slds-m-around_xx-small slds-text-align_center"
-                 style="background-color: {entry.color}; padding:0.5rem; border-radius:0.25rem;">
-                {entry.name}
+            <div class="header-actions">
+                <lightning-button
+                    label="Export CSV"
+                    title="Export the rotor schedule to CSV"
+                    icon-name="utility:download"
+                    onclick={handleExportCsv}
+                    disabled={exportDisabled}>
+                </lightning-button>
+
+                <lightning-button
+                    label="Reset Plan"
+                    title="Clear all sessions and assignments"
+                    icon-name="utility:refresh"
+                    onclick={handleResetPlan}
+                    disabled={resetDisabled}
+                    variant="destructive-text">
+                </lightning-button>
+            </div>
+        </header>
+
+        <template lwc:if={isLoading}>
+            <div class="loading-area">
+                <lightning-spinner
+                    alternative-text="Loading production lots"
+                    size="medium">
+                </lightning-spinner>
             </div>
         </template>
-    </div>
-</template>
 
+        <template lwc:else>
+            <template lwc:if={loadError}>
+                <div class="error-message" role="alert">
+                    {loadError}
+                </div>
+            </template>
 
-        <!-- Available Orders Pool -->
-        <div class="available-orders slds-m-bottom_medium">
-            <h3>Available Orders</h3>
-            <div class="order-pool-dropzone slds-grid slds-wrap" ondrop={handleDropToPool} ondragover={allowDrop}>
-                <template for:each={availableOrders} for:item="order">
-                    <div key={order.Id} class="card slds-p-around_small slds-m-around_xx-small"
-                         draggable="true" data-id={order.Id} ondragstart={handleDragStart}
-                         style={order.colorStyle}>
-                        {order.displayLabel}
+            <div class="scheduler-layout">
+                <!-- Available production lots -->
+                <section class="panel available-panel">
+                    <div class="panel-heading">
+                        <div>
+                            <h2>Available Production Lots</h2>
+                            <p>Select a lot to prepare it for assignment.</p>
+                        </div>
+                        <span class="count-pill">{availableCount}</span>
                     </div>
-                </template>
-                <template if:true={noAvailableOrders}>
-    <div class="slds-text-color_weak slds-p-around_small">All orders assigned</div>
-</template>
 
-            </div>
-        </div>
+                    <lightning-input
+                        type="search"
+                        label="Search lots"
+                        placeholder="Search lot, order, construct, or researcher"
+                        value={searchTerm}
+                        onchange={handleSearchChange}>
+                    </lightning-input>
 
-        <!-- Rotor Columns -->
-        <div class="board slds-grid slds-grid_pull-padded">
-            <template for:each={rotors} for:item="rotor">
-                <div key={rotor.name} class="rotor-column slds-p-horizontal_small">
-                    <h3>{rotor.label}</h3>
-                    <div class="dropzone" data-rotor={rotor.name} ondrop={handleDrop} ondragover={allowDrop}>
-                        <template for:each={rotor.slots} for:item="slot">
-                            <div key={slot.id} class="slot slds-box slds-m-bottom_x-small slds-text-align_center" style="height:50px;">
-                                <template if:true={slot.detail}>
-                                    <div class="card slds-p-around_x-small slds-text-body_small"
-                                         draggable="true" data-id={slot.detail.Id} ondragstart={handleDragStart}
-                                         style={slot.detail.colorStyle}>
-                                        {slot.detail.displayLabel}
+                    <div class="lot-list">
+                        <template lwc:if={hasFilteredOrders}>
+                            <template
+                                for:each={filteredOrders}
+                                for:item="order">
+                                <article
+                                    key={order.id}
+                                    class={order.cardClass}>
+                                    <div class="lot-card-heading">
+                                        <strong>{order.lotLabel}</strong>
+                                        <template lwc:if={order.isSelected}>
+                                            <span class="selected-pill">
+                                                Selected
+                                            </span>
+                                        </template>
                                     </div>
-                                </template>
-                                <template if:false={slot.detail}>
-                                    <div class="empty-slot slds-text-color_weak">Empty</div>
-                                </template>
+
+                                    <p class="lot-order">
+                                        Order: {order.orderNumber}
+                                    </p>
+                                    <p class="lot-construct">
+                                        {order.construct}
+                                    </p>
+
+                                    <div class="lot-metadata">
+                                        <span>
+                                            Plates: {order.plates}
+                                        </span>
+                                        <span>
+                                            Transfection:
+                                            {order.transfectionDate}
+                                        </span>
+                                    </div>
+
+                                    <template lwc:if={order.assignedTo}>
+                                        <p class="lot-researcher">
+                                            Assigned to: {order.assignedTo}
+                                        </p>
+                                    </template>
+
+                                    <lightning-button
+                                        class="select-lot-button"
+                                        label={order.selectButtonLabel}
+                                        variant={order.selectButtonVariant}
+                                        data-id={order.id}
+                                        onclick={handleSelectLot}>
+                                    </lightning-button>
+                                </article>
+                            </template>
+                        </template>
+
+                        <template lwc:else>
+                            <div class="empty-state">
+                                <lightning-icon
+                                    icon-name="utility:search"
+                                    size="large"
+                                    alternative-text="">
+                                </lightning-icon>
+                                <p>No production lots match your search.</p>
                             </div>
                         </template>
                     </div>
+                </section>
+
+                <!-- Session creation and lot assignment -->
+                <div class="planning-column">
+                    <section class="panel">
+                        <div class="panel-heading">
+                            <div>
+                                <h2>Add Processing Session</h2>
+                                <p>Choose any date and a morning or afternoon session.</p>
+                            </div>
+                        </div>
+
+                        <div class="session-form">
+                            <lightning-input
+                                type="date"
+                                label="Processing date"
+                                value={newSessionDate}
+                                onchange={handleSessionDateChange}
+                                required>
+                            </lightning-input>
+
+                            <lightning-combobox
+                                label="Session"
+                                value={newSessionPeriod}
+                                options={periodOptions}
+                                onchange={handleSessionPeriodChange}
+                                required>
+                            </lightning-combobox>
+
+                            <lightning-button
+                                label="Add Session"
+                                icon-name="utility:add"
+                                variant="brand"
+                                onclick={handleAddSession}
+                                disabled={addSessionDisabled}>
+                            </lightning-button>
+                        </div>
+                    </section>
+
+                    <section class="panel">
+                        <div class="panel-heading">
+                            <div>
+                                <h2>Assign Production Lot</h2>
+                                <p>
+                                    Select a lot, processing session,
+                                    and ultracentrifuge.
+                                </p>
+                            </div>
+                        </div>
+
+                        <template lwc:if={hasSelectedLot}>
+                            <div class="selected-lot-banner">
+                                <lightning-icon
+                                    icon-name="utility:check"
+                                    size="small"
+                                    alternative-text="Selected">
+                                </lightning-icon>
+                                <div>
+                                    <span>Selected lot</span>
+                                    <strong>{selectedLot.lotLabel}</strong>
+                                </div>
+                            </div>
+                        </template>
+
+                        <div class="assignment-form">
+                            <lightning-combobox
+                                name="lot"
+                                label="Production lot"
+                                value={selectedDetailId}
+                                options={lotOptions}
+                                onchange={handleLotChange}
+                                placeholder="Choose a production lot"
+                                required>
+                            </lightning-combobox>
+
+                            <lightning-combobox
+                                name="session"
+                                label="Processing session"
+                                value={selectedSessionId}
+                                options={sessionOptions}
+                                onchange={handleAssignmentSessionChange}
+                                placeholder="Choose a session"
+                                required
+                                disabled={noSessions}>
+                            </lightning-combobox>
+
+                            <lightning-combobox
+                                name="rotor"
+                                label="Ultracentrifuge"
+                                value={selectedRotor}
+                                options={rotorOptions}
+                                onchange={handleRotorChange}
+                                required>
+                            </lightning-combobox>
+
+                            <lightning-button
+                                label="Assign Lot"
+                                variant="brand"
+                                icon-name="utility:check"
+                                onclick={handleAssignLot}
+                                disabled={assignDisabled}>
+                            </lightning-button>
+                        </div>
+
+                        <template lwc:if={noSessions}>
+                            <p class="helper-message">
+                                Add a processing session before assigning lots.
+                            </p>
+                        </template>
+
+                        <p class="helper-message">
+                            A lot can be scheduled for more than one session.
+                        </p>
+                    </section>
                 </div>
-            </template>
-        </div>
-    </lightning-card>
+            </div>
+
+            <!-- Schedule -->
+            <section class="panel schedule-panel">
+                <div class="panel-heading schedule-heading">
+                    <div>
+                        <h2>Processing Schedule</h2>
+                        <p>
+                            Set each rotor's configuration and review
+                            the lots assigned to each session.
+                        </p>
+                    </div>
+                </div>
+
+                <template lwc:if={hasSessions}>
+                    <div class="schedule-list">
+                        <template
+                            for:each={scheduleSessions}
+                            for:item="session">
+                            <article
+                                key={session.id}
+                                class="session-card">
+                                <header class="session-card-header">
+                                    <div>
+                                        <h3>{session.label}</h3>
+                                        <p>{session.formattedDate}</p>
+                                    </div>
+
+                                    <lightning-button-icon
+                                        icon-name="utility:delete"
+                                        alternative-text="Remove session"
+                                        title="Remove this session"
+                                        data-id={session.id}
+                                        onclick={handleRemoveSession}
+                                        variant="border-filled">
+                                    </lightning-button-icon>
+                                </header>
+
+                                <div class="rotor-grid">
+                                    <!-- Ultra 1 -->
+                                    <section class="rotor-column">
+                                        <div class="rotor-heading">
+                                            <div>
+                                                <h4>Ultra 1</h4>
+                                                <span>Ultracentrifuge</span>
+                                            </div>
+
+                                            <lightning-combobox
+                                                label="Rotor size"
+                                                variant="label-hidden"
+                                                value={session.ultra1Size}
+                                                options={rotorSizeOptions}
+                                                data-session-id={session.id}
+                                                data-rotor="Ultra 1"
+                                                onchange={handleRotorSizeChange}>
+                                            </lightning-combobox>
+                                        </div>
+
+                                        <template lwc:if={session.ultra1IsDown}>
+                                            <div class="down-state">
+                                                <lightning-icon
+                                                    icon-name="utility:ban"
+                                                    size="small"
+                                                    alternative-text="Unavailable">
+                                                </lightning-icon>
+                                                <span>Down / Unavailable</span>
+                                            </div>
+                                        </template>
+
+                                        <template lwc:else>
+                                            <template lwc:if={session.ultra1HasAssignments}>
+                                                <div class="assigned-lots">
+                                                    <template
+                                                        for:each={session.ultra1Assignments}
+                                                        for:item="assignment">
+                                                        <div
+                                                            key={assignment.id}
+                                                            class="assigned-lot">
+                                                            <div>
+                                                                <strong>
+                                                                    {assignment.lotLabel}
+                                                                </strong>
+                                                                <span>
+                                                                    Order:
+                                                                    {assignment.orderNumber}
+                                                                </span>
+                                                                <template lwc:if={assignment.construct}>
+                                                                    <span>
+                                                                        {assignment.construct}
+                                                                    </span>
+                                                                </template>
+                                                            </div>
+
+                                                            <lightning-button-icon
+                                                                icon-name="utility:close"
+                                                                alternative-text="Remove assignment"
+                                                                title="Remove assignment"
+                                                                data-id={assignment.id}
+                                                                onclick={handleRemoveAssignment}
+                                                                variant="bare">
+                                                            </lightning-button-icon>
+                                                        </div>
+                                                    </template>
+                                                </div>
+                                            </template>
+
+                                            <template lwc:else>
+                                                <div class="empty-rotor">
+                                                    <lightning-icon
+                                                        icon-name="utility:inbox"
+                                                        size="medium"
+                                                        alternative-text="">
+                                                    </lightning-icon>
+                                                    <p>No lots assigned</p>
+                                                </div>
+                                            </template>
+                                        </template>
+                                    </section>
+
+                                    <!-- Ultra 2 -->
+                                    <section class="rotor-column">
+                                        <div class="rotor-heading">
+                                            <div>
+                                                <h4>Ultra 2</h4>
+                                                <span>Ultracentrifuge</span>
+                                            </div>
+
+                                            <lightning-combobox
+                                                label="Rotor size"
+                                                variant="label-hidden"
+                                                value={session.ultra2Size}
+                                                options={rotorSizeOptions}
+                                                data-session-id={session.id}
+                                                data-rotor="Ultra 2"
+                                                onchange={handleRotorSizeChange}>
+                                            </lightning-combobox>
+                                        </div>
+
+                                        <template lwc:if={session.ultra2IsDown}>
+                                            <div class="down-state">
+                                                <lightning-icon
+                                                    icon-name="utility:ban"
+                                                    size="small"
+                                                    alternative-text="Unavailable">
+                                                </lightning-icon>
+                                                <span>Down / Unavailable</span>
+                                            </div>
+                                        </template>
+
+                                        <template lwc:else>
+                                            <template lwc:if={session.ultra2HasAssignments}>
+                                                <div class="assigned-lots">
+                                                    <template
+                                                        for:each={session.ultra2Assignments}
+                                                        for:item="assignment">
+                                                        <div
+                                                            key={assignment.id}
+                                                            class="assigned-lot">
+                                                            <div>
+                                                                <strong>
+                                                                    {assignment.lotLabel}
+                                                                </strong>
+                                                                <span>
+                                                                    Order:
+                                                                    {assignment.orderNumber}
+                                                                </span>
+                                                                <template lwc:if={assignment.construct}>
+                                                                    <span>
+                                                                        {assignment.construct}
+                                                                    </span>
+                                                                </template>
+                                                            </div>
+
+                                                            <lightning-button-icon
+                                                                icon-name="utility:close"
+                                                                alternative-text="Remove assignment"
+                                                                title="Remove assignment"
+                                                                data-id={assignment.id}
+                                                                onclick={handleRemoveAssignment}
+                                                                variant="bare">
+                                                            </lightning-button-icon>
+                                                        </div>
+                                                    </template>
+                                                </div>
+                                            </template>
+
+                                            <template lwc:else>
+                                                <div class="empty-rotor">
+                                                    <lightning-icon
+                                                        icon-name="utility:inbox"
+                                                        size="medium"
+                                                        alternative-text="">
+                                                    </lightning-icon>
+                                                    <p>No lots assigned</p>
+                                                </div>
+                                            </template>
+                                        </template>
+                                    </section>
+                                </div>
+                            </article>
+                        </template>
+                    </div>
+                </template>
+
+                <template lwc:else>
+                    <div class="empty-schedule">
+                        <lightning-icon
+                            icon-name="utility:event"
+                            size="large"
+                            alternative-text="">
+                        </lightning-icon>
+                        <h3>No processing sessions yet</h3>
+                        <p>
+                            Add a date and session above to start building
+                            your rotor schedule.
+                        </p>
+                    </div>
+                </template>
+            </section>
+        </template>
+    </div>
 </template>
