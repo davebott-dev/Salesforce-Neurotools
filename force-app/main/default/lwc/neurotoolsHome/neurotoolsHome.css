@@ -1345,6 +1345,83 @@
     line-height: 1.7;
 }
 
+/* Bundle detail cards */
+.bundle-details-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.bundle-detail-item {
+    padding: 16px 18px;
+    background: #f7f9fc;
+    border: 1px solid #e4eaf2;
+    border-radius: 10px;
+}
+
+.bundle-detail-item h3 {
+    margin: 0 0 7px;
+    color: #203957;
+    font-size: 0.92rem;
+    font-weight: 750;
+    line-height: 1.45;
+}
+
+.bundle-detail-item p {
+    margin: 0;
+    color: #65758b;
+    font-size: 0.82rem;
+    line-height: 1.7;
+}
+
+/* Ordering note */
+.bundle-order-note {
+    margin-top: 18px;
+    padding: 16px;
+    background: #edf5ff;
+    border: 1px solid #dceafb;
+    border-radius: 10px;
+}
+
+.bundle-order-note strong {
+    display: block;
+    margin-bottom: 6px;
+    color: #234b74;
+    font-size: 0.88rem;
+}
+
+.bundle-order-note p {
+    margin: 0;
+    color: #627991;
+    font-size: 0.81rem;
+    line-height: 1.65;
+}
+
+/* Modal buttons */
+.bundle-modal-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 22px;
+}
+
+.bundle-modal-actions .primary-button {
+    min-height: 42px;
+    padding: 11px 16px;
+    font-size: 0.82rem;
+}
+
+@media (max-width: 480px) {
+    .bundle-modal-actions {
+        flex-direction: column-reverse;
+    }
+
+    .bundle-modal-actions button {
+        width: 100%;
+    }
+}
 
 @media (max-width: 700px) {
     .bundle-catalog {

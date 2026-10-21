@@ -238,7 +238,7 @@ selectedBundle = null;
     
 handleBulkOrderTemplate() {
     const downloadLink = document.createElement('a');
-    downloadLink.href = BulkOrderTemplate;
+    downloadLink.href = BulkOrderDownloadTemplate;
     downloadLink.download = 'Bulk_Order_Template.xlsx';
     downloadLink.click();
 }
@@ -378,9 +378,117 @@ handleContactEmail() {
     }
 
 
-// Bundle modal state
-bundleModalOpen = false;
-selectedBundle = null;
+
+    // Bundle catalog
+    bundleModalOpen = false;
+    selectedBundle = null;
+
+    bundles = {
+        aav: {
+            id: 'aav',
+            title: 'AAV Research Bundle',
+            description:
+                'Explore AAV vector products and preparation options for your research project.',
+            details: [
+                {
+                    id: 'products',
+                    heading: 'Available AAV Preparations',
+                    description:
+                        'AAV products are available in Standard, Medium, and Large preparation sizes.'
+                },
+                {
+                    id: 'testing',
+                    heading: 'Additional Services',
+                    description:
+                        'Options include endotoxin testing, Enriched Full Prep, and 3x CsCl purification, subject to product eligibility.'
+                },
+                {
+                    id: 'requirements',
+                    heading: 'Before Ordering',
+                    description:
+                        'Confirm your construct, capsid, desired volume, preparation size, and any additional services.'
+                }
+            ]
+        },
+        rabies: {
+            id: 'rabies',
+            title: 'Rabies Helper Bundle',
+            description:
+                'Explore rabies virus ordering options and discuss the products needed for your research workflow.',
+            details: [
+                {
+                    id: 'products',
+                    heading: 'Product Information',
+                    description:
+                        'Review available rabies virus products and their specifications with the NeuroTools catalog.'
+                },
+                {
+                    id: 'requirements',
+                    heading: 'Research Requirements',
+                    description:
+                        'Identify the required construct, preparation, volume, and any project-specific requirements.'
+                },
+                {
+                    id: 'confirmation',
+                    heading: 'Confirm Bundle Contents',
+                    description:
+                        'The exact products, quantities, and included services for this bundle must be confirmed with NeuroTools.'
+                }
+            ]
+        }
+    };
+
+    handleExploreBundle(event) {
+        const bundleId = event.currentTarget.dataset.bundle;
+        const bundle = this.bundles[bundleId];
+
+        if (!bundle) {
+            this.showInfo('Unable to load this bundle. Please try again.');
+            return;
+        }
+
+        this.selectedBundle = bundle;
+        this.bundleModalOpen = true;
+    }
+
+    closeBundleModal() {
+        this.bundleModalOpen = false;
+        this.selectedBundle = null;
+    }
+
+    get selectedBundleImage() {
+        if (!this.selectedBundle) {
+            return '';
+        }
+
+        return this.selectedBundle.id === 'aav'
+            ? this.aavBundleImage
+            : this.rabiesBundleImage;
+    }
+
+    get selectedBundleTitle() {
+        return this.selectedBundle?.title || '';
+    }
+
+    get selectedBundleDescription() {
+        return this.selectedBundle?.description || '';
+    }
+
+    get selectedBundleDetails() {
+        return this.selectedBundle?.details || [];
+    }
+
+    handleOrderSelectedBundle() {
+        if (!this.selectedBundle) {
+            this.showInfo('Please select a bundle first.');
+            return;
+        }
+
+        // Opens the existing order page. This does not prepopulate
+        // the order with bundle products.
+        this.navigateTo(this.routes.createOrder);
+    }
+
 
 // Bundle images
 get aavBundleImage() {

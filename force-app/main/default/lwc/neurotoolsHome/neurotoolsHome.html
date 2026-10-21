@@ -334,6 +334,7 @@
 <!-- Bundle Details Modal -->
 <template lwc:if={bundleModalOpen}>
     <div class="bundle-modal-overlay">
+
         <button
             class="bundle-modal-backdrop"
             type="button"
@@ -374,21 +375,48 @@
                     {selectedBundleDescription}
                 </p>
 
-                <div class="bundle-details-placeholder">
-                    <h3>Bundle Details</h3>
+                <!-- Dynamic bundle details -->
+                <div class="bundle-details-list">
+                    <template
+                        for:each={selectedBundleDetails}
+                        for:item="detail">
+
+                        <article
+                            class="bundle-detail-item"
+                            key={detail.id}>
+
+                            <h3>{detail.heading}</h3>
+                            <p>{detail.description}</p>
+                        </article>
+                    </template>
+                </div>
+
+                <!-- Ordering note -->
+                <div class="bundle-order-note">
+                    <strong>Ready to get started?</strong>
+
                     <p>
-                        Product inclusions, associated orders,
-                        available options, and ordering requirements
-                        will be added here as the bundle is finalized.
+                        Continue to the ordering page to review available
+                        products and options. This bundle does not
+                        automatically add products to your order.
                     </p>
                 </div>
 
+                <!-- Modal actions -->
                 <div class="bundle-modal-actions">
                     <button
                         type="button"
                         class="help-secondary-button"
                         onclick={closeBundleModal}>
                         Close
+                    </button>
+
+                    <button
+                        type="button"
+                        class="primary-button"
+                        onclick={handleOrderSelectedBundle}>
+                        Start an Order
+                        <span aria-hidden="true">→</span>
                     </button>
                 </div>
             </div>
