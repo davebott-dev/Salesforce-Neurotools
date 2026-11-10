@@ -19,15 +19,6 @@ import getStockViruses
 import addStockToCart
     from '@salesforce/apex/StockVirusProductController.addStockToCart';
 
-const FEATURED_PRODUCTS = [
-    'pAAV-CAG-dLight3.8: Capsid AAV9',
-    'Rbv-CVS-N2c(dG)-H2B-eGFP(EnvA)',
-    'Rbv-CVS-N2c(dG)-H2B-eGFP(EnvA)',
-    'Rbv-CVS-N2c(dG)-tdTomato(EnvA)',
-    'pAAV-Syn-dLight3.8: Capsid AAV9',
-    'hSyn-kLight1.3: Capsid AAV1'
-];
-
 export default class NeurotoolsHome extends LightningElement {
     routes = {
         createOrder: '/s/createorder',
@@ -228,90 +219,82 @@ export default class NeurotoolsHome extends LightningElement {
         this.loadStockProducts();
     }
 
-    async loadStockProducts() {
-        this.isLoadingStock = true;
-        this.stockError = '';
+//fix error on this page preventing it from loading
 
-        try {
-            const results = await getStockViruses();
-            const featuredNames = new Set(
-                FEATURED_PRODUCTS.map((name) => name.toLowerCase())
-            );
+@wire(getStockViruses)
+wiredStockProducts({ error, data }) {
 
-            const allProducts = (results || []).map((product) => {
-                const batches = (product.Stock_Batch__r || [])
-                    .filter((batch) =>
-                        Number(batch.Tubes_Remaining_num_val__c || 0) > 0
-                    )
-                    .map((batch) => ({
+    if (data) {
+
+        console.log('Home page stock data:', data);
+
+        const featuredProducts = [
+            'pAAV-CAG-dLight3.8: Capsid AAV9',
+            'Rbv-CVS-N2c(dG)-H2B-eGFP(EnvA)',
+            'Rbv-CVS-N2c(dG)-tdTomato(EnvA)',
+            'pAAV-Syn-dLight3.8: Capsid AAV9',
+            'hSyn-kLight1.3: Capsid AAV1'
+        ];
+
+        const featuredNames = new Set(
+            featuredProducts.map(name => name.toLowerCase())
+        );
+
+        this.stockProducts = data
+            .filter(prod =>
+                featuredNames.has((prod.Name || '').toLowerCase())
+            )
+            .map(prod => {
+
+                // Match the working StockVirusTable component.
+                const batches = prod.Stock_Batch__r || [];
+
+                const formattedBatches = batches.map(batch => {
+
+                    const available =
+                        Number(batch.Tubes_Remaining_num_val__c) || 0;
+
+                    return {
                         ...batch,
+                        AvailableTubes: available,
                         batchLabel:
                             batch.Transfection_ID__c ||
                             batch.Name ||
-                            'Available batch',
+                            'Stock Batch',
                         displayTiter: batch.Titer__c || 'Not specified',
-                        displayVolume: batch.End_Volume__c || 'Not specified',
-                        displayTubes:
-                            batch.Tubes_Remaining__c ??
-                            batch.Tubes_Remaining_num_val__c ??
-                            0
-                    }));
+                        displayTubes: available
+                    };
+                });
+
+                const totalTubes = formattedBatches.reduce(
+                    (total, batch) => total + batch.AvailableTubes,
+                    0
+                );
 
                 return {
-    ...product,
-    batches,
-    hasAvailableBatches: batches.length > 0,
-    isUnavailable: batches.length === 0,
-    constructName: product.Construct__r?.Name || '',
-    capsidName: product.Capsid_Envelope__r?.Name || ''
-};
+                    ...prod,
+                    batches: formattedBatches,
+                    batchCount: formattedBatches.length,
+                    TubesRemaining: totalTubes,
+                    isUnavailable: totalTubes <= 0
+                };
             });
 
-            this.stockProducts = FEATURED_PRODUCTS
-                .map((featuredName) =>
-                    allProducts.find(
-                        (product) =>
-                            (product.Name || '').toLowerCase() ===
-                            featuredName.toLowerCase()
-                    )
-                )
-                .filter(Boolean)
-                .map((product) => ({
-                    ...product,
-                    cardDescription: this.getProductDescription(product)
-                }));
+        console.log('Featured products:', this.stockProducts);
 
-            if (this.stockProducts.length === 0) {
-                this.stockError =
-                    'No featured stock products are currently available.';
-            }
-        } catch (error) {
-            console.error('Error loading stock products:', error);
-            this.stockProducts = [];
-            this.stockError =
-                'Unable to load popular stock products. Please try again later.';
-        } finally {
-            this.isLoadingStock = false;
-        }
+        this.stockError = '';
+
+    } else if (error) {
+
+        console.error('Error loading featured stock:', error);
+
+        this.stockError =
+            error.body?.message || 'Unable to load stock products.';
+
+        this.stockProducts = [];
     }
+}
 
-    getProductDescription(product) {
-        const details = [];
-
-        if (product.Virus_Type__c) {
-            details.push(product.Virus_Type__c);
-        }
-
-        if (product.capsidName) {
-            details.push(product.capsidName);
-        }
-
-        if (product.End_Use__c) {
-            details.push(product.End_Use__c);
-        }
-
-        return details.join(' • ') || 'Available stock virus product';
-    }
 
     // ----------------------------------------
     // Quick Order: product selection and modal
