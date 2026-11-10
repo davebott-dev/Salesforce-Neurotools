@@ -175,255 +175,302 @@
             </div>
         </section>
 
-        <!-- Order Summary and Research Bundles -->
-        <section class="two-column-section">
+        <!-- Order Summary and Quick Order -->
+<section class="two-column-section">
 
-            <!-- Order Summary -->
-            <div class="section-card">
-                <div class="section-header">
-                    <div>
-                        <h2>Order Summary</h2>
-                        <p>An overview of your orders.</p>
-                    </div>
-                </div>
+    <!-- Order Summary -->
+    <div class="section-card">
+        <div class="section-header">
+            <div>
+                <h2>Order Summary</h2>
+                <p>An overview of your orders.</p>
+            </div>
+        </div>
 
-                <div class="summary-grid">
-                    <button
-                        class="summary-item"
-                        onclick={handleViewAllOrders}>
-                        <span class="summary-number">
-                            <template lwc:if={isLoadingDashboard}>
-                                —
+        <div class="summary-grid">
+            <button class="summary-item" onclick={handleViewAllOrders}>
+                <span class="summary-number">
+                    <template lwc:if={isLoadingDashboard}>—</template>
+                    <template lwc:else>{orderSummary.active}</template>
+                </span>
+                <span class="summary-label">Active</span>
+            </button>
+
+            <button class="summary-item" onclick={handleViewAllOrders}>
+                <span class="summary-number">
+                    <template lwc:if={isLoadingDashboard}>—</template>
+                    <template lwc:else>{orderSummary.inProduction}</template>
+                </span>
+                <span class="summary-label">In Production</span>
+            </button>
+
+            <button class="summary-item" onclick={handleViewAllOrders}>
+                <span class="summary-number">
+                    <template lwc:if={isLoadingDashboard}>—</template>
+                    <template lwc:else>{orderSummary.readyToShip}</template>
+                </span>
+                <span class="summary-label">Ready to Ship</span>
+            </button>
+
+            <button class="summary-item" onclick={handleViewAllOrders}>
+                <span class="summary-number">
+                    <template lwc:if={isLoadingDashboard}>—</template>
+                    <template lwc:else>{orderSummary.completed}</template>
+                </span>
+                <span class="summary-label">Completed</span>
+            </button>
+        </div>
+
+        <template lwc:if={dashboardError}>
+            <p class="summary-error">
+                Order counts are temporarily unavailable. Please refresh the page.
+            </p>
+        </template>
+    </div>
+
+    <!-- Quick Order: Popular Stock -->
+    <div class="section-card quick-order-section">
+        <div class="section-header">
+            <div>
+                <h2>Quick Order – Popular Stock</h2>
+                <p>Select a popular stock product to view available batches and add it to your cart.</p>
+            </div>
+        </div>
+
+        <template lwc:if={isLoadingStock}>
+            <div class="stock-loading">
+                <lightning-spinner
+                    alternative-text="Loading popular stock"
+                    size="small">
+                </lightning-spinner>
+                <span>Loading available stock...</span>
+            </div>
+        </template>
+
+        <template lwc:elseif={stockError}>
+            <div class="stock-message stock-error">
+                {stockError}
+                <button class="text-button" onclick={loadStockProducts}>
+                    Try Again →
+                </button>
+            </div>
+        </template>
+
+        <template lwc:elseif={stockProducts.length}>
+            <div class="quick-order-grid">
+                <template for:each={stockProducts} for:item="product">
+                    <article class="quick-order-card" key={product.Id}>
+                        <div class="quick-order-card-top">
+                            <span class="stock-product-type">
+                                {product.Virus_Type__c}
+                            </span>
+                            <template lwc:if={product.hasAvailableBatches}>
+                                <span class="stock-availability">
+                                    In Stock
+                                </span>
                             </template>
                             <template lwc:else>
-                                {orderSummary.active}
+                                <span class="stock-unavailable">
+                                    Unavailable
+                                </span>
                             </template>
-                        </span>
-                        <span class="summary-label">Active</span>
-                    </button>
+                        </div>
 
-                    <button
-                        class="summary-item"
-                        onclick={handleViewAllOrders}>
-                        <span class="summary-number">
-                            <template lwc:if={isLoadingDashboard}>
-                                —
-                            </template>
-                            <template lwc:else>
-                                {orderSummary.inProduction}
-                            </template>
-                        </span>
-                        <span class="summary-label">In Production</span>
-                    </button>
+                        <h3>{product.Name}</h3>
 
-                    <button
-                        class="summary-item"
-                        onclick={handleViewAllOrders}>
-                        <span class="summary-number">
-                            <template lwc:if={isLoadingDashboard}>
-                                —
-                            </template>
-                            <template lwc:else>
-                                {orderSummary.readyToShip}
-                            </template>
-                        </span>
-                        <span class="summary-label">Ready to Ship</span>
-                    </button>
+                        <p class="quick-order-description">
+                            {product.cardDescription}
+                        </p>
 
-                    <button
-                        class="summary-item"
-                        onclick={handleViewAllOrders}>
-                        <span class="summary-number">
-                            <template lwc:if={isLoadingDashboard}>
-                                —
-                            </template>
-                            <template lwc:else>
-                                {orderSummary.completed}
-                            </template>
-                        </span>
-                        <span class="summary-label">Completed</span>
-                    </button>
-                </div>
+                        <div class="quick-order-card-footer">
+                            <span class="batch-count">
+                                {product.batches.length} available
+                                batch(es)
+                            </span>
 
-                <template lwc:if={dashboardError}>
-                    <p class="summary-error">
-                        Order counts are temporarily unavailable.
-                        Please refresh the page.
-                    </p>
+                            <button
+                                type="button"
+                                class="quick-order-select-button"
+                                data-id={product.Id}
+                                onclick={handleSelectStockProduct}
+                                disabled={product.isUnavailable}>
+                                View Stock <span aria-hidden="true">→</span>
+                            </button>
+                        </div>
+                    </article>
                 </template>
             </div>
+        </template>
 
+        <template lwc:else>
+            <div class="stock-message">
+                No featured stock products are currently available.
+            </div>
+        </template>
 
-<!-- Research Order Bundles -->
-<div class="section-card bundle-section">
-    <div class="section-header">
-        <div>
-            <h2>Research Order Bundles</h2>
-            <p>
-                Explore curated ordering options for your research.
-            </p>
-        </div>
+        <p class="quick-order-footnote">
+            Inventory and titers are based on currently available stock batches.
+            Availability may change as orders are submitted.
+        </p>
     </div>
+</section>
 
-    <div class="bundle-catalog">
-
-        <!-- AAV Bundle -->
-        <article class="bundle-product-card">
-            <div class="bundle-image-container">
-                <img
-                    src={aavBundleImage}
-                    alt="Scientific research imagery for the AAV bundle"
-                    class="bundle-image"
-                />
-                <span class="bundle-category">AAV</span>
-            </div>
-
-            <div class="bundle-product-content">
-                <h3>AAV Research Bundle</h3>
-                <p>
-                    Explore AAV products and available options
-                    for your research needs.
-                </p>
-
-                <button
-                    class="bundle-explore-button"
-                    data-bundle="aav"
-                    onclick={handleExploreBundle}>
-                    Explore Bundle
-                    <span aria-hidden="true">→</span>
-                </button>
-            </div>
-        </article>
-
-        <!-- Rabies Bundle -->
-        <article class="bundle-product-card">
-            <div class="bundle-image-container">
-                <img
-                    src={rabiesBundleImage}
-                    alt="Scientific research imagery for the Rabies Helper bundle"
-                    class="bundle-image"
-                />
-                <span class="bundle-category">RABIES</span>
-            </div>
-
-            <div class="bundle-product-content">
-                <h3>Rabies Helper Bundle</h3>
-                <p>
-                    Discover related products and coordinated
-                    ordering options.
-                </p>
-
-                <button
-                    class="bundle-explore-button"
-                    data-bundle="rabies"
-                    onclick={handleExploreBundle}>
-                    Explore Bundle
-                    <span aria-hidden="true">→</span>
-                </button>
-            </div>
-        </article>
-
-    </div>
-
-    <p class="bundle-footnote">
-        Bundle contents and ordering details will be provided
-        as offerings are finalized.
-    </p>
-</div>
-
-<!-- Bundle Details Modal -->
-<template lwc:if={bundleModalOpen}>
-    <div class="bundle-modal-overlay">
+<!-- Quick Order Stock Selection Modal -->
+<template lwc:if={stockModalOpen}>
+    <div class="stock-modal-overlay">
 
         <button
-            class="bundle-modal-backdrop"
             type="button"
-            aria-label="Close bundle details"
-            onclick={closeBundleModal}>
+            class="stock-modal-backdrop"
+            aria-label="Close stock selection"
+            onclick={closeStockModal}>
         </button>
 
         <section
-            class="bundle-modal"
+            class="stock-modal"
             role="dialog"
             aria-modal="true"
-            aria-labelledby="bundle-modal-title">
+            aria-labelledby="stock-modal-title">
 
             <button
                 type="button"
-                class="bundle-modal-close"
+                class="stock-modal-close"
                 aria-label="Close"
-                onclick={closeBundleModal}>
+                onclick={closeStockModal}>
                 ×
             </button>
 
-            <div class="bundle-modal-image-container">
-                <img
-                    src={selectedBundleImage}
-                    alt=""
-                    class="bundle-modal-image"
-                />
-            </div>
-
-            <div class="bundle-modal-body">
-                <p class="eyebrow">RESEARCH ORDER BUNDLE</p>
-
-                <h2 id="bundle-modal-title">
-                    {selectedBundleTitle}
-                </h2>
-
-                <p class="bundle-modal-description">
-                    {selectedBundleDescription}
+            <header class="stock-modal-header">
+                <p class="eyebrow">QUICK ORDER</p>
+                <h2 id="stock-modal-title">{selectedProductTitle}</h2>
+                <p>
+                    Review the product specifications, select an available
+                    batch, and choose the number of tubes to add to your cart.
                 </p>
+            </header>
 
-                <!-- Dynamic bundle details -->
-                <div class="bundle-details-list">
-                    <template
-                        for:each={selectedBundleDetails}
-                        for:item="detail">
+            <div class="stock-modal-body">
 
-                        <article
-                            class="bundle-detail-item"
-                            key={detail.id}>
+                <!-- Product Details -->
+                <div class="stock-detail-panel">
+                    <h3>Product Information</h3>
 
-                            <h3>{detail.heading}</h3>
-                            <p>{detail.description}</p>
-                        </article>
+                    <dl class="stock-detail-grid">
+                        <div>
+                            <dt>Virus Type</dt>
+                            <dd>{selectedProductType}</dd>
+                        </div>
+
+                        <div>
+                            <dt>Construct</dt>
+                            <dd>{selectedProductConstruct}</dd>
+                        </div>
+
+                        <div>
+                            <dt>Capsid / Envelope</dt>
+                            <dd>{selectedProductCapsid}</dd>
+                        </div>
+
+                        <div>
+                            <dt>End Use</dt>
+                            <dd>{selectedProductEndUse}</dd>
+                        </div>
+                    </dl>
+                </div>
+
+                <!-- Batch Selection -->
+                <div class="stock-selection-panel">
+                    <h3>Available Stock Batches</h3>
+
+                    <lightning-combobox
+                        name="stockBatch"
+                        label="Select a batch"
+                        value={selectedBatchId}
+                        options={batchOptions}
+                        onchange={handleBatchChange}
+                        placeholder="Select an available batch">
+                    </lightning-combobox>
+
+                    <template lwc:if={selectedBatch}>
+                        <div class="selected-batch-details">
+                            <div class="selected-batch-item">
+                                <span>Batch / Transfection ID</span>
+                                <strong>{selectedBatch.batchLabel}</strong>
+                            </div>
+
+                            <div class="selected-batch-item">
+                                <span>Titer</span>
+                                <strong>{selectedBatchTiter}</strong>
+                            </div>
+
+                            <div class="selected-batch-item">
+                                <span>End Volume</span>
+                                <strong>{selectedBatchVolume}</strong>
+                            </div>
+
+                            <div class="selected-batch-item">
+                                <span>Tubes Remaining</span>
+                                <strong>{selectedBatchTubesRemaining}</strong>
+                            </div>
+                        </div>
                     </template>
                 </div>
 
-                <!-- Ordering note -->
-                <div class="bundle-order-note">
-                    <strong>Ready to get started?</strong>
+                <!-- Requested Quantity -->
+                <div class="stock-quantity-panel">
+                    <lightning-input
+                        type="number"
+                        name="requestedTubes"
+                        label="Number of Tubes"
+                        value={requestedTubes}
+                        min="1"
+                        max={maxRequestedTubes}
+                        step="1"
+                        onchange={handleTubeQuantityChange}>
+                    </lightning-input>
 
-                    <p>
-                        Continue to the ordering page to review available
-                        products and options. This bundle does not
-                        automatically add products to your order.
+                    <p class="stock-quantity-help">
+                        Maximum available quantity:
+                        <strong>{selectedBatchTubesRemaining}</strong>
+                        tube(s).
                     </p>
                 </div>
 
-                <!-- Modal actions -->
-                <div class="bundle-modal-actions">
-                    <button
-                        type="button"
-                        class="help-secondary-button"
-                        onclick={closeBundleModal}>
-                        Close
-                    </button>
-
-                    <button
-                        type="button"
-                        class="primary-button"
-                        onclick={handleOrderSelectedBundle}>
-                        Start an Order
-                        <span aria-hidden="true">→</span>
-                    </button>
+                <div class="stock-order-note">
+                    <strong>Before adding to your cart</strong>
+                    <p>
+                        Your selected batch and tube quantity will be used
+                        to create a draft virus order in your existing cart.
+                    </p>
                 </div>
             </div>
+
+            <footer class="stock-modal-footer">
+                <button
+                    type="button"
+                    class="help-secondary-button"
+                    onclick={closeStockModal}
+                    disabled={isAddingToCart}>
+                    Cancel
+                </button>
+
+                <button
+                    type="button"
+                    class="primary-button"
+                    onclick={handleAddStockToCart}
+                    disabled={isAddToCartDisabled}>
+                    <template lwc:if={isAddingToCart}>
+                        Adding to Cart...
+                    </template>
+                    <template lwc:else>
+                        Add to Cart →
+                    </template>
+                </button>
+            </footer>
         </section>
     </div>
 </template>
-        </section>
+
 
         <!-- Resources -->
         <section class="section">
@@ -507,7 +554,6 @@
         <div class="shipping-address">
             <h3>Shipping Address</h3>
             <p>
-                <!-- Replace with the verified NeuroTools shipping address -->
                 Ritola Lab<br>
                 Mary Ellen Jones Building<br>
                 116 Manning Drive<br>

@@ -1,39 +1,48 @@
+
 import { LightningElement, wire } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
-import AAV_Bundle from '@salesforce/resourceUrl/aav_bundle';
-import Rabies_Bundle from '@salesforce/resourceUrl/rabies_bundle';
-import BulkOrderDownloadTemplate from '@salesforce/resourceUrl/BulkOrderTemplate';
-
 
 import USER_ID from '@salesforce/user/Id';
 import CONTACT_ID from '@salesforce/schema/User.ContactId';
-import CONTACT_ACCOUNT_LAB_TYPE
-    from '@salesforce/schema/Contact.Account.Lab_Type__c';
+import CONTACT_ACCOUNT_LAB_TYPE from '@salesforce/schema/Contact.Account.Lab_Type__c';
+
+import BulkOrderDownloadTemplate from '@salesforce/resourceUrl/BulkOrderTemplate';
 
 import getRecentClientVirusOrders
     from '@salesforce/apex/ClientOrderController.getRecentClientVirusOrders';
 import getClientOrderSummary
     from '@salesforce/apex/ClientOrderController.getClientOrderSummary';
 
+import getStockViruses
+    from '@salesforce/apex/StockVirusProductController.getStockViruses';
+import addStockToCart
+    from '@salesforce/apex/StockVirusProductController.addStockToCart';
+
+const FEATURED_PRODUCTS = [
+    'pAAV-CAG-dLight3.8: Capsid AAV9',
+    'Rbv-CVS-N2c(dG)-H2B-eGFP(EnvA)',
+    'Rbv-CVS-N2c(dG)-H2B-eGFP(EnvA)',
+    'Rbv-CVS-N2c(dG)-tdTomato(EnvA)',
+    'pAAV-Syn-dLight3.8: Capsid AAV9',
+    'hSyn-kLight1.3: Capsid AAV1'
+];
+
 export default class NeurotoolsHome extends LightningElement {
-   
-routes = {
-    createOrder: '/s/createorder',
-    quoteRequest: '/s/quoterequest',
-    createCase: '/s/createcase',
-    allOrders: '/s/orders',
-    creditCard: '/partners/s/credit-card/Credit_Card__c/Default',
-    chartfield: '/partners/s/chartfield-strings',
-    purchaseOrder: '/partners/s/purchaseorders',
-
-    orderingGuide: 'https://neurotools.unc.edu/about-us/placing-paying-for-your-order',
-    shippingInfo: 'https://neurotools.unc.edu/sending-samples',
-    faqs: 'https://neurotools.unc.edu/faqs',
-    products: 'https://neurotools.unc.edu/services/virus-pricing',
-    publications: '/s/publications'
-};
-
+    routes = {
+        createOrder: '/s/createorder',
+        quoteRequest: '/s/quoterequest',
+        createCase: '/s/createcase',
+        allOrders: '/s/orders',
+        creditCard: '/partners/s/credit-card/Credit_Card__c/Default',
+        chartfield: '/partners/s/chartfield-strings',
+        purchaseOrder: '/partners/s/purchaseorders',
+        orderingGuide: 'https://neurotools.unc.edu/about-us/placing-paying-for-your-order',
+        shippingInfo: 'https://neurotools.unc.edu/sending-samples',
+        faqs: 'https://neurotools.unc.edu/faqs',
+        products: 'https://neurotools.unc.edu/services/virus-pricing',
+        publications: '/s/publications'
+    };
 
     // Current user and contact
     contactId;
@@ -41,7 +50,6 @@ routes = {
 
     // Dashboard data
     recentOrders = [];
-
     orderSummary = {
         active: 0,
         inProduction: 0,
@@ -56,11 +64,20 @@ routes = {
     billingModalOpen = false;
     billingOptions = [];
 
-    bundleModalOpen = false;
-selectedBundle = null;
+    // Quick Order inventory
+    stockProducts = [];
+    isLoadingStock = false;
+    stockError = '';
+
+    // Quick Order modal
+    stockModalOpen = false;
+    selectedProduct = null;
+    selectedBatchId = '';
+    requestedTubes = 1;
+    isAddingToCart = false;
 
     // ----------------------------------------
-    // Retrieve the logged-in user's Contact ID
+    // Retrieve logged-in user's Contact ID
     // ----------------------------------------
     @wire(getRecord, {
         recordId: USER_ID,
@@ -68,7 +85,7 @@ selectedBundle = null;
     })
     wiredUser({ data, error }) {
         if (data) {
-            this.contactId = data.fields.ContactId.value;
+            this.contactId = getFieldValue(data, CONTACT_ID);
 
             if (this.contactId) {
                 this.loadDashboardData();
@@ -83,7 +100,6 @@ selectedBundle = null;
             this.isLoadingDashboard = false;
             this.dashboardError =
                 'Unable to retrieve your portal user information.';
-
             console.error('Error retrieving portal user:', error);
         }
     }
@@ -97,12 +113,7 @@ selectedBundle = null;
     })
     wiredContact({ data, error }) {
         if (data) {
-            this._labType = getFieldValue(
-                data,
-                CONTACT_ACCOUNT_LAB_TYPE
-            );
-
-            console.log('Retrieved lab type:', this._labType);
+            this._labType = getFieldValue(data, CONTACT_ACCOUNT_LAB_TYPE);
         } else if (error) {
             this._labType = null;
             console.error('Error retrieving contact lab type:', error);
@@ -133,12 +144,8 @@ selectedBundle = null;
 
         try {
             const [recentData, summaryData] = await Promise.all([
-                getRecentClientVirusOrders({
-                    contactId: this.contactId
-                }),
-                getClientOrderSummary({
-                    contactId: this.contactId
-                })
+                getRecentClientVirusOrders({ contactId: this.contactId }),
+                getClientOrderSummary({ contactId: this.contactId })
             ]);
 
             this.recentOrders = (recentData || []).map((orderRecord) => ({
@@ -157,10 +164,8 @@ selectedBundle = null;
             };
         } catch (error) {
             console.error('Error loading dashboard data:', error);
-
             this.dashboardError =
                 'We could not load your order dashboard. Please refresh the page.';
-
             this.recentOrders = [];
             this.setEmptySummary();
         } finally {
@@ -217,6 +222,261 @@ selectedBundle = null;
     }
 
     // ----------------------------------------
+    // Quick Order: load featured stock
+    // ----------------------------------------
+    connectedCallback() {
+        this.loadStockProducts();
+    }
+
+    async loadStockProducts() {
+        this.isLoadingStock = true;
+        this.stockError = '';
+
+        try {
+            const results = await getStockViruses();
+            const featuredNames = new Set(
+                FEATURED_PRODUCTS.map((name) => name.toLowerCase())
+            );
+
+            const allProducts = (results || []).map((product) => {
+                const batches = (product.Stock_Batch__r || [])
+                    .filter((batch) =>
+                        Number(batch.Tubes_Remaining_num_val__c || 0) > 0
+                    )
+                    .map((batch) => ({
+                        ...batch,
+                        batchLabel:
+                            batch.Transfection_ID__c ||
+                            batch.Name ||
+                            'Available batch',
+                        displayTiter: batch.Titer__c || 'Not specified',
+                        displayVolume: batch.End_Volume__c || 'Not specified',
+                        displayTubes:
+                            batch.Tubes_Remaining__c ??
+                            batch.Tubes_Remaining_num_val__c ??
+                            0
+                    }));
+
+                return {
+    ...product,
+    batches,
+    hasAvailableBatches: batches.length > 0,
+    isUnavailable: batches.length === 0,
+    constructName: product.Construct__r?.Name || '',
+    capsidName: product.Capsid_Envelope__r?.Name || ''
+};
+            });
+
+            this.stockProducts = FEATURED_PRODUCTS
+                .map((featuredName) =>
+                    allProducts.find(
+                        (product) =>
+                            (product.Name || '').toLowerCase() ===
+                            featuredName.toLowerCase()
+                    )
+                )
+                .filter(Boolean)
+                .map((product) => ({
+                    ...product,
+                    cardDescription: this.getProductDescription(product)
+                }));
+
+            if (this.stockProducts.length === 0) {
+                this.stockError =
+                    'No featured stock products are currently available.';
+            }
+        } catch (error) {
+            console.error('Error loading stock products:', error);
+            this.stockProducts = [];
+            this.stockError =
+                'Unable to load popular stock products. Please try again later.';
+        } finally {
+            this.isLoadingStock = false;
+        }
+    }
+
+    getProductDescription(product) {
+        const details = [];
+
+        if (product.Virus_Type__c) {
+            details.push(product.Virus_Type__c);
+        }
+
+        if (product.capsidName) {
+            details.push(product.capsidName);
+        }
+
+        if (product.End_Use__c) {
+            details.push(product.End_Use__c);
+        }
+
+        return details.join(' • ') || 'Available stock virus product';
+    }
+
+    // ----------------------------------------
+    // Quick Order: product selection and modal
+    // ----------------------------------------
+    handleSelectStockProduct(event) {
+        const productId = event.currentTarget.dataset.id;
+
+        const product = this.stockProducts.find(
+            (item) => item.Id === productId
+        );
+
+        if (!product) {
+            this.showToast(
+                'Product unavailable',
+                'Unable to load the selected product.',
+                'error'
+            );
+            return;
+        }
+
+        if (!product.batches || product.batches.length === 0) {
+            this.showToast(
+                'No available stock',
+                'There are currently no available batches for this product.',
+                'info'
+            );
+            return;
+        }
+
+        this.selectedProduct = product;
+        this.selectedBatchId = product.batches[0].Id;
+        this.requestedTubes = 1;
+        this.stockModalOpen = true;
+    }
+
+    get selectedBatch() {
+        if (!this.selectedProduct || !this.selectedBatchId) {
+            return null;
+        }
+
+        return this.selectedProduct.batches.find(
+            (batch) => batch.Id === this.selectedBatchId
+        );
+    }
+
+    get batchOptions() {
+        if (!this.selectedProduct) {
+            return [];
+        }
+
+        return this.selectedProduct.batches.map((batch) => ({
+            label: `${batch.batchLabel} | Titer: ${batch.displayTiter} | Tubes: ${batch.displayTubes}`,
+            value: batch.Id
+        }));
+    }
+
+    get selectedProductTitle() {
+        return this.selectedProduct?.Name || '';
+    }
+
+    get selectedProductConstruct() {
+        return this.selectedProduct?.constructName || 'Not specified';
+    }
+
+    get selectedProductCapsid() {
+        return this.selectedProduct?.capsidName || 'Not specified';
+    }
+
+    get selectedProductType() {
+        return this.selectedProduct?.Virus_Type__c || 'Not specified';
+    }
+
+    get selectedProductEndUse() {
+        return this.selectedProduct?.End_Use__c || 'Not specified';
+    }
+
+    get selectedBatchTiter() {
+        return this.selectedBatch?.displayTiter || 'Not specified';
+    }
+
+    get selectedBatchVolume() {
+        return this.selectedBatch?.displayVolume || 'Not specified';
+    }
+
+    get selectedBatchTubesRemaining() {
+        return Number(this.selectedBatch?.Tubes_Remaining_num_val__c || 0);
+    }
+
+    get maxRequestedTubes() {
+        return this.selectedBatchTubesRemaining || 1;
+    }
+
+    get isAddToCartDisabled() {
+        return (
+            this.isAddingToCart ||
+            !this.selectedBatchId ||
+            !Number.isInteger(Number(this.requestedTubes)) ||
+            Number(this.requestedTubes) < 1 ||
+            Number(this.requestedTubes) > this.maxRequestedTubes
+        );
+    }
+
+    handleBatchChange(event) {
+        this.selectedBatchId = event.detail.value;
+        this.requestedTubes = 1;
+    }
+
+    handleTubeQuantityChange(event) {
+        this.requestedTubes = Number(event.detail.value);
+    }
+
+    closeStockModal() {
+        if (this.isAddingToCart) {
+            return;
+        }
+
+        this.stockModalOpen = false;
+        this.selectedProduct = null;
+        this.selectedBatchId = '';
+        this.requestedTubes = 1;
+    }
+
+    async handleAddStockToCart() {
+        if (this.isAddToCartDisabled) {
+            return;
+        }
+
+        this.isAddingToCart = true;
+
+        try {
+            const draftOrderId = await addStockToCart({
+                stockBatchId: this.selectedBatchId,
+                tubesRequested: Number(this.requestedTubes)
+            });
+
+            this.showToast(
+                'Added to cart',
+                `${this.selectedProductTitle} was added to your cart.`,
+                'success'
+            );
+
+            this.stockModalOpen = false;
+            this.selectedProduct = null;
+            this.selectedBatchId = '';
+            this.requestedTubes = 1;
+
+            // Reload stock because the available tube count has changed.
+            await this.loadStockProducts();
+
+            // The returned ID is the created Draft_Virus_Order__c record.
+            console.log('Created draft virus order:', draftOrderId);
+        } catch (error) {
+            console.error('Error adding stock to cart:', error);
+
+            this.showToast(
+                'Unable to add to cart',
+                this.getErrorMessage(error),
+                'error'
+            );
+        } finally {
+            this.isAddingToCart = false;
+        }
+    }
+
+    // ----------------------------------------
     // Navigation
     // ----------------------------------------
     navigateTo(path) {
@@ -226,23 +486,36 @@ selectedBundle = null;
     }
 
     showInfo(message) {
+        this.showToast('NeuroTools Portal', message, 'info');
+    }
+
+    showToast(title, message, variant) {
         this.dispatchEvent(
             new ShowToastEvent({
-                title: 'NeuroTools Portal',
+                title,
                 message,
-                variant: 'info'
+                variant
             })
         );
     }
 
-    
-handleBulkOrderTemplate() {
-    const downloadLink = document.createElement('a');
-    downloadLink.href = BulkOrderDownloadTemplate;
-    downloadLink.download = 'Bulk_Order_Template.xlsx';
-    downloadLink.click();
-}
+    getErrorMessage(error) {
+        return (
+            error?.body?.message ||
+            error?.message ||
+            'An unexpected error occurred. Please try again.'
+        );
+    }
 
+    // ----------------------------------------
+    // Downloads and dashboard actions
+    // ----------------------------------------
+    handleBulkOrderTemplate() {
+        const downloadLink = document.createElement('a');
+        downloadLink.href = BulkOrderDownloadTemplate;
+        downloadLink.download = 'Bulk_Order_Template.xlsx';
+        downloadLink.click();
+    }
 
     handleCreateOrder() {
         this.navigateTo(this.routes.createOrder);
@@ -334,186 +607,34 @@ handleBulkOrderTemplate() {
         }
     }
 
-    // ----------------------------------------
-    // Other dashboard actions
-    // ----------------------------------------
     handleBilling() {
         this.openBillingModal();
     }
 
-    
-handleOrderingGuide() {
-    this.navigateTo(this.routes.orderingGuide);
-}
-
-handleShippingInfo() {
-    this.navigateTo(this.routes.shippingInfo);
-}
-
-handleFAQs() {
-    this.navigateTo(this.routes.faqs);
-}
-
-handleProducts() {
-    this.navigateTo(this.routes.products);
-}
-
-handlePublications() {
-    this.navigateTo(this.routes.publications);
-}
-
-handleContactEmail() {
-    window.location.href = 'mailto:neurotools@unc.edu';
-}
-
-
-    handleQuickOrder(event) {
-        const productName = event.currentTarget.dataset.product;
-
-        this.showInfo(
-            `${productName} selected. Review the product and complete the order on the order page.`
-        );
-
-        this.navigateTo(this.routes.createOrder);
+    // ----------------------------------------
+    // Resource actions
+    // ----------------------------------------
+    handleOrderingGuide() {
+        this.navigateTo(this.routes.orderingGuide);
     }
 
-
-
-    // Bundle catalog
-    bundleModalOpen = false;
-    selectedBundle = null;
-
-    bundles = {
-        aav: {
-            id: 'aav',
-            title: 'AAV Research Bundle',
-            description:
-                'Explore AAV vector products and preparation options for your research project.',
-            details: [
-                {
-                    id: 'products',
-                    heading: 'Available AAV Preparations',
-                    description:
-                        'AAV products are available in Standard, Medium, and Large preparation sizes.'
-                },
-                {
-                    id: 'testing',
-                    heading: 'Additional Services',
-                    description:
-                        'Options include endotoxin testing, Enriched Full Prep, and 3x CsCl purification, subject to product eligibility.'
-                },
-                {
-                    id: 'requirements',
-                    heading: 'Before Ordering',
-                    description:
-                        'Confirm your construct, capsid, desired volume, preparation size, and any additional services.'
-                }
-            ]
-        },
-        rabies: {
-            id: 'rabies',
-            title: 'Rabies Helper Bundle',
-            description:
-                'Explore rabies virus ordering options and discuss the products needed for your research workflow.',
-            details: [
-                {
-                    id: 'products',
-                    heading: 'Product Information',
-                    description:
-                        'Review available rabies virus products and their specifications with the NeuroTools catalog.'
-                },
-                {
-                    id: 'requirements',
-                    heading: 'Research Requirements',
-                    description:
-                        'Identify the required construct, preparation, volume, and any project-specific requirements.'
-                },
-                {
-                    id: 'confirmation',
-                    heading: 'Confirm Bundle Contents',
-                    description:
-                        'The exact products, quantities, and included services for this bundle must be confirmed with NeuroTools.'
-                }
-            ]
-        }
-    };
-
-    handleExploreBundle(event) {
-        const bundleId = event.currentTarget.dataset.bundle;
-        const bundle = this.bundles[bundleId];
-
-        if (!bundle) {
-            this.showInfo('Unable to load this bundle. Please try again.');
-            return;
-        }
-
-        this.selectedBundle = bundle;
-        this.bundleModalOpen = true;
+    handleShippingInfo() {
+        this.navigateTo(this.routes.shippingInfo);
     }
 
-    closeBundleModal() {
-        this.bundleModalOpen = false;
-        this.selectedBundle = null;
+    handleFAQs() {
+        this.navigateTo(this.routes.faqs);
     }
 
-    get selectedBundleImage() {
-        if (!this.selectedBundle) {
-            return '';
-        }
-
-        return this.selectedBundle.id === 'aav'
-            ? this.aavBundleImage
-            : this.rabiesBundleImage;
+    handleProducts() {
+        this.navigateTo(this.routes.products);
     }
 
-    get selectedBundleTitle() {
-        return this.selectedBundle?.title || '';
+    handlePublications() {
+        this.navigateTo(this.routes.publications);
     }
 
-    get selectedBundleDescription() {
-        return this.selectedBundle?.description || '';
+    handleContactEmail() {
+        window.location.href = 'mailto:neurotools@unc.edu';
     }
-
-    get selectedBundleDetails() {
-        return this.selectedBundle?.details || [];
-    }
-
-    handleOrderSelectedBundle() {
-        if (!this.selectedBundle) {
-            this.showInfo('Please select a bundle first.');
-            return;
-        }
-
-        // Opens the existing order page. This does not prepopulate
-        // the order with bundle products.
-        this.navigateTo(this.routes.createOrder);
-    }
-
-
-// Bundle images
-get aavBundleImage() {
-    return AAV_Bundle;
-}
-
-get rabiesBundleImage() {
-    return Rabies_Bundle;
-}
-
-get selectedBundleImage() {
-    if (!this.selectedBundle) {
-        return '';
-    }
-
-    return this.selectedBundle.id === 'aav'
-        ? this.aavBundleImage
-        : this.rabiesBundleImage;
-}
-
-get selectedBundleTitle() {
-    return this.selectedBundle?.title || '';
-}
-
-get selectedBundleDescription() {
-    return this.selectedBundle?.description || '';
-}
 }
