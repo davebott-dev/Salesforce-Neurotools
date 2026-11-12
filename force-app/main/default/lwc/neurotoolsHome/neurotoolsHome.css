@@ -1446,6 +1446,245 @@
 
 
 /* =========================================================
+   QUICK ORDER – COMPACT STOCK ROWS
+   ========================================================= */
+
+.quick-order-list {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid #e2eaf3;
+    border-radius: 10px;
+}
+
+.quick-order-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 125px 100px 115px;
+    align-items: center;
+    gap: 16px;
+    min-width: 0;
+    padding: 14px 16px;
+    border-bottom: 1px solid #edf1f5;
+    transition: background 0.15s ease;
+}
+
+.quick-order-row:last-child {
+    border-bottom: none;
+}
+
+.quick-order-row:hover {
+    background: #f8fbff;
+}
+
+/* Product name and description */
+
+.quick-order-product {
+    min-width: 0;
+}
+
+.quick-order-product-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.quick-order-product h3 {
+    margin: 0;
+    color: #203957;
+    font-size: 0.82rem;
+    font-weight: 750;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.quick-order-description {
+    margin: 4px 0 0;
+    color: #7a8798;
+    font-size: 0.7rem;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+/* Virus type */
+
+.stock-product-type {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 7px;
+    color: #315d87;
+    background: #eaf2fb;
+    border-radius: 5px;
+    font-size: 0.63rem;
+    font-weight: 750;
+    line-height: 1.4;
+    white-space: nowrap;
+}
+
+/* Inventory count */
+
+.quick-order-inventory {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+}
+
+.quick-order-inventory-count {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    color: #203957;
+}
+
+.quick-order-inventory-count strong {
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+.quick-order-inventory-count span {
+    color: #77879a;
+    font-size: 0.7rem;
+}
+
+.batch-count {
+    color: #8996a5;
+    font-size: 0.65rem;
+    line-height: 1.4;
+}
+
+/* Availability chips */
+
+.quick-order-status {
+    display: flex;
+    justify-content: center;
+}
+
+.stock-availability,
+.stock-unavailable {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 9px;
+    border-radius: 6px;
+    font-size: 0.65rem;
+    font-weight: 750;
+    line-height: 1.4;
+    white-space: nowrap;
+}
+
+.stock-availability {
+    color: #237354;
+    background: #e8f6ef;
+    border: 1px solid #d2ebdf;
+}
+
+.stock-unavailable {
+    color: #8b5555;
+    background: #fbebeb;
+    border: 1px solid #f0d8d8;
+}
+
+/* View stock button */
+
+.quick-order-action {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.quick-order-select-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 32px;
+    padding: 7px 10px;
+    color: #245c91;
+    background: #edf4fd;
+    border: 1px solid #dce9f8;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 750;
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.quick-order-select-button:hover:not(:disabled) {
+    background: #e1edfc;
+    border-color: #bfd5ee;
+}
+
+.quick-order-select-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+/* Stock footnote */
+
+.quick-order-footnote {
+    margin: 12px 0 0;
+    padding-top: 10px;
+    color: #7a8798;
+    border-top: 1px solid #edf0f4;
+    font-size: 0.69rem;
+    line-height: 1.6;
+}
+
+/* Responsive layout */
+
+@media (max-width: 900px) {
+    .quick-order-row {
+        grid-template-columns: minmax(0, 1fr) 100px 90px;
+        gap: 12px;
+    }
+
+    .quick-order-inventory {
+        grid-column: 2;
+    }
+
+    .quick-order-status {
+        grid-column: 3;
+    }
+
+    .quick-order-action {
+        grid-column: 3;
+        grid-row: 2;
+    }
+}
+
+@media (max-width: 600px) {
+    .quick-order-row {
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 10px;
+        padding: 13px;
+    }
+
+    .quick-order-product {
+        grid-column: 1 / -1;
+    }
+
+    .quick-order-inventory {
+        grid-column: 1;
+    }
+
+    .quick-order-status {
+        grid-column: 2;
+        grid-row: 2;
+        justify-content: flex-end;
+    }
+
+    .quick-order-action {
+        grid-column: 1 / -1;
+        grid-row: 3;
+        justify-content: flex-start;
+    }
+}
+
+/* =========================================================
    QUICK ORDER RESPONSIVENESS
    ========================================================= */
 

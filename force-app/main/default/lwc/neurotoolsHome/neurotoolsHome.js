@@ -1,4 +1,5 @@
 
+import { refreshApex } from '@salesforce/apex';
 import { LightningElement, wire } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
@@ -57,7 +58,7 @@ export default class NeurotoolsHome extends LightningElement {
 
     // Quick Order inventory
     stockProducts = [];
-    isLoadingStock = false;
+    isLoadingStock = true;
     stockError = '';
 
     // Quick Order modal
@@ -66,6 +67,9 @@ export default class NeurotoolsHome extends LightningElement {
     selectedBatchId = '';
     requestedTubes = 1;
     isAddingToCart = false;
+
+    // Stores the complete wire result for refreshApex()
+    wiredStockResult;
 
     // ----------------------------------------
     // Retrieve logged-in user's Contact ID
@@ -213,21 +217,16 @@ export default class NeurotoolsHome extends LightningElement {
     }
 
     // ----------------------------------------
-    // Quick Order: load featured stock
+    // Load and format featured stock products
     // ----------------------------------------
-    connectedCallback() {
-        this.loadStockProducts();
-    }
-
-//fix error on this page preventing it from loading
-
+    
 @wire(getStockViruses)
-wiredStockProducts({ error, data }) {
+wiredStockProducts(result) {
+    this.wiredStockResult = result;
+
+    const { error, data } = result;
 
     if (data) {
-
-        console.log('Home page stock data:', data);
-
         const featuredProducts = [
             'pAAV-CAG-dLight3.8: Capsid AAV9',
             'Rbv-CVS-N2c(dG)-H2B-eGFP(EnvA)',
@@ -245,53 +244,112 @@ wiredStockProducts({ error, data }) {
                 featuredNames.has((prod.Name || '').toLowerCase())
             )
             .map(prod => {
-
-                // Match the working StockVirusTable component.
                 const batches = prod.Stock_Batch__r || [];
 
                 const formattedBatches = batches.map(batch => {
-
                     const available =
                         Number(batch.Tubes_Remaining_num_val__c) || 0;
 
                     return {
                         ...batch,
                         AvailableTubes: available,
+
                         batchLabel:
                             batch.Transfection_ID__c ||
                             batch.Name ||
                             'Stock Batch',
-                        displayTiter: batch.Titer__c || 'Not specified',
+
+                        displayTiter:
+                            batch.Titer__c || 'Not specified',
+
+                        displayVolume:
+                            batch.End_Volume__c || 'Not specified',
+
                         displayTubes: available
                     };
                 });
 
+                // Calculate actual available inventory.
                 const totalTubes = formattedBatches.reduce(
-                    (total, batch) => total + batch.AvailableTubes,
+                    (total, batch) =>
+                        total + batch.AvailableTubes,
                     0
                 );
 
+                // Only batches with remaining tubes count as available.
+                const availableBatches = formattedBatches.filter(
+                    batch => batch.AvailableTubes > 0
+                );
+
+                const hasAvailableBatches =
+                    totalTubes > 0 && availableBatches.length > 0;
+
                 return {
                     ...prod,
-                    batches: formattedBatches,
-                    batchCount: formattedBatches.length,
+
+                    constructName:
+                        prod.Construct__r?.Name || '',
+
+                    capsidName:
+                        prod.Capsid_Envelope__r?.Name || '',
+
+                    cardDescription: [
+                        prod.Construct__r?.Name,
+                        prod.Capsid_Envelope__r?.Name
+                    ].filter(Boolean).join(' · ') ||
+                        'Stock virus preparation',
+
+                    batches: availableBatches,
+
+                    batchCount: availableBatches.length,
+
                     TubesRemaining: totalTubes,
-                    isUnavailable: totalTubes <= 0
+
+                    // Both properties are used by the HTML.
+                    hasAvailableBatches: hasAvailableBatches,
+
+                    isUnavailable: !hasAvailableBatches
                 };
             });
 
-        console.log('Featured products:', this.stockProducts);
-
         this.stockError = '';
+        this.isLoadingStock = false;
+
+        console.log(
+            'Featured stock products:',
+            JSON.stringify(this.stockProducts)
+        );
 
     } else if (error) {
-
         console.error('Error loading featured stock:', error);
 
         this.stockError =
-            error.body?.message || 'Unable to load stock products.';
+            error.body?.message ||
+            'Unable to load stock products.';
 
         this.stockProducts = [];
+        this.isLoadingStock = false;
+    }
+}
+
+async loadStockProducts() {
+    if (!this.wiredStockResult) {
+        return;
+    }
+
+    this.isLoadingStock = true;
+    this.stockError = '';
+
+    try {
+        await refreshApex(this.wiredStockResult);
+    } catch (error) {
+        console.error('Error refreshing stock:', error);
+
+        this.stockError =
+            error.body?.message ||
+            'Unable to refresh stock products.';
+
+        this.isLoadingStock = false;
     }
 }
 
@@ -417,6 +475,9 @@ wiredStockProducts({ error, data }) {
         this.requestedTubes = 1;
     }
 
+    // ----------------------------------------
+    // Add selected stock to cart
+    // ----------------------------------------
     async handleAddStockToCart() {
         if (this.isAddToCartDisabled) {
             return;
@@ -441,11 +502,11 @@ wiredStockProducts({ error, data }) {
             this.selectedBatchId = '';
             this.requestedTubes = 1;
 
-            // Reload stock because the available tube count has changed.
-            await this.loadStockProducts();
-
-            // The returned ID is the created Draft_Virus_Order__c record.
             console.log('Created draft virus order:', draftOrderId);
+
+            // Refresh the stock inventory after the successful cart addition.
+            await refreshApex(this.wiredStockResult);
+
         } catch (error) {
             console.error('Error adding stock to cart:', error);
 

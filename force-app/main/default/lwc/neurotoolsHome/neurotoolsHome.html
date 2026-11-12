@@ -228,91 +228,124 @@
         </template>
     </div>
 
-    <!-- Quick Order: Popular Stock -->
-    <div class="section-card quick-order-section">
-        <div class="section-header">
-            <div>
-                <h2>Quick Order – Popular Stock</h2>
-                <p>Select a popular stock product to view available batches and add it to your cart.</p>
-            </div>
+   
+<!-- Quick Order: Popular Stock -->
+<div class="section-card quick-order-section">
+    <div class="section-header">
+        <div>
+            <h2>Quick Order</h2>
+            <p>
+                Below are some of our most requested stock product. Select one to view available batches
+                and add it to your cart!
+            </p>
         </div>
+    </div>
 
-        <template lwc:if={isLoadingStock}>
-            <div class="stock-loading">
-                <lightning-spinner
-                    alternative-text="Loading popular stock"
-                    size="small">
-                </lightning-spinner>
-                <span>Loading available stock...</span>
-            </div>
-        </template>
+    <template lwc:if={isLoadingStock}>
+        <div class="stock-loading">
+            <lightning-spinner
+                alternative-text="Loading popular stock"
+                size="small">
+            </lightning-spinner>
+            <span>Loading available stock...</span>
+        </div>
+    </template>
 
-        <template lwc:elseif={stockError}>
-            <div class="stock-message stock-error">
-                {stockError}
-                <button class="text-button" onclick={loadStockProducts}>
-                    Try Again →
-                </button>
-            </div>
-        </template>
+    <template lwc:elseif={stockError}>
+        <div class="stock-message stock-error">
+            {stockError}
+            <button
+                class="text-button"
+                onclick={loadStockProducts}>
+                Try Again →
+            </button>
+        </div>
+    </template>
 
-        <template lwc:elseif={stockProducts.length}>
-            <div class="quick-order-grid">
-                <template for:each={stockProducts} for:item="product">
-                    <article class="quick-order-card" key={product.Id}>
-                        <div class="quick-order-card-top">
+    <template lwc:elseif={stockProducts.length}>
+        <div class="quick-order-list">
+
+            <template
+                for:each={stockProducts}
+                for:item="product">
+
+                <article
+                    class="quick-order-row"
+                    key={product.Id}>
+
+                    <!-- Product Information -->
+                    <div class="quick-order-product">
+                        <div class="quick-order-product-heading">
+                            <h3>{product.Name}</h3>
+
                             <span class="stock-product-type">
                                 {product.Virus_Type__c}
                             </span>
-                            <template lwc:if={product.hasAvailableBatches}>
-                                <span class="stock-availability">
-                                    In Stock
-                                </span>
-                            </template>
-                            <template lwc:else>
-                                <span class="stock-unavailable">
-                                    Unavailable
-                                </span>
-                            </template>
                         </div>
-
-                        <h3>{product.Name}</h3>
 
                         <p class="quick-order-description">
                             {product.cardDescription}
                         </p>
+                    </div>
 
-                        <div class="quick-order-card-footer">
-                            <span class="batch-count">
-                                {product.batches.length} available
-                                batch(es)
-                            </span>
-
-                            <button
-                                type="button"
-                                class="quick-order-select-button"
-                                data-id={product.Id}
-                                onclick={handleSelectStockProduct}
-                                disabled={product.isUnavailable}>
-                                View Stock <span aria-hidden="true">→</span>
-                            </button>
+                    <!-- Inventory Information -->
+                    <div class="quick-order-inventory">
+                        <div class="quick-order-inventory-count">
+                            <strong>{product.TubesRemaining}</strong>
+                            <span>tubes</span>
                         </div>
-                    </article>
-                </template>
-            </div>
-        </template>
 
-        <template lwc:else>
-            <div class="stock-message">
-                No featured stock products are currently available.
-            </div>
-        </template>
+                        <span class="batch-count">
+                            {product.batchCount} available batch(es)
+                        </span>
+                    </div>
 
-        <p class="quick-order-footnote">
-            Inventory and titers are based on currently available stock batches.
-            Availability may change as orders are submitted.
-        </p>
-    </div>
+                    <!-- Availability -->
+                    <div class="quick-order-status">
+                        <template lwc:if={product.hasAvailableBatches}>
+                            <span class="stock-availability">
+                                In Stock
+                            </span>
+                        </template>
+
+                        <template lwc:else>
+                            <span class="stock-unavailable">
+                                Unavailable
+                            </span>
+                        </template>
+                    </div>
+
+                    <!-- View Stock -->
+                    <div class="quick-order-action">
+                        <button
+                            type="button"
+                            class="quick-order-select-button"
+                            data-id={product.Id}
+                            onclick={handleSelectStockProduct}
+                            disabled={product.isUnavailable}>
+
+                            View Stock
+                            <span aria-hidden="true">→</span>
+                        </button>
+                    </div>
+
+                </article>
+            </template>
+        </div>
+    </template>
+
+    <template lwc:else>
+        <div class="stock-message">
+            No featured stock products are currently available.
+        </div>
+    </template>
+
+    <p class="quick-order-footnote">
+        Inventory and titers are based on currently available stock batches.
+        Availability may change as orders are submitted.
+    </p>
+</div>
+
 </section>
 
 <!-- Quick Order Stock Selection Modal -->
